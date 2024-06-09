@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SavyStudents</title>
+    <link rel="stylesheet" href="reset.css" />
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div class="site_container">
+      <header class="header">
+        <nav class="navbar navbar-expand-md bg-body-tertiary ">
+          <div class="container-fluid px-lg-5 px-md-2 ">
+            <a class="navbar-brand fs-1" href="home.html">
+              <img src="images/logo.jpg" alt="SavyStudent brand logo" />
+              SavyStudents</a
+            >
+            <button
+              class="navbar-toggler d-md-none"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarSupportedContent"
+              aria-controls="navbarSupportedContent"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div
+              class="collapse navbar-collapse mx-md-0"
+              id="navbarSupportedContent"
+            >
+              <ul class="navbar-nav ms-auto mb-2 mb-lg-0 ps-sm-2 fs-5">
+                <li class="nav-item">
+                  <a class="nav-link" aria-current="page" href="home.html"
+                    >Home</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" aria-current="page" href="about-us.html"
+                    >About Us</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link"
+                    aria-current="page"
+                    href="budgeting-tips.html"
+                    >Budgeting Tips</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="sign-on.html"> Sign In </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="update-budget.html"> budget </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="update-form.html"> form </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="update-income.html"> income </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="dashboard.html">dashboard</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+      </header>
+      <main class="main">
+        <div id="csCaption" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-indicators">
+            <button
+              type="button"
+              data-bs-target="#csCaption"
+              data-bs-slide-to="0"
+              class="active"
+              aria-current="true"
+              aria-label="Slide 1"
+            ></button>
+            <button
+              type="button"
+              data-bs-target="#csCaption"
+              data-bs-slide-to="1"
+              aria-label="Slide 2"
+            ></button>
+            <button
+              type="button"
+              data-bs-target="#csCaption"
+              data-bs-slide-to="2"
+              aria-label="Slide 3"
+            ></button>
+          </div>
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              <img src="images/cs-1.jpg" class="d-block w-100" alt="..." />
+              <div class="carousel-caption d-none d-md-block">
+                <h5>Start Budgeting Now</h5>
+                <p class="cs-text">Set goals based on your spending habits to meet your needs.</p>
+              </div>
+              <div
+                class="carousel-caption d-block d-md-none position-static p-3"
+              >
+                <h5>Start Budgeting Now</h5>
+                <p class="cs-text">Set goals based on your spending habitsto meet your needs.</p>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <img src="images/cs-2.jpg" class="d-block w-100" alt="..." />
+              <div class="carousel-caption d-none d-md-block">
+                <h5>Sit Under the Learning Tree</h5>
+                <p class="cs-text">
+                  Gain the knowledge necessary to make better financial
+                  decisions.
+                </p>
+              </div>
+              <div
+                class="carousel-caption d-block d-md-none position-static p-3"
+              >
+                <h5>Sit Under the Learning Tree</h5>
+                <p class="cs-text">
+                  Gain the knowledge necessary to make better financial
+                  decisions.
+                </p>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <img src="images/cs-3.jpg" class="d-block w-100" alt="..." />
+              <div class="carousel-caption d-none d-md-block">
+                <h5>Every Penny Counts</h5>
+                <p class="cs-text">
+                  Every cent adds up. Keep track of the money you save today!
+                </p>
+              </div>
+              <div
+                class="carousel-caption d-block d-md-none position-static p-3"
+              >
+                <h5>Every Penny Counts</h5>
+                <p class="cs-text">
+                  Every cent adds up. Keep track of the money you save today!
+                </p>
+              </div>
+            </div>
+          </div>
+          <button
+            class="carousel-control-prev custom-carousel-control"
+            type="button"
+            data-bs-target="#csCaption"
+            data-bs-slide="prev"
+          >
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button
+            class="carousel-control-next custom-carousel-control"
+            type="button"
+            data-bs-target="#csCaption"
+            data-bs-slide="next"
+          >
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
+      </main>
+      <section class="left">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Est accusamus
+        dolorum laudantium eveniet delectus impedit minima itaque mollitia nisi
+        nobis, quo voluptates a veritatis maiores saepe odit distinctio, ipsam
+        officiis nihil quas excepturi cumque ex possimus dicta. Fuga quia,
+        voluptatibus nobis error consequuntur facilis autem. Adipisci, voluptate
+        illo labore reiciendis non, mollitia sed repudiandae beatae aliquam
+        impedit enim quasi fugit odit placeat vero. Quos cumque consectetur sunt
+        cum facere inventore veniam ipsam soluta perferendis! Praesentium
+        delectus est quam reprehenderit veniam ex esse laudantium ab voluptatem
+        commodi, tempore quod ipsum omnis modi, eveniet ea dolore nisi inventore
+        ducimus libero excepturi deleniti?
+      </section>
+      <aside class="right">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit quas
+        laudantium, laboriosam quod veniam quis temporibus ducimus corporis
+        neque beatae! Fuga iste cupiditate deleniti recusandae tenetur corporis
+        quo aliquid. Harum fugit voluptatibus est odio cumque rerum magnam
+        mollitia eligendi architecto sint explicabo, illum molestias? Libero
+        numquam adipisci quisquam. Voluptates, iure! Voluptatum vero velit sit,
+        necessitatibus et enim explicabo possimus eligendi unde ipsum? Porro,
+        consequuntur non. Atque culpa fugit at natus magnam eum quaerat. Cum
+        rerum fugiat necessitatibus eum repudiandae soluta blanditiis illo
+        itaque explicabo, consequuntur inventore provident minus obcaecati
+        magnam assumenda asperiores sint quasi? Cupiditate quisquam omnis
+        consequuntur maiores! Quos!
+      </aside>
+      <footer class="footer">&#169 2023-2024 SavyStudents
+        <br>SavyStudents.com
+        <br>123 First St.
+        <br>Designed by Cajoe Bits Team</footer>
+    </div>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
