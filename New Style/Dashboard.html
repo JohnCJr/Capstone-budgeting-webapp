@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <h2 id="budgetTrackerTitle">Budget Tracker</h2>
+            </div>
+            <nav class="nav">
+                <a href="dashboard.html" class="nav-item active" id="dashboardLink">Dashboard</a>
+                <a href="transactions.html" class="nav-item" id="transactionsLink">Transactions</a>
+                <a href="cards.html" class="nav-item" id="cardsLink">Cards</a>
+                <a href="bank-accounts.html" class="nav-item" id="bankAccountsLink">Bank Accounts</a>
+                <a href="analytics.html" class="nav-item" id="analyticsLink">Analytics</a>
+                <a href="settings.html" class="nav-item" id="settingsLink">Settings</a>
+            </nav>
+        </aside>
+        <main class="main-content">
+            <header class="header">
+                <h1 id="mainTitle">Project Expense Tracking Software</h1>
+                <div class="user-info">
+                    <span>Edinson Almanzar Marte</span>
+                    <img src="user.jpg" alt="User Avatar">
+                </div>
+                <select id="languageSelect">
+                    <option value="en">English</option>
+                    <option value="es">Spanish</option>
+                </select>
+            </header>
+            <section class="overview">
+                <div class="card">
+                    <h3 id="totalBudgetTitle">Total Budget</h3>
+                    <p id="totalBudget">$8200</p>
+                </div>
+                <div class="card">
+                    <h3 id="totalIncomeTitle">Total Income</h3>
+                    <p id="totalIncome">$10000</p>
+                </div>
+                <div class="card">
+                    <h3 id="totalSpentTitle">Total Spent</h3>
+                    <p id="totalSpent">$1550</p>
+                </div>
+                <div class="card">
+                    <h3 id="totalSavedTitle">Total Saved</h3>
+                    <p id="totalSaved">$5210</p>
+                </div>
+            </section>
+            <section class="charts">
+                <div class="chart-container">
+                    <canvas id="transactionChart"></canvas>
+                </div>
+                <div class="pie-charts">
+                    <div class="pie-chart-container">
+                        <canvas id="pieChart1"></canvas>
+                        <p id="pieChart1Value">$5200</p>
+                    </div>
+                    <div class="pie-chart-container">
+                        <canvas id="pieChart2"></canvas>
+                        <p id="pieChart2Value">$4500</p>
+                    </div>
+                    <div class="pie-chart-container">
+                        <canvas id="pieChart3"></canvas>
+                        <p id="pieChart3Value">$3200</p>
+                    </div>
+                    <div class="pie-chart-container">
+                        <canvas id="pieChart4"></canvas>
+                        <p id="pieChart4Value">$2100</p>
+                    </div>
+                </div>
+            </section>
+            <section class="transactions">
+                <h2 id="latestTransactionsTitle">Latest Transactions</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th id="dateHeader">Date</th>
+                            <th id="descriptionHeader">Description</th>
+                            <th id="amountHeader">Amount</th>
+                            <th id="categoryHeader">Category</th>
+                            <th id="actionsHeader">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transactionTableBody">
+                        <tr>
+                            <td>2023-06-10</td>
+                            <td>Groceries</td>
+                            <td>$50</td>
+                            <td>Food</td>
+                            <td>
+                                <button class="edit-btn">Edit</button>
+                                <button class="delete-btn">Delete</button>
+                            </td>
+                        </tr>
+                        <!-- Add more rows dynamically from the server or script -->
+                    </tbody>
+                </table>
+            </section>
+            <section class="manage-expense">
+                <h2 id="addEditExpenseTitle">Add/Edit Expense</h2>
+                <form id="expenseForm">
+                    <label for="date" id="dateLabel">Date:</label>
+                    <input type="date" id="date" name="date" required>
+                    
+                    <label for="description" id="descriptionLabel">Description:</label>
+                    <input type="text" id="description" name="description" required>
+                    
+                    <label for="amount" id="amountLabel">Amount:</label>
+                    <input type="number" id="amount" name="amount" required>
+                    
+                    <label for="category" id="categoryLabel">Category:</label>
+                    <select id="category" name="category" required>
+                        <option value="Food">Food</option>
+                        <option value="Transport">Transport</option>
+                        <option value="Entertainment">Entertainment</option>
+                        <option value="Utilities">Utilities</option>
+                        <!-- Add more categories as needed -->
+                    </select>
+                    
+                    <button type="submit" id="addExpenseBtn">Add Expense</button>
+                    <button type="button" id="editExpenseBtn" style="display: none;">Edit Expense</button>
+                </form>
+            </section>
+            <section class="manage-income">
+                <h2 id="addEditIncomeTitle">Add/Edit Income</h2>
+                <form id="incomeForm">
+                    <label for="incomeDate" id="incomeDateLabel">Date:</label>
+                    <input type="date" id="incomeDate" name="incomeDate" required>
+                    
+                    <label for="incomeDescription" id="incomeDescriptionLabel">Description:</label>
+                    <input type="text" id="incomeDescription" name="incomeDescription" required>
+                    
+                    <label for="incomeAmount" id="incomeAmountLabel">Amount:</label>
+                    <input type="number" id="incomeAmount" name="incomeAmount" required>
+                    
+                    <label for="incomeCategory" id="incomeCategoryLabel">Category:</label>
+                    <select id="incomeCategory" name="incomeCategory" required>
+                        <option value="Salary">Salary</option>
+                        <option value="Business">Business</option>
+                        <option value="Investments">Investments</option>
+                        <option value="Other">Other</option>
+                        <!-- Add more categories as needed -->
+                    </select>
+                    
+                    <button type="submit" id="addIncomeBtn">Add Income</button>
+                    <button type="button" id="editIncomeBtn" style="display: none;">Edit Income</button>
+                </form>
+            </section>
+            <section class="income">
+                <h2 id="latestIncomesTitle">Latest Incomes</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th id="incomeDateHeader">Date</th>
+                            <th id="incomeDescriptionHeader">Description</th>
+                            <th id="incomeAmountHeader">Amount</th>
+                            <th id="incomeCategoryHeader">Category</th>
+                            <th id="incomeActionsHeader">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="incomeTableBody">
+                        <tr>
+                            <td>2023-06-10</td>
+                            <td>Freelancing</td>
+                            <td>$500</td>
+                            <td>Business</td>
+                            <td>
+                                <button class="edit-income-btn">Edit</button>
+                                <button class="delete-income-btn">Delete</button>
+                            </td>
+                        </tr>
+                        <!-- Add more rows dynamically from the server or script -->
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+    <!-- Include Chart.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="scripts.js"></script>
+</body>
+</html>
