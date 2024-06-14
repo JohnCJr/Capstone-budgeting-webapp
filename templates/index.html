@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Compound Interest Growth</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <div id="graph"></div>
+
+    <script>
+        // Retrieve graph data from Flask and plot using Plotly
+        var graphDiv = document.getElementById('graph');
+        var graphJson = JSON.parse('{{ graph_json|safe }}');
+        Plotly.newPlot(graphDiv, graphJson.data, graphJson.layout);
+    </script>
+</body>
+</html>
