@@ -1,0 +1,100 @@
+<!-- This HTML file is dynamically pulled to the dashboard.html file 
+and serves as the template to generate a new expense. -->
+
+<form id="newExpense">
+  <div class="row mb-3 mt-3">
+    <label for="examount" class="col-sm-3 col-form-label">Amount:</label>
+    <div class="col-sm-8">
+      <div class="input-group">
+        <span class="input-group-text">$</span>
+        <input
+          type="text"
+          class="money-field form-control"
+          id="examount"
+          placeholder="6.49"
+        />
+      </div>
+    </div>
+  </div>
+  <fieldset class="row mb-3 ms-3">
+    <legend class="col-form-label col-sm-3 pt-0">Type:</legend>
+    <div class="col-sm-8">
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="expenseTypes"
+          id="expenseType1"
+          value="food"
+          checked
+        />
+        <label class="form-check-label" for="expenseType1"> Food </label>
+      </div>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="expenseTypes"
+          id="expenseType2"
+          value="utility"
+        />
+        <label class="form-check-label" for="expenseType2"> Utility </label>
+      </div>
+      <div class="form-check-label">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="expenseTypes"
+          id="expenseType3"
+          value="entertainment"
+        />
+        <label class="form-check-label ms-1" for="expenseType3">
+          Entertainment
+        </label>
+      </div>
+      <div class="form-check-label">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="expenseTypes"
+          id="expenseType4"
+          value="other"
+        />
+        <label class="form-check-label ms-1" for="expenseType4"> Other </label>
+      </div>
+    </div>
+  </fieldset>
+  <div class="row mb-3">
+    <label for="exdescription" class="col-sm-3 col-form-label"
+      >Description</label
+    >
+    <div class="col-sm-8">
+      <input
+        type="text"
+        class="form-control"
+        id="exdescription"
+        placeholder="Enter a brief description"
+      />
+    </div>
+  </div>
+  <div
+    id="update-income-error-msg"
+    class="text-danger mt-2 justify-content-center"
+    style="display: none"
+  ></div>
+
+  <div
+    class="btn-group-vertical"
+    role="group"
+    aria-label="Vertical button group"
+  >
+    <button type="submit" class="btn btn-primary btn-success">Submit</button>
+    <button
+      type="button"
+      class="btn btn-primary btn-success btn-md"
+      data-bs-dismiss="modal"
+    >
+      Cancel
+    </button>
+  </div>
+</form>

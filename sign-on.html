@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SavyStudents</title>
+    <link rel="stylesheet" href="reset.css" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="bootstrap.min.css"/>
+  </head>
+  <body>
+    <div class="site_container">
+      <header class="header"></header>
+      <main class="main logon">
+        <div class="form-container bg-light bg-gradient p-5">
+          <h2>SavyStudent Logon</h2>
+          <form id="signInForm" autocomplete="off">
+            <label for="username" class="form-label">Username</label>
+            <input
+              type="text"
+              class="form-control form-control-md"
+              id="username"
+              placeholder="username"
+              required
+            />
+            <label for="password" class="form-label">Password</label>
+            <input
+              type="password"
+              id="password"
+              class="form-control form-control-md"
+              placeholder="password"
+              required
+            />
+            <div
+              id="error-msg"
+              class="text-danger mt-2 justify-content-center"
+              style="display: none"
+            ></div>
+              <button type="submit" class="btn btn-primary btn-success btn-md d-flex mx-auto mt-3">
+                Submit
+              </button>
+              <div class="d-flex justify-content-center">
+                <a href="register.html" class="logon-links btn fs-6"> Register </a>
+                <a href="reset-password.html" class="logon-links btn fs-6"> Forgot Password </a>
+              </div>
+             
+            </div>
+          </form>
+        </div>
+      </main>
+      <footer class="footer"></footer>
+    </div>
+    <script src="bootstrap.min.js"></script>
+    <script src="load-template.js"></script>
+    <script src="validate-login.js"></script>
+  </body>
+</html>

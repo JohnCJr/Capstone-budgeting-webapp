@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SavyStudents</title>
+    <link rel="stylesheet" href="reset.css" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="bootstrap.min.css">
+  </head>
+  <body>
+    <div class="site_container">
+      <header class="header"></header>
+      <main class="main logon">
+        <div class="form-container bg-light bg-gradient p-5">
+          <h2>SavyStudent Register</h2>
+          <form id="registerForm" autocomplete="off">
+            <div class="row">
+              <div class="col-12 col-sm-6"">
+                <label for="firstName" class="form-label">First Name</label>
+                <input
+                  type="text"
+                  class="form-control form-control-md"
+                  id="firstName"
+                  placeholder="first name"
+                  required
+                />
+              </div>
+              <div class="col-12 col-sm-6"">
+                <label for="lastName" class="form-label">Last Name</label>
+                <input
+                  type="text"
+                  class="form-control form-control-md"
+                  id="lastName"
+                  placeholder="last name"
+                  required
+                />
+              </div>
+            </div>
+
+            <label for="userEmail" class="form-label">Email address</label>
+            <input
+              type="email"
+              class="form-control"
+              id="userEmail"
+              placeholder="example@gmail.com"
+              required
+            />
+
+            <label for="userName" class="form-label">Username</label>
+            <input
+              type="text"
+              class="form-control form-control-md"
+              id="userName"
+              placeholder="username"
+              required
+            />
+            <div class="row">
+                <div class="col-12 col-sm-6""><label for="password" class="form-label">Password</label>
+                    <input
+                      type="password"
+                      id="password"
+                      class="form-control form-control-md"
+                      placeholder="password"
+                      required
+                    /></div>
+                <div class="col-12 col-sm-6""> <label for="phoneNumber" class="form-label">Phone Number</label>
+                    <input
+                      type="tel"
+                      class="form-control"
+                      id="phoneNumber"
+                      placeholder="123-456-7890"
+                      required
+                  /></div>
+            </div>
+            <div
+              id="register-user-error-msg"
+              class="text-danger mt-2 justify-content-center"
+              style="display: none"
+            ></div>
+            <div
+              class="btn-group-horizontal d-flex justify-content-center gap-3 mt-3"
+              role="group"
+              aria-label="Vertical button group"
+            >
+              <button type="submit" class="btn btn-primary btn-success btn-md">Submit</button>
+                <a href="sign-on.html" class="btn btn-primary btn-success btn-md">Cancel</a>
+            </div>
+          </form>
+        </div>
+      </main>
+      <footer class="footer"></footer>
+    </div>
+    <script src="bootstrap.min.js"></script>
+    <script src="load-template.js"></script>
+    <script src="register-user.js"></script>
+  </body>
+</html>

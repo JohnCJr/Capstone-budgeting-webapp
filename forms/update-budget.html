@@ -1,0 +1,102 @@
+<!-- This HTML file is dynamically pulled to the dashboard.html file 
+and serves as the template to generate a new expense. -->
+
+<form id="updateBudget" autocomplete="off">
+  <div class="row m-1">
+    <label for="totalBudget" class="col-sm-2 col-form-label">Total</label>
+    <div class="col-12">
+      <div class="input-group">
+        <span class="input-group-text">$</span>
+        <input
+          type="text"
+          class="money-field form-control form-control-md"
+          id="totalBudget"
+          placeholder="6.49"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div class="row m-1">
+    <label for="foodBudget" class="col-sm-2 col-form-label">Food</label>
+    <div class="col-12">
+      <div class="input-group">
+        <span class="input-group-text">$</span>
+        <input
+          type="text"
+          class="money-field form-control form-control-md"
+          id="foodBudget"
+          placeholder="6.49"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div class="row m-1">
+    <label for="utilityBudget" class="col-sm-2 col-form-label">Utility</label>
+    <div class="col-12">
+      <div class="input-group">
+        <span class="input-group-text">$</span>
+        <input
+          type="text"
+          class="money-field form-control form-control-md"
+          id="utilityBudget"
+          placeholder="6.49"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div class="row m-1">
+    <label for="entertainmentBudget" class="col-sm-2 col-form-label"
+      >Entertainment</label
+    >
+    <div class="col-12">
+      <div class="input-group">
+        <span class="input-group-text">$</span>
+        <input
+          type="text"
+          class="money-field form-control form-control-md"
+          id="entertainmentBudget"
+          placeholder="6.49"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div class="row m-1">
+    <label for="otherBudget" class="col-sm-2 col-form-label">Other</label>
+    <div class="col-12">
+      <div class="input-group">
+        <span class="input-group-text">$</span>
+        <input
+          type="text"
+          class="money-field form-control form-control-md"
+          id="otherBudget"
+          placeholder="6.49"
+        />
+      </div>
+    </div>
+  </div>
+  <div
+    id="update-budget-error-msg"
+    class="text-danger mt-2 justify-content-center"
+    style="display: none"
+  ></div>
+  <div
+    class="btn-group-vertical"
+    role="group"
+    aria-label="Vertical button group"
+  >
+    <button type="submit" class="btn btn-primary btn-success btn-md">
+      Submit
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary btn-success btn-md"
+      data-bs-dismiss="modal"
+    >
+      Cancel
+    </button>
+  </div>
+</form>

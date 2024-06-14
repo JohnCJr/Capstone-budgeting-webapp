@@ -1,0 +1,51 @@
+/*resets css to a default to prevent browser dault css issues*/
+
+@charset "utf-8";
+
+address,
+article,
+aside,
+body,
+blockquote,
+caption,
+div,
+dl,
+dt,
+dd,
+em,
+footer,
+h1,
+h2,
+h3,
+h4,
+header,
+html,
+img,
+li,
+main,
+nav,
+nav a,
+p,
+q,
+section,
+table,
+ul,
+iframe {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  font-size: 100%;
+  vertical-align: baseline;
+  box-sizing: border-box;
+  color: black;
+}
+
+html {
+  font-family: Verdana, Geneva, sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  line-height: 1;
+}

@@ -1,0 +1,98 @@
+<!-- This HTML file is dynamically pulled to the dashboard.html file 
+and serves as the template to update your income. -->
+
+<form id="newIncome">
+  <div class="row mb-3 mt-3">
+    <label for="incomeAmount" class="col-sm-3 col-form-label">Income:</label>
+    <div class="col-sm-8">
+      <div class="input-group">
+        <span class="input-group-text">$</span>
+        <input
+          type="text"
+          class="money-field form-control"
+          id="incomeAmount"
+          placeholder="6.49"
+        />
+      </div>
+    </div>
+  </div>
+  <fieldset class="row mb-3 ms-3">
+    <legend class="col-form-label col-sm-3 pt-0">Type:</legend>
+    <div class="col-sm-8">
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="incomeTypes"
+          id="incomeType1"
+          value="weekly"
+          checked
+        />
+        <label class="form-check-label ms-1" for="incomeType1">Weekly</label>
+      </div>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="incomeTypes"
+          id="incomeType2"
+          value="biweekly"
+        />
+        <label class="form-check-label ms-1" for="incomeType2">Bi-weekly</label>
+      </div>
+      <div class="form-check-label">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="incomeTypes"
+          id="incomeType3"
+          value="monthly"
+        />
+        <label class="form-check-label ms-2" for="incomeType3">Monthly</label>
+      </div>
+      <div class="form-check-label">
+        <input
+          class="form-check-input"
+          type="radio"
+          name="incomeTypes"
+          id="incomeType4"
+          value="once"
+        />
+        <label class="form-check-label ms-2" for="incomeType4">One-time</label>
+      </div>
+    </div>
+  </fieldset>
+  <div class="row mb-3">
+    <label for="incomeDescription" class="col-sm-3 col-form-label"
+      >Description</label
+    >
+    <div class="col-sm-8">
+      <input
+        type="text"
+        class="form-control"
+        id="incomeDescription"
+        placeholder="Enter a brief description"
+      />
+    </div>
+  </div>
+  <div
+    id="new-income-error-msg"
+    class="text-danger mt-2 justify-content-center"
+    style="display: none"
+  ></div>
+
+  <div
+    class="btn-group-vertical"
+    role="group"
+    aria-label="Vertical button group"
+  >
+    <button type="submit" class="btn btn-primary btn-success">Submit</button>
+    <button
+      type="button"
+      class="btn btn-primary btn-success btn-md"
+      data-bs-dismiss="modal"
+    >
+      Cancel
+    </button>
+  </div>
+</form>
