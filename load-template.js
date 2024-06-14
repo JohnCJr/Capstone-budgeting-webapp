@@ -191,6 +191,8 @@
 //   }
 // });
 
+
+
 document.addEventListener("DOMContentLoaded", () => {
   let navbarHTML = '';
   let footerHTML = `

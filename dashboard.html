@@ -6,35 +6,71 @@
     <title>SavyStudents</title>
     <link rel="stylesheet" href="reset.css" />
     <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap.min.css" />
   </head>
   <body>
     <div class="site_container">
       <header class="header"></header>
       <main class="main">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#actionModal" data-source="forms/update-budget.html" data-title="
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-bs-toggle="modal"
+          data-bs-target="#actionModal"
+          data-source="forms/update-budget.html"
+          data-title="
           <h2>Update your budget</h2>
           <h3>Current Budget:</h3>
           <h3>$300.00</h3>
           <h3>Updated Budget:</h3>
-          <h3 id='newBudget'>$300.00</h3>">
+          <h3 id='newBudget'>$300.00</h3>"
+        >
           Update Budget
         </button>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#actionModal" data-source="forms/new-income.html" data-title="<h2>Add New Income</h2>
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-bs-toggle="modal"
+          data-bs-target="#actionModal"
+          data-source="forms/new-income.html"
+          data-title="<h2>Add New Income</h2>
           <h3>Current Total Income:</h3>
-          <h3 id='currentTotalIncome'>$100.00</h3>">
+          <h3 id='currentTotalIncome'>$100.00</h3>"
+        >
           Add Income
         </button>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#actionModal" data-source="forms/new-expense.html" data-title="<h2>Enter new expense</h2>">
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-bs-toggle="modal"
+          data-bs-target="#actionModal"
+          data-source="forms/new-expense.html"
+          data-title="<h2>Enter new expense</h2>"
+        >
           Add Expense
         </button>
 
-        <div class="modal fade" id="actionModal" tabindex="-1" data-bs-backdrop="static" aria-labelledby="actionModalLabel" aria-hidden="true">
+        <div
+          class="modal fade"
+          id="actionModal"
+          tabindex="-1"
+          data-bs-backdrop="static"
+          aria-labelledby="actionModalLabel"
+          aria-hidden="true"
+        >
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
               <div class="modal-header">
-                <div id="modal-header-container" class="mx-auto d-flex flex-column justify-content-center"></div>
-                <button type="button" class="btn-close ms-0 mb-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div
+                  id="modal-header-container"
+                  class="mx-auto d-flex flex-column justify-content-center"
+                ></div>
+                <button
+                  type="button"
+                  class="btn-close ms-0 mb-3"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
               </div>
               <div class="modal-body" id="modal-body"></div>
               <!-- <div class="modal-footer">
@@ -45,207 +81,430 @@
           </div>
         </div>
 
-
         <div class="db-graph-1 card col-12">
-          <img src="..." class="card-img-top" alt="...">
+          <img src="..." class="card-img-top" alt="..." />
           <div class="card-body">
             <h5 class="card-title">Card title</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <p class="card-text">
+              Some quick example text to build on the card title and make up the
+              bulk of the card's content.
+            </p>
             <a href="#" class="btn btn-primary">Go somewhere</a>
           </div>
         </div>
       </main>
-      <section class="left"> 
-        <div class="row d-flex justify-content-center mx-auto my-5 col-12 gap-lg-5 gap-md-0 gap-5">
+      <section class="left">
+        <div
+          class="row d-flex justify-content-center mx-auto my-5 col-12 gap-lg-5 gap-md-0 gap-5"
+        >
           <div class="card col-lg-3 col-md-4 col-sm-12">
-            <img src="..." class="card-img-top" alt="...">
+            <!-- <img src="..." class="card-img-top" alt="..." /> -->
             <div class="card-body">
-              <h5 class="card-title">Card title</h5>
-              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-              <a href="#" class="btn btn-primary">Go somewhere </a>
+              <h5 class="card-title text-center mb-3">
+                <strong>Want to update your budget?</strong>
+              </h5>
+              <p class="card-text text">
+                It's always nice to change your budget based on your life
+                situation. Maybe you want to save up just a bit more than your
+                current budget provides.
+              </p>
+              <button
+                type="button"
+                class="btn btn-primary d-flex mx-auto"
+                data-bs-toggle="modal"
+                data-bs-target="#actionModal"
+                data-source="forms/update-budget.html"
+                data-title="
+                <h2>Update your budget</h2>
+                <h3>Current Budget:</h3>
+                <h3>$300.00</h3>
+                <h3>Updated Budget:</h3>
+                <h3 id='newBudget'>$300.00</h3>"
+              >
+                Update Budget
+              </button>
             </div>
           </div>
-  
+
           <div class="card col-lg-3 col-md-4 col-sm-12">
-            <img src="..." class="card-img-top" alt="...">
+            <!-- <img src="..." class="card-img-top" alt="..." /> -->
             <div class="card-body">
-              <h5 class="card-title">Card title</h5>
-              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-              <a href="#" class="btn btn-primary">Go somewhere</a>
+              <h5 class="card-title text-center mb-3">
+                <strong>Made new expense?</strong>
+              </h5>
+              <p class="card-text text">
+                Click below to enter a new expense so we can help you track your
+                budget categories. Make sure to log your expenses frequently!
+              </p>
+              <button
+                type="button"
+                class="btn btn-primary d-flex mx-auto"
+                data-bs-toggle="modal"
+                data-bs-target="#actionModal"
+                data-source="forms/new-expense.html"
+                data-title="<h2>Enter new expense</h2>"
+              >
+                Add Expense
+              </button>
             </div>
           </div>
-  
-            <div class="card col-lg-3 col-md-4 col-sm-12">
-              <img src="..." class="card-img-top" alt="...">
-            
-              <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
+
+          <div class="card col-lg-3 col-md-4 col-sm-12">
+            <!-- <img src="..." class="card-img-top" alt="..." /> -->
+            <div class="card-body">
+              <h5 class="card-title text-center mb-3">
+                <strong>Need to add a new source of income?</strong>
+              </h5>
+              <p class="card-text text">
+                Click below to enter a new expense so we can help you track your
+                budget categories. Make sure to log your expenses frequently!
+              </p>
+              <button
+                type="button"
+                class="btn btn-primary d-flex mx-auto"
+                data-bs-toggle="modal"
+                data-bs-target="#actionModal"
+                data-source="forms/new-income.html"
+                data-title="<h2>Add New Income</h2>
+                <h3>Current Total Income:</h3>
+                <h3 id='currentTotalIncome'>$100.00</h3>"
+              >
+                Add Income
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <aside class="right">
+        <div
+          class="accordion justify-content-center mx-auto col-12 col-md-10 col-sm-12 my-5"
+          id="accordionTransactions"
+        >
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button
+                class="accordion-button"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseOne"
+                aria-expanded="true"
+                aria-controls="collapseOne"
+              >
+                Budgets
+              </button>
+            </h2>
+            <div
+              id="collapseOne"
+              class="accordion-collapse collapse show"
+              data-bs-parent="#accordionTransactions"
+            >
+              <div class="accordion-body">
+                <div class="table-responsive">
+                  <table class="table table-danger table-striped">
+                    <thead>
+                      <tr class="table-primary">
+                        <th scope="col">Category</th>
+                        <th scope="col">Limit</th>
+                        <th scope="col">Spent</th>
+                        <th scope="col">Remaining</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row">Entertainment</th>
+                        <td>$100.00</td>
+                        <td>$22.33</td>
+                        <td>$77.77</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Food</th>
+                        <td>$100.00</td>
+                        <td>$32.33</td>
+                        <td>$77.77</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Utility</th>
+                        <td>$100.00</td>
+                        <td>$32.33</td>
+                        <td>$77.77</td>
+                      </tr>
+                    </tbody>
+                    <tfoot>
+                      <tr class="table-dark">
+                        <th scope="row">Total:</th>
+                        <td>$300.00</td>
+                        <td>$60.22</td>
+                        <td>$276.66</td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
-      </section>
-      <aside class="right">
-        <div class="accordion justify-content-center mx-auto col-md-10 col-sm-12 my-5" id="accordionTransactions">
           <div class="accordion-item">
             <h2 class="accordion-header">
+              <button
+                class="accordion-button collapsed"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseTwo"
+                aria-expanded="false"
+                aria-controls="collapseTwo"
+              >
+                Expenses
+              </button>
+            </h2>
+            <div
+              id="collapseTwo"
+              class="accordion-collapse collapse"
+              data-bs-parent="#accordionTransactions"
+            >
+              <div class="accordion-body">
+                <div class="table-responsive">
+                  <table class="table table-info table-striped">
+                    <thead>
+                      <tr class="table-primary">
+                        <th scope="col">Date</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Category</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row">11/12/2024</th>
+                        <td>Add a description of your transaction</td>
+                        <td>$12.33</td>
+                        <td>Entertainment</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">11/12/2024</th>
+                        <td>Add a description of your transaction</td>
+                        <td>$12.33</td>
+                        <td>Food</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">11/12/2024</th>
+                        <td>Add a description of your transaction</td>
+                        <td>$12.33</td>
+                        <td>Utility</td>
+                      </tr>
+                    </tbody>
+                    <tfoot>
+                      <tr class="table-dark">
+                        <th scope="row"></th>
+                        <td class="d-flex justify-content-end">Total:</td>
+                        <td>$276.66</td>
+                        <td></td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button
+                class="accordion-button collapsed"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseThree"
+                aria-expanded="false"
+                aria-controls="collapseThree"
+              >
+                Income
+              </button>
+            </h2>
+            <div
+              id="collapseThree"
+              class="accordion-collapse collapse"
+              data-bs-parent="#accordionTransactions"
+            >
+              <div class="accordion-body">
+                <div class="table-responsive">
+                  <table class="table table-success table-striped">
+                    <thead>
+                      <tr class="table-primary">
+                        <th scope="col">Description</th>
+                        <th scope="col">Interval</th>
+                        <th scope="col">Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row">Best Buy check</th>
+                        <td>Weekly</td>
+                        <td>$12.33</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Walmart check</th>
+                        <td>Weekly</td>
+                        <td>$12.33</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Christmas Gift</th>
+                        <td>One-time</td>
+                        <td>$12.33</td>
+                      </tr>
+                    </tbody>
+                    <tfoot>
+                      <tr class="table-dark">
+                        <th scope="row"></th>
+                        <td>Total:</td>
+                        <td>$276.66</td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- eperimental html code to populate the tables based on database information -->
+        <!-- <div class="accordion" id="accordionTransactions">
+          
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
               <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                 Budgets
               </button>
             </h2>
-            <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionTransactions">
+            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionTransactions">
               <div class="accordion-body">
-                <table class="table table-danger table-striped">
-                  <thead>
-                    <tr class="table-primary">
-                      <th scope="col">Category</th>
-                      <th scope="col">Limit</th>
-                      <th scope="col">Spent</th>
-                      <th scope="col">Remaining</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <th scope="row">Entertainment</th>
-                      <td>$100.00</td>
-                      <td>$22.33</td>
-                      <td>$77.77</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">Food</th>
-                      <td>$100.00</td>
-                      <td>$32.33</td>
-                      <td>$77.77</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">Utility</th>
-                      <td>$100.00</td>
-                      <td>$32.33</td>
-                      <td>$77.77</td>
-                    </tr>
-                  </tbody>
-                  <tfoot>
-                    <tr class="table-dark">
-                      <th scope="row">Total:</th>
-                      <td>$300.00</td>
-                      <td>$60.22</td>
-                      <td>$276.66</td>
-                    </tr>
-                </table>
+                <div class="table-responsive">
+                  <table class="table table-danger table-striped">
+                    <thead>
+                      <tr class="table-primary">
+                        <th scope="col">Category</th>
+                        <th scope="col">Limit</th>
+                        <th scope="col">Spent</th>
+                        <th scope="col">Remaining</th>
+                      </tr>
+                    </thead>
+                    <tbody id="budgetsTableBody">
+                      
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
+          
           <div class="accordion-item">
-            <h2 class="accordion-header">
+            <h2 class="accordion-header" id="headingTwo">
               <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                 Expenses
               </button>
             </h2>
-            <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionTransactions">
+            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionTransactions">
               <div class="accordion-body">
-                <table class="table table-info table-striped">
-                  <thead>
-                    <tr class="table-primary">
-                      <th scope="col">Date</th>
-                      <th scope="col">Description</th>
-                      <th scope="col">Amount</th>
-                      <th scope="col">Category</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <th scope="row">11/12/2024</th>
-                      <td>Add a description of your transaction</td>
-                      <td>$12.33</td>
-                      <td>Entertainment</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">11/12/2024</th>
-                      <td>Add a description of your transaction</td>
-                      <td>$12.33</td>
-                      <td>Food</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">11/12/2024</th>
-                      <td> Add a description of your transaction</td>
-                      <td>$12.33</td>
-                      <td>Utility</td>
-                    </tr>
-                  </tbody>
-                  <tr class="table-dark">
-                    <th scope="row"></th>
-                    <td class="d-flex justify-content-end">Total:</td>
-                    <td>$276.66</td>
-                    <td></td>
-                  </tr>
-                </table>
+                <div class="table-responsive">
+                  <table class="table table-info table-striped">
+                    <thead>
+                      <tr class="table-primary">
+                        <th scope="col">Date</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Category</th>
+                      </tr>
+                    </thead>
+                    <tbody id="expensesTableBody">
+                      
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
           <div class="accordion-item">
-            <h2 class="accordion-header">
+            <h2 class="accordion-header" id="headingThree">
               <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
                 Income
               </button>
             </h2>
-            <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionTransactions">
+            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionTransactions">
               <div class="accordion-body">
-                <table class="table table-success table-striped">
-                  <thead>
-                    <tr class="table-primary">
-                      <th scope="col">Description</th>
-                      <th scope="col">Interval</th>
-                      <th scope="col">Amount</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <th scope="row">Best Buy check</th>
-                      <td>Weekly</td>
-                      <td>$12.33</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">Walmart check</th>
-                      <td>Weekly</td>
-                      <td>$12.33</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">Christmas Gift</th>
-                      <td> One-time</td>
-                      <td>$12.33</td>
-                    </tr>
-                  </tbody>
-                  <tr class="table-dark">
-                    <th scope="row"></th>
-                    <td class="d-flex justify-content-end">Total:</td>
-                    <td>$276.66</td>
-                  </tr>
-                </table>
+                <div class="table-responsive">
+                  <table class="table table-success table-striped">
+                    <thead>
+                      <tr class="table-primary">
+                        <th scope="col">Description</th>
+                        <th scope="col">Interval</th>
+                        <th scope="col">Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody id="incomeTableBody">
+                      
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        </div>
-        <div id="toasterContainer"class="toast-container position-fixed bottom-0 end-0 p-3"></div>
+        </div>  -->
+        <div
+          id="toasterContainer"
+          class="toast-container position-fixed bottom-0 end-0 p-3"
+        ></div>
       </aside>
       <footer class="footer"></footer>
     </div>
-    <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
-        <div class="offcanvas-header">
-          <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">User Name</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-          <img class="canvas-profile-pic" src="images/logo.jpg" width="300px"alt=""/>
-          <a class="btn btn-primary" href="">Edit Profile</a>
-          <a class="btn btn-primary" href="">My Dashboard</a>
-          <p>Brief description about the user.</p>
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Unde nesciunt necessitatibus, fuga deleniti mollitia atque molestias aut, nemo nihil quis labore iste natus. Debitis voluptatem velit possimus, dolores quasi est, et labore aperiam doloribus reprehenderit ut sapiente similique earum. Perferendis obcaecati magnam omnis! Accusamus velit ipsum enim fuga ea quidem facere delectus pariatur placeat dicta suscipit mollitia facilis cum, voluptatum distinctio reiciendis voluptates aspernatur soluta officia vel exercitationem hic ipsam laboriosam possimus! Laborum amet expedita tempore quis corrupti rem! Molestias, nemo qui exercitationem assumenda recusandae dolorem iste nulla nisi maxime nam ad non dolore doloremque, porro maiores dolorum error beatae?</p>
-        </div>
+    <div
+      class="offcanvas offcanvas-start"
+      data-bs-scroll="true"
+      tabindex="-1"
+      id="offcanvasWithBothOptions"
+      aria-labelledby="offcanvasWithBothOptionsLabel"
+    >
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">
+          User Name
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="offcanvas"
+          aria-label="Close"
+        ></button>
       </div>
+      <div class="offcanvas-body d-flex flex-column">
+        <img
+          class="canvas-profile-pic d-flex mx-auto mb-3"
+          src="images/logo.jpg"
+          width="260px"
+          alt=""
+        />
+        <div class="row gap-1 justify-content-center mb-3">
+          <a class="btn btn-primary col-8 col-md-5" href="#">Edit Profile</a>
+          <a class="btn btn-primary col-8 col-md-5" href="dashboard.html"
+            >My Dashboard</a
+          >
+        </div>
+        <p>Brief description about the user.</p>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Unde
+          nesciunt necessitatibus, fuga deleniti mollitia atque molestias aut,
+          nemo nihil quis labore iste natus. Debitis voluptatem velit possimus,
+          dolores quasi est, et labore aperiam doloribus reprehenderit ut
+          sapiente similique earum. Perferendis obcaecati magnam omnis!
+          Accusamus velit ipsum enim fuga ea quidem facere delectus pariatur
+          placeat dicta suscipit mollitia facilis cum, voluptatum distinctio
+          reiciendis voluptates aspernatur soluta officia vel exercitationem hic
+          ipsam laboriosam possimus! Laborum amet expedita tempore quis corrupti
+          rem! Molestias, nemo qui exercitationem assumenda recusandae dolorem
+          iste nulla nisi maxime nam ad non dolore doloremque, porro maiores
+          dolorum error beatae?
+        </p>
+      </div>
+    </div>
     <script src="form-modal-load.js"></script>
     <script src="bootstrap.min.js"></script>
     <script src="load-template.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+    <script src="populateTables.js"></script>
   </body>
 </html>

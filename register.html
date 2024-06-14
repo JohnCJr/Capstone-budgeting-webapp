@@ -6,17 +6,17 @@
     <title>SavyStudents</title>
     <link rel="stylesheet" href="reset.css" />
     <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap.min.css" />
   </head>
   <body>
     <div class="site_container">
       <header class="header"></header>
       <main class="main logon">
-        <div class="form-container bg-light bg-gradient p-5">
+        <div class="registerForm form-container bg-light">
           <h2>SavyStudent Register</h2>
           <form id="registerForm" autocomplete="off">
             <div class="row">
-              <div class="col-12 col-sm-6"">
+              <div class="col-12 col-sm-6">
                 <label for="firstName" class="form-label">First Name</label>
                 <input
                   type="text"
@@ -26,7 +26,7 @@
                   required
                 />
               </div>
-              <div class="col-12 col-sm-6"">
+              <div class="col-12 col-sm-6">
                 <label for="lastName" class="form-label">Last Name</label>
                 <input
                   type="text"
@@ -56,22 +56,26 @@
               required
             />
             <div class="row">
-                <div class="col-12 col-sm-6""><label for="password" class="form-label">Password</label>
-                    <input
-                      type="password"
-                      id="password"
-                      class="form-control form-control-md"
-                      placeholder="password"
-                      required
-                    /></div>
-                <div class="col-12 col-sm-6""> <label for="phoneNumber" class="form-label">Phone Number</label>
-                    <input
-                      type="tel"
-                      class="form-control"
-                      id="phoneNumber"
-                      placeholder="123-456-7890"
-                      required
-                  /></div>
+              <div class="col-12 col-sm-6">
+                <label for="password" class="form-label">Password</label>
+                <input
+                  type="password"
+                  id="password"
+                  class="form-control form-control-md"
+                  placeholder="password"
+                  required
+                />
+              </div>
+              <div class="col-12 col-sm-6">
+                <label for="phoneNumber" class="form-label">Phone Number</label>
+                <input
+                  type="tel"
+                  class="form-control"
+                  id="phoneNumber"
+                  placeholder="123-456-7890"
+                  required
+                />
+              </div>
             </div>
             <div
               id="register-user-error-msg"
@@ -83,8 +87,12 @@
               role="group"
               aria-label="Vertical button group"
             >
-              <button type="submit" class="btn btn-primary btn-success btn-md">Submit</button>
-                <a href="sign-on.html" class="btn btn-primary btn-success btn-md">Cancel</a>
+              <button type="submit" class="btn btn-primary btn-success btn-md">
+                Submit
+              </button>
+              <a href="sign-on.html" class="btn btn-primary btn-success btn-md"
+                >Cancel</a
+              >
             </div>
           </form>
         </div>
@@ -94,5 +102,8 @@
     <script src="bootstrap.min.js"></script>
     <script src="load-template.js"></script>
     <script src="register-user.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
   </body>
 </html>
