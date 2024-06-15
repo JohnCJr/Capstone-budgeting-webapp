@@ -4,10 +4,6 @@ function getFormValidation() {
   const incomeForm = document.getElementById("newIncome");
   const errorMessage = document.getElementById("new-income-error-msg");
 
-  // Firebase references
-  const database = firebase.database();
-  const auth = firebase.auth();
-
   incomeForm.addEventListener("submit", (event) => {
     event.preventDefault();
 
@@ -23,35 +19,49 @@ function getFormValidation() {
       description: incomeDescription,
     };
 
-    // Get the current user's ID and update their income in Firebase
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        const userId = user.uid;
-        const newIncomeKey = database.ref().child('income/' + userId).push().key;
-        const updates = {};
-        updates['/income/' + userId + '/' + newIncomeKey] = data;
+    // Try to connect to Firebase and handle form submission
+    try {
+      const database = firebase.database();
+      const auth = firebase.auth();
 
-        database.ref().update(updates)
-          .then(() => {
-            // Redirect to the dashboard once successfully updated income
-            window.location.href = "/dashboard.html";
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-            errorMessage.textContent = "An error occurred. Please try again.";
-            errorMessage.style.display = "flex";
+      auth.onAuthStateChanged((user) => {
+        if (user) {
+          const userId = user.uid;
+          const newIncomeKey = database.ref().child('income/' + userId).push().key;
+          const updates = {};
+          updates['/income/' + userId + '/' + newIncomeKey] = data;
 
-            // Clears the input fields and resets radio to default selection
-            document.getElementById("incomeAmount").value = "";
-            document.getElementById("incomeType1").checked = true;
-            document.getElementById("incomeDescription").value = "";
-          });
-      } else {
-        console.log('No user is signed in.');
-        errorMessage.textContent = "You must be signed in to add a new income source.";
-        errorMessage.style.display = "flex";
-      }
-    });
+          database.ref().update(updates)
+            .then(() => {
+              // Redirect to the dashboard once successfully updated income
+              window.location.href = "/dashboard.html";
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              errorMessage.textContent = "An error occurred. Please try again.";
+              errorMessage.style.display = "flex";
+
+             // Resets the input fields
+              document.getElementById("incomeAmount").value = "";
+              document.getElementById("incomeType1").checked = true;
+              document.getElementById("incomeDescription").value = "";
+            });
+        } else {
+          console.log('No user is signed in.');
+          errorMessage.textContent = "You must be signed in to add a new income source.";
+          errorMessage.style.display = "flex";
+        }
+      });
+    } catch (error) {
+      console.error("Firebase initialization error:", error);
+      errorMessage.textContent = "Unable to connect to the database. Please try again later.";
+      errorMessage.style.display = "flex";
+
+      // Clears the input fields and resets radio to default selection
+      document.getElementById("incomeAmount").value = "";
+      document.getElementById("incomeType1").checked = true;
+      document.getElementById("incomeDescription").value = "";
+    }
   });
 }
 

@@ -7,17 +7,13 @@ function getFormValidation() {
   const errorMessage = document.getElementById("update-budget-error-msg");
   const moneyBoxes = document.querySelectorAll(".money-field");
 
-  // Firebase references
-  const database = firebase.database();
-  const auth = firebase.auth();
-
-  // Function to clear error messages
+  // used to clear error text when user makes correction
   function clearErrorMessage() {
     errorMessage.style.display = "none";
     errorMessage.textContent = "";
   }
 
-  // Function to check if the budget set for categories exceeds the total budget
+  // checks to see if the budget set for categories exceeds the total budget
   function checkCategorySum() {
     const totalBudget = parseFloat(document.getElementById("totalBudget").value) || 0;
     const foodBudget = parseFloat(document.getElementById("foodBudget").value) || 0;
@@ -36,37 +32,10 @@ function getFormValidation() {
     return true;
   }
 
-  // Function to fetch and set the current user's budget
-  function setDefaultBudget() {
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        const userId = user.uid;
-        database.ref('budgets/' + userId).once('value', (snapshot) => {
-          const data = snapshot.val();
-          if (data) {
-            document.getElementById("totalBudget").value = data.total || "";
-            document.getElementById("foodBudget").value = data.food || "";
-            document.getElementById("utilityBudget").value = data.utility || "";
-            document.getElementById("entertainmentBudget").value = data.entertainment || "";
-            document.getElementById("otherBudget").value = data.other || "";
-          } else {
-            document.getElementById("totalBudget").value = "";
-            document.getElementById("foodBudget").value = "";
-            document.getElementById("utilityBudget").value = "";
-            document.getElementById("entertainmentBudget").value = "";
-            document.getElementById("otherBudget").value = "";
-          }
-        });
-      } else {
-        console.log('No user is signed in.');
-      }
-    });
-  }
-
-  // Function to validate and update the budget
   budgetForm.addEventListener("submit", (event) => {
     event.preventDefault();
 
+    // will display error message if sum of categories exceed the amount entered in totalBudget
     if (!checkCategorySum()) {
       return;
     }
@@ -78,7 +47,7 @@ function getFormValidation() {
     const entertainmentBudget = document.getElementById("entertainmentBudget").value;
     const otherBudget = document.getElementById("otherBudget").value;
 
-    // Create the data object of user input values to be sent to Firebase
+    // Create the data object of user input values to be sent to Firebase Realtime Database
     const data = {
       total: totalBudget,
       food: foodBudget,
@@ -87,34 +56,55 @@ function getFormValidation() {
       other: otherBudget,
     };
 
-    // Get the current user's ID and update their budget in Firebase
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        const userId = user.uid;
-        database.ref('budgets/' + userId).once('value')
-          .then((snapshot) => {
-            if (!snapshot.exists()) {
-              console.log('No budget found. Creating a new budget.');
-            }
-            return database.ref('budgets/' + userId).set(data);
-          })
-          .then(() => {
-            // Redirect to the dashboard once successfully updated budget
-            window.location.href = "/dashboard.html";
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-            errorMessage.textContent = "An error occurred. Please try again.";
-            errorMessage.style.display = "flex";
-          });
-      } else {
-        console.log('No user is signed in.');
-        errorMessage.textContent = "You must be signed in to update the budget.";
-        errorMessage.style.display = "flex";
-      }
-    });
+    // Try to connect to Firebase Realtime Database and handle form submission
+    try {
+      const database = firebase.database();
+      const auth = firebase.auth();
+
+      auth.onAuthStateChanged((user) => {
+        if (user) {
+          const userId = user.uid;
+          const updates = {};
+          updates['/budgets/' + userId] = data;
+
+          database.ref().update(updates)
+            .then(() => {
+              // Redirect to the dashboard once successfully updated budget
+              window.location.href = "/dashboard.html";
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              errorMessage.textContent = "An error occurred. Please try again.";
+              errorMessage.style.display = "flex";
+
+              // Resets the input fields
+              document.getElementById("totalBudget").value = "";
+              document.getElementById("foodBudget").value = "";
+              document.getElementById("utilityBudget").value = "";
+              document.getElementById("entertainmentBudget").value = "";
+              document.getElementById("otherBudget").value = "";
+            });
+        } else {
+          console.log('No user is signed in.');
+          errorMessage.textContent = "You must be signed in to update your budget.";
+          errorMessage.style.display = "flex";
+        }
+      });
+    } catch (error) {
+      console.error("Firebase initialization error:", error);
+      errorMessage.textContent = "Unable to connect to the database. Please try again later.";
+      errorMessage.style.display = "flex";
+
+      // Clears the input fields, may take out if too inconvenient to the user
+      document.getElementById("totalBudget").value = "";
+      document.getElementById("foodBudget").value = "";
+      document.getElementById("utilityBudget").value = "";
+      document.getElementById("entertainmentBudget").value = "";
+      document.getElementById("otherBudget").value = "";
+    }
   });
 
+  // updates the new budget header to be the total entered by the user on the input field totalBudget
   moneyBoxes.forEach((input) => {
     input.addEventListener("blur", function () {
       const newTotalBudget = document.getElementById("totalBudget").value;
@@ -122,10 +112,7 @@ function getFormValidation() {
       checkCategorySum();
     });
   });
-
-  // Set default budget values when the form is loaded
-  setDefaultBudget();
 }
 
-// Assign the function to the window object to ensure it can be called asynchronously
+// getFormValidation function to be called after the script is loaded to prevent issues with functionality
 window.getFormValidation = getFormValidation;
