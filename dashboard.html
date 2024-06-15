@@ -177,18 +177,63 @@
                         <td>$100.00</td>
                         <td>$22.33</td>
                         <td>$77.77</td>
+                        <td class="table-btns col-1">
+                          <div class="btn-group" role="group">
+                            <button class="btn btn-secondary" value="1">
+                              Edit
+                            </button>
+                            <button class="btn btn-danger" value="1">
+                              Delete
+                            </button>
+                          </div>
+                        </td>
+                        <tr>
+                          <td>
+                            <input type="text" class="form-control" id="edit-category-${key}" value="${data.category}">
+                          </td>
+                            <td>
+                    
+                                <input type="number" class="form-control" id="edit-limit-${key}" value="${data.limit}">
+                            </td>
+                            <td>
+                                <input type="number" class="form-control" id="edit-spent-${key}" value="${data.spent}">
+                            </td>
+                            <td class="table-btns col-1">
+                              <div class="btn-group" role="group">
+                                <button class="btn btn-success">Confirm</button>
+                                <button class="btn btn-secondary">Cancel</button>
+                              </div>
+                            </td>
+                        </td>
+                        </tr>
                       </tr>
                       <tr>
                         <th scope="row">Food</th>
                         <td>$100.00</td>
                         <td>$32.33</td>
                         <td>$77.77</td>
+                        <td class="table-btns col-1">
+                          <div class="btn-group" role="group">
+                            <button class="btn btn-primary btn-md">Edit</button>
+                            <button class="btn btn-danger btn-md">
+                              Delete
+                            </button>
+                          </div>
+                        </td>
                       </tr>
                       <tr>
                         <th scope="row">Utility</th>
                         <td>$100.00</td>
                         <td>$32.33</td>
                         <td>$77.77</td>
+                        <td class="table-btns col-1">
+                          <div class="btn-group gap-2" role="group">
+                            <button class="btn btn-primary btn-md">Edit</button>
+                            <button class="btn btn-danger btn-md">
+                              Delete
+                            </button>
+                          </div>
+                        </td>
                       </tr>
                     </tbody>
                     <tfoot>
@@ -239,7 +284,30 @@
                         <td>Add a description of your transaction</td>
                         <td>$12.33</td>
                         <td>Entertainment</td>
-                      </tr>
+                        <tr>
+                          <td>
+                              <input type="date" class="date-field form-control" id="edit-date-${key}" value="">
+                          </td>
+                          <td>
+                              <input type="text" class="form-control" id="edit-description-${key}" value="${data.description}">
+                          </td>
+                          <td>
+                              <input type="text" class="money-field form-control" id="edit-amount-${key}" value="${data.amount}">
+                          </td>
+                          <td>
+                              <input type="text" class="form-control" id="edit-category-${key}" value="${data.category}">
+                          </td>
+                          <td class="table-btns col-1">
+                            <div class="btn-group" role="group">
+                              <button class="btn btn-secondary" value="1">
+                                Confirm
+                              </button>
+                              <button class="btn btn-danger" value="1">
+                                Cancel
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
                       <tr>
                         <th scope="row">11/12/2024</th>
                         <td>Add a description of your transaction</td>
@@ -462,9 +530,11 @@
         </p>
       </div>
     </div>
+    <script></script>
     <script src="form-modal-load.js"></script>
     <script src="bootstrap.min.js"></script>
     <script src="load-template.js"></script>
+    <script src="savy_script.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
     <script src="initialize-firebase.js"></script>

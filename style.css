@@ -295,3 +295,11 @@ arrows big no matter the screen size*/
     margin-right: auto;
   }
 }
+
+/*overrides boostrap color scheme, do not remove!*/
+.table-btns {
+  --bs-table-bg-type: white !important;
+  border: none;
+  margin: 0 !important;
+  padding: auto 0 !important;
+}
