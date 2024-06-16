@@ -12,6 +12,13 @@ function getFormValidation() {
     const incomeType = document.querySelector('input[name="incomeTypes"]:checked').value;
     const incomeDescription = document.getElementById("incomeDescription").value;
 
+    // Validate input data
+    if (!incomeAmount || !incomeType || !incomeDescription) {
+      errorMessage.textContent = "All fields are required.";
+      errorMessage.style.display = "flex";
+      return;
+    }
+
     // Create the data object to be sent to Firebase
     const data = {
       amount: incomeAmount,
@@ -38,31 +45,29 @@ function getFormValidation() {
             })
             .catch((error) => {
               console.error("Error:", error);
-              errorMessage.textContent = "An error occurred. Please try again.";
-              errorMessage.style.display = "flex";
-
-             // Resets the input fields
-              document.getElementById("incomeAmount").value = "";
-              document.getElementById("incomeType1").checked = true;
-              document.getElementById("incomeDescription").value = "";
+              displayError("An error occurred. Please try again.");
             });
         } else {
           console.log('No user is signed in.');
-          errorMessage.textContent = "You must be signed in to add a new income source.";
-          errorMessage.style.display = "flex";
+          displayError("You must be signed in to add a new income source.");
         }
       });
     } catch (error) {
       console.error("Firebase initialization error:", error);
-      errorMessage.textContent = "Unable to connect to the database. Please try again later.";
-      errorMessage.style.display = "flex";
-
-      // Clears the input fields and resets radio to default selection
-      document.getElementById("incomeAmount").value = "";
-      document.getElementById("incomeType1").checked = true;
-      document.getElementById("incomeDescription").value = "";
+      displayError("Unable to connect to the database. Please try again later.");
     }
   });
+
+  // Function to display error messages
+  function displayError(message) {
+    errorMessage.textContent = message;
+    errorMessage.style.display = "flex";
+
+    // Clears the input fields and resets radio to default selection
+    document.getElementById("incomeAmount").value = "";
+    document.getElementById("incomeType1").checked = true;
+    document.getElementById("incomeDescription").value = "";
+  }
 }
 
 // Assign the function to the window object to ensure it can be called asynchronously

@@ -1,19 +1,7 @@
 // money input field validation
 function getFormValidation() {
 
-    // // stores all text boxes that accept a dollar amount
-    // const moneyBoxes = document.querySelectorAll(".money-field");
-    // const dateBoxes = document.querySelectorAll(".date-field")
-    // const todayDate = new Date().toISOString().split("T")[0]; // formats to date yy-mm-dd and removes everything else
-    // const lastYear = new Date;
-    // lastYear.setFullYear(lastYear.getFullYear() - 1);
-    // const previousYear = lastYear.toISOString().split('T')[0];  // formats a date one year from the current date
-
-    // // sets limit to any fields using a date
-    // dateBoxes.forEach(field => {
-    //     field.setAttribute('max', todayDate);
-    //     field.setAttribute('min', previousYear);
-    // });
+    const moneyBoxes = document.querySelectorAll(".money-field");
 
     // filters/removes invalid key inputs for text boxes that need a dollar amount as a user input
     moneyBoxes.forEach(input => {

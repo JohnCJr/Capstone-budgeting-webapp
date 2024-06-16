@@ -1,7 +1,7 @@
 // This set of code will send user's expense input to a database
 
 function getFormValidation() {
-  // Store the form and error message div into variables
+  // Will store the form and error message div into variables
   const expenseForm = document.getElementById("newExpense");
   const errorMessage = document.getElementById("new-expense-error-msg");
 
@@ -13,14 +13,14 @@ function getFormValidation() {
     const amount = document.getElementById("examount").value;
     const selectedCategory = document.querySelector('input[name="expenseTypes"]:checked').value;
 
-    // Create the data object to be sent to Firebase
+    // Create the data object to be sent user input to the back-end
     const data = {
       description: description,
       amount: amount,
       category: selectedCategory,
     };
 
-    // Try to connect to Firebase and handle form submission
+    // Attempt to connect to Firebase and handle form submission
     try {
       const database = firebase.database();
       const auth = firebase.auth();
@@ -39,31 +39,29 @@ function getFormValidation() {
             })
             .catch((error) => {
               console.error("Error:", error);
-              errorMessage.textContent = "An error occurred. Please try again.";
-              errorMessage.style.display = "flex";
-
-              // Resets the input fields
-              document.getElementById("exdescription").value = "";
-              document.getElementById("examount").value = "";
-              document.getElementById("expenseType1").checked = true;
+              displayError("An error occurred. Please try again.");
             });
         } else {
           console.log('No user is signed in.');
-          errorMessage.textContent = "You must be signed in to add a new expense.";
-          errorMessage.style.display = "flex";
+          displayError("You must be signed in to add a new expense.");
         }
       });
     } catch (error) {
       console.error("Firebase initialization error:", error);
-      errorMessage.textContent = "Unable to connect to the database. Please try again later.";
-      errorMessage.style.display = "flex";
-
-      // Resets the input fields
-      document.getElementById("exdescription").value = "";
-      document.getElementById("examount").value = "";
-      document.getElementById("expenseType1").checked = true;
+      displayError("Unable to connect to the database. Please try again later.");
     }
   });
+
+  // Function to display error messages
+  function displayError(message) {
+    errorMessage.textContent = message;
+    errorMessage.style.display = "flex";
+
+    // Clears the input fields
+    document.getElementById("exdescription").value = "";
+    document.getElementById("examount").value = "";
+    document.getElementById("expenseType1").checked = true;
+  }
 }
 
 // Assign the function to the window object to ensure it can be called asynchronously

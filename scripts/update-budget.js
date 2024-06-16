@@ -7,13 +7,13 @@ function getFormValidation() {
   const errorMessage = document.getElementById("update-budget-error-msg");
   const moneyBoxes = document.querySelectorAll(".money-field");
 
-  // used to clear error text when user makes correction
+  // Used to clear error text when user makes correction
   function clearErrorMessage() {
     errorMessage.style.display = "none";
     errorMessage.textContent = "";
   }
 
-  // checks to see if the budget set for categories exceeds the total budget
+  // Checks to see if the budget set for categories exceeds the total budget
   function checkCategorySum() {
     const totalBudget = parseFloat(document.getElementById("totalBudget").value) || 0;
     const foodBudget = parseFloat(document.getElementById("foodBudget").value) || 0;
@@ -24,8 +24,7 @@ function getFormValidation() {
     const total = foodBudget + utilityBudget + entertainmentBudget + otherBudget;
 
     if (total > totalBudget) {
-      errorMessage.textContent = "Categories total exceeds total budget amount. Please adjust a category or your budget";
-      errorMessage.style.display = "flex";
+      displayError("Categories total exceeds total budget amount. Please adjust a category or your budget");
       return false;
     }
     clearErrorMessage();
@@ -35,7 +34,7 @@ function getFormValidation() {
   budgetForm.addEventListener("submit", (event) => {
     event.preventDefault();
 
-    // will display error message if sum of categories exceed the amount entered in totalBudget
+    // Display error message if sum of categories exceed the amount entered in totalBudget
     if (!checkCategorySum()) {
       return;
     }
@@ -74,37 +73,26 @@ function getFormValidation() {
             })
             .catch((error) => {
               console.error("Error:", error);
-              errorMessage.textContent = "An error occurred. Please try again.";
-              errorMessage.style.display = "flex";
-
-              // Resets the input fields
-              document.getElementById("totalBudget").value = "";
-              document.getElementById("foodBudget").value = "";
-              document.getElementById("utilityBudget").value = "";
-              document.getElementById("entertainmentBudget").value = "";
-              document.getElementById("otherBudget").value = "";
+              displayError("An error occurred. Please try again.");
             });
         } else {
           console.log('No user is signed in.');
-          errorMessage.textContent = "You must be signed in to update your budget.";
-          errorMessage.style.display = "flex";
+          displayError("You must be signed in to update your budget.");
         }
       });
     } catch (error) {
       console.error("Firebase initialization error:", error);
-      errorMessage.textContent = "Unable to connect to the database. Please try again later.";
-      errorMessage.style.display = "flex";
-
-      // Clears the input fields, may take out if too inconvenient to the user
-      document.getElementById("totalBudget").value = "";
-      document.getElementById("foodBudget").value = "";
-      document.getElementById("utilityBudget").value = "";
-      document.getElementById("entertainmentBudget").value = "";
-      document.getElementById("otherBudget").value = "";
+      displayError("Unable to connect to the database. Please try again later.");
     }
   });
 
-  // updates the new budget header to be the total entered by the user on the input field totalBudget
+  // Function to display error messages without clearing input fields
+  function displayError(message) {
+    errorMessage.textContent = message;
+    errorMessage.style.display = "flex";
+  }
+
+  // Updates the new budget header to be the total entered by the user on the input field totalBudget
   moneyBoxes.forEach((input) => {
     input.addEventListener("blur", function () {
       const newTotalBudget = document.getElementById("totalBudget").value;
@@ -114,5 +102,5 @@ function getFormValidation() {
   });
 }
 
-// getFormValidation function to be called after the script is loaded to prevent issues with functionality
+// Assign the function to the window object to ensure it can be called asynchronously
 window.getFormValidation = getFormValidation;
