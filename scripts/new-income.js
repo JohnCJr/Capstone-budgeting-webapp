@@ -3,14 +3,22 @@
 function getFormValidation() {
   const incomeForm = document.getElementById("newIncome");
   const errorMessage = document.getElementById("new-income-error-msg");
+  const incomeSelect = document.getElementById("incomeSelect");
 
   incomeForm.addEventListener("submit", (event) => {
     event.preventDefault();
 
     // Gather income data entered by the user
     const incomeAmount = document.getElementById("incomeAmount").value;
-    const incomeType = document.querySelector('input[name="incomeTypes"]:checked').value;
     const incomeDescription = document.getElementById("incomeDescription").value;
+    let incomeType;
+
+    // used to decide which input for income type to accept based on the screen size
+    if (window.innerWidth < 576) { // Small screen
+      incomeType = incomeSelect.value;
+    } else { // Larger screen
+      incomeType = document.querySelector('input[name="incomeTypes"]:checked').value;
+    }
 
     // Validate input data
     if (!incomeAmount || !incomeType || !incomeDescription) {

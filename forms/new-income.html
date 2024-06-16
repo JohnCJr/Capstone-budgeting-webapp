@@ -16,7 +16,7 @@ and serves as the template to update your income. -->
       </div>
     </div>
   </div>
-  <fieldset class="row mb-3 ms-3">
+  <fieldset class="row mb-3 ms-3 d-sm-flex d-none">
     <legend class="col-form-label col-sm-3 pt-0">Type:</legend>
     <div class="col-sm-8">
       <div class="form-check">
@@ -62,6 +62,22 @@ and serves as the template to update your income. -->
       </div>
     </div>
   </fieldset>
+
+  <div class="row mb-3 d-sm-none d-flex" id="selectContainer">
+    <label for="incomeSelect" class="col-form-label col-sm-3 pt-0">Type:</label>
+    <div class="col-sm-8">
+      <select
+        class="form-select form-select-sm"
+        id="incomeSelect"
+        aria-label="Small type select"
+      >
+        <option value="weekly">Weekly</option>
+        <option value="biweekly">Bi-weekly</option>
+        <option value="monthly">Monthly</option>
+        <option value="once">One-time</option>
+      </select>
+    </div>
+  </div>
   <div class="row mb-3">
     <label for="incomeDescription" class="col-sm-3 col-form-label"
       >Description</label

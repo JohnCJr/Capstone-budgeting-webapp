@@ -28,7 +28,7 @@ body, aside, section {
 
 .main {
   grid-area: main;
-  background-color: pink;
+  background-color: rgb(202, 87, 106);
   height: 100%;
   width: 100%;
 }
