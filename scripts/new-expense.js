@@ -4,6 +4,7 @@ function getFormValidation() {
   // Will store the form and error message div into variables
   const expenseForm = document.getElementById("newExpense");
   const errorMessage = document.getElementById("new-expense-error-msg");
+  const expenseSelect = document.getElementById("incomeSelect");
 
   expenseForm.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -11,7 +12,21 @@ function getFormValidation() {
     // Gather expense data entered by the user
     const description = document.getElementById("exdescription").value;
     const amount = document.getElementById("examount").value;
-    const selectedCategory = document.querySelector('input[name="expenseTypes"]:checked').value;
+    let selectedCategory;
+
+    // used to decide which input for expense type to accept based on the screen size
+    if (window.innerWidth < 576) { // Small screen
+      selectedCategory = expenseSelect.value;
+    } else { // Larger screen
+      selectedCategory = document.querySelector('input[name="expenseTypes"]:checked').value;
+    }
+
+    // Validates user input data
+    if (!amount || !selectedCategory || !description) {
+      errorMessage.textContent = "All fields are required.";
+      errorMessage.style.display = "flex";
+      return;
+    }
 
     // Create the data object to be sent user input to the back-end
     const data = {
