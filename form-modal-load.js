@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const formModal = document.getElementById("actionModal");
   const modalHeader = document.getElementById("modal-header-container");
   const modalBody = document.getElementById("modal-body");
+  let msg;
 
   formModal.addEventListener("show.bs.modal", function (event) {
     const button = event.relatedTarget;
@@ -44,10 +45,20 @@ document.addEventListener("DOMContentLoaded", () => {
           window.getFormValidation();
         }
 
+        if (form === "forms/new-income.html") {
+          msg = "income form";
+        }
+        else if (form === "forms/new-expense.html"){
+          msg = "expense form";
+        }
+        else {
+          msg = "budget form"
+        }
+
         // Add event listener for cancel buttons within the modal
         const cancelButtons = modalBody.querySelectorAll('.btn-cancel, [data-bs-dismiss="modal"]');
         cancelButtons.forEach(button => {
-          button.addEventListener('click', () => showCancelNotification(header, "cancelled"));
+          button.addEventListener('click', () => showCancelNotification(msg, "cancelled"));
         });
       })
       .catch((error) => {
@@ -59,10 +70,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Add event listener for the close button in the modal header
   const closeButton = formModal.querySelector('.btn-close');
-  closeButton.addEventListener('click', () => showCancelNotification('Action', "closed"));
+  closeButton.addEventListener('click', () => showCancelNotification(`${msg}`, "closed"));
 
   // Function to display a cancel notification
-  function showCancelNotification(formName, action) {
+  function showCancelNotification(msg, action) {
     const toasterContainer = document.getElementById('toasterContainer');
     if (toasterContainer.children.length >= 4) {
       toasterContainer.removeChild(toasterContainer.firstChild);
@@ -86,7 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
       </div>
       <div class="toast-body">
-        The ${formName} ${actionText}.
+        The ${msg} ${actionText}.
       </div>
     `;
 

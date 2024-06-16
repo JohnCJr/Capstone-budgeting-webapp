@@ -4,13 +4,13 @@
 
 try {
     const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_AUTH_DOMAIN",
-      databaseURL: "YOUR_DATABASE_URL",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_STORAGE_BUCKET",
-      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-      appId: "YOUR_APP_ID"
+      apiKey: "AIzaSyBUg93vtK4elbinmaFL7Hr8nOSBFcc5btY",
+      authDomain: "savvystudent-64ef5.firebaseapp.com",
+      databaseURL: "https://savvystudent-64ef5-default-rtdb.firebaseio.com",
+      projectId: "savvystudent-64ef5",
+      storageBucket: "savvystudent-64ef5.appspot.com",
+      messagingSenderId: "622607412269",
+      appId: "1:622607412269:web:91a2ec46fbabd6428e5ca4"
     };
   
       // Initialize Firebase
