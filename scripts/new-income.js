@@ -1,4 +1,5 @@
 // This set of code is intended to validate a user's attempt to submit a new source of income
+import { auth, onAuthStateChanged, getDatabase, ref, push, update } from '/initialize-firebase.js';// Adjust the path if necessary
 
 function getFormValidation() {
   const incomeForm = document.getElementById("newIncome");
@@ -36,17 +37,15 @@ function getFormValidation() {
 
     // Try to connect to Firebase and handle form submission
     try {
-      const database = firebase.database();
-      const auth = firebase.auth();
-
-      auth.onAuthStateChanged((user) => {
+      const database = getDatabase();
+      onAuthStateChanged(auth, (user) => {
         if (user) {
           const userId = user.uid;
-          const newIncomeKey = database.ref().child('income/' + userId).push().key;
+          const newIncomeKey = push(ref(database, 'income/' + userId)).key;
           const updates = {};
           updates['/income/' + userId + '/' + newIncomeKey] = data;
 
-          database.ref().update(updates)
+          update(ref(database), updates)
             .then(() => {
               // Redirect to the dashboard once successfully updated income
               window.location.href = "/dashboard.html";

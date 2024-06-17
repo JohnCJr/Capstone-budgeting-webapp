@@ -1,5 +1,7 @@
 // handles registering the user
 
+import { auth, database, ref, get, orderByChild, equalTo, query, set, createUserWithEmailAndPassword } from "./initialize-firebase.js"; // Adjust the path if necessary
+
 document.addEventListener("DOMContentLoaded", () => {
   const registerForm = document.getElementById('registerForm');
   const errorMessage = document.getElementById('register-user-error-msg');
@@ -70,10 +72,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       // Check if the username or email already exists in the database
-      const db = firebase.database();
-      const usersRef = db.ref('users');
-      const usernameSnapshot = await usersRef.orderByChild('username').equalTo(userName).once('value');
-      const emailSnapshot = await usersRef.orderByChild('email').equalTo(userEmail).once('value');
+      const usersRef = query(ref(database, 'users'), orderByChild('username'), equalTo(userName));
+      const usernameSnapshot = await get(usersRef);
+      const emailRef = query(ref(database, 'users'), orderByChild('email'), equalTo(userEmail));
+      const emailSnapshot = await get(emailRef);
 
       if (usernameSnapshot.exists()) {
         displayError('Username already exists');
@@ -86,14 +88,14 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       // Create the user in Firebase Authentication
-      const userCredential = await firebase.auth().createUserWithEmailAndPassword(userEmail, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, userEmail, password);
 
       // User created, now store additional information
       const user = userCredential.user;
       const userId = user.uid;
 
       // Store additional information in the database after creating a user's userid
-      await firebase.database().ref('users/' + userId).set({
+      await set(ref(database, 'users/' + userId), {
         firstName: cleanedFirstName,
         lastName: cleanedLastName,
         email: userEmail,

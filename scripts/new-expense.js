@@ -1,4 +1,5 @@
 // This set of code will send user's expense input to a database
+import { auth, onAuthStateChanged, getDatabase, ref, push, update } from '/initialize-firebase.js';// Adjust the path if necessary
 
 function getFormValidation() {
   // Will store the form and error message div into variables
@@ -37,17 +38,15 @@ function getFormValidation() {
 
     // Attempt to connect to Firebase and handle form submission
     try {
-      const database = firebase.database();
-      const auth = firebase.auth();
-
-      auth.onAuthStateChanged((user) => {
+      const database = getDatabase();
+      onAuthStateChanged(auth, (user) => {
         if (user) {
           const userId = user.uid;
-          const newExpenseKey = database.ref().child('expenses/' + userId).push().key;
+          const newExpenseKey = push(ref(database, 'expenses/' + userId)).key;
           const updates = {};
           updates['/expenses/' + userId + '/' + newExpenseKey] = data;
 
-          database.ref().update(updates)
+          update(ref(database), updates)
             .then(() => {
               // Redirect to the dashboard once successfully added expense
               window.location.href = "/dashboard.html";

@@ -1,6 +1,7 @@
 // This code validates and sends user input to update their budget
 // If budget doesn't exist then one will be created and sent to firebase
 // currently has some checks for erros that shouldn't be possible for testing purposes
+import {auth, onAuthStateChanged, getDatabase, ref, update} from '/initialize-firebase.js';
 
 function getFormValidation() {
   const budgetForm = document.getElementById("updateBudget");
@@ -57,16 +58,14 @@ function getFormValidation() {
 
     // Try to connect to Firebase Realtime Database and handle form submission
     try {
-      const database = firebase.database();
-      const auth = firebase.auth();
-
-      auth.onAuthStateChanged((user) => {
+      const database = getDatabase();
+      onAuthStateChanged(auth, (user) => {
         if (user) {
           const userId = user.uid;
           const updates = {};
           updates['/budgets/' + userId] = data;
 
-          database.ref().update(updates)
+          update(ref(database), updates)
             .then(() => {
               // Redirect to the dashboard once successfully updated budget
               window.location.href = "/dashboard.html";

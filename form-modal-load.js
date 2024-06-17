@@ -129,12 +129,14 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-
 // function used to dynaimically load the forms into the dashboard page
 function loadScript(src) {
   return new Promise((resolve, reject) => {
     const script = document.createElement("script");
     script.src = src;
+    if (src !== "scripts/savy_script.js") {
+      script.type = "module";
+    }
     script.onload = () => {
       console.log(`${src} loaded successfully`);
       resolve();
@@ -146,4 +148,3 @@ function loadScript(src) {
     document.body.appendChild(script);
   });
 }
-

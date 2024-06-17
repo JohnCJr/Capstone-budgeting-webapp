@@ -1,4 +1,5 @@
 // resets user password if the correct username, email, and phoneNumber provided.
+import { database, ref, get, orderByChild, equalTo, query, update } from "./initialize-firebase.js"; // Adjust the path if necessary
 
 document.addEventListener("DOMContentLoaded", () => {
   const resetForm = document.getElementById("resetForm");
@@ -53,9 +54,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       // Queries the database to find the matching user information
-      const database = firebase.database();
-      const userRef = database.ref('users').orderByChild('username').equalTo(username);
-      const snapshot = await userRef.once('value');
+      const userRef = query(ref(database, 'users'), orderByChild('username'), equalTo(username));
+      const snapshot = await get(userRef);
 
       let userFound = false;
 
@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
           const userKey = childSnapshot.key;
 
           // Update the password in the Realtime Database
-          database.ref('users/' + userKey).update({ password: newPassword })
+          update(ref(database, 'users/' + userKey), { password: newPassword })
             .then(() => {
               // Display success message in green and start countdown
               let countdown = 3;
@@ -94,7 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (!userFound) {
         // Display error message if user information does not match
-        displayError("incorrect information");
+        displayError("Incorrect information");
       }
     } catch (error) {
       console.error("Error querying Firebase:", error);

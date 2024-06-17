@@ -1,53 +1,57 @@
-// this set of code is intended to validate a user's login attempt
+import { auth, database, ref, get, orderByChild, equalTo, query, signInWithEmailAndPassword } from "./initialize-firebase.js"; // Adjust the path if necessary
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Get references to form elements
   const signInForm = document.getElementById('signInForm');
   const errorMsg = document.getElementById('error-msg');
 
-  // Handle form submission
   signInForm.addEventListener('submit', async (event) => {
     event.preventDefault();
 
-    const username = document.getElementById('username').value;
+    const userInput = document.getElementById('username').value;
     const password = document.getElementById('password').value;
 
     try {
-      // Check if the username exists in the database
-      const database = firebase.database();
-      const userRef = database.ref(`users/${username}`);
-      const snapshot = await userRef.once('value');
+      let email;
 
-      if (!snapshot.exists()) {
-        displayError('username doesn\'t exist');
-        return;
+      if (userInput.includes('@')) {
+        // If the input contains "@", assume it's an email will implment at a later date
+        email = userInput;
+      } else {
+        // Otherwise, assume it's a username and look up the corresponding email
+        const usersRef = ref(database, 'users');
+        const userQuery = query(usersRef, orderByChild('username'), equalTo(userInput));
+        const snapshot = await get(userQuery);
+
+        if (!snapshot.exists()) {
+          displayError('Username doesn\'t exist');
+          return;
+        }
+
+        snapshot.forEach(childSnapshot => {
+          email = childSnapshot.val().email; // Get the email associated with the username
+        });
       }
 
-      // If username exists, attempt to sign in with email and password
-      const auth = firebase.auth();
-      const email = snapshot.val().email;
-
-      auth.signInWithEmailAndPassword(email, password)
+      // Sign in with email and password
+      signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-          // Signed in successfully
           errorMsg.style.display = 'none';
-          // Redirect to another page or perform any other actions on successful login
-          window.location.href = '/dashboard'; // example redirect
+          window.location.href = '/dashboard';
         })
         .catch((error) => {
-          // Handle authentication errors
+          console.error("Authentication error:", error.code);
           if (error.code === 'auth/wrong-password') {
-            displayError('username and password don\'t match');
+            displayError('Username/Email and password don\'t match');
           } else {
             displayError('An issue occurred, please try again');
           }
         });
     } catch (error) {
+      console.error("Error occurred during submission:", error);
       displayError('An issue occurred, please try again');
     }
   });
 
-  // Function to display error messages
   function displayError(message) {
     errorMsg.textContent = message;
     errorMsg.style.display = 'flex';

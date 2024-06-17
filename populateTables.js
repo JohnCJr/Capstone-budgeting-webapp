@@ -1,14 +1,10 @@
-// Will populate the tables based on firbase data, must test first, 
+// Will populate the tables based on firebase data, must test first, 
 // commented out portion in the dashboard.html for now
 
+import { database, ref, update, remove, onValue } from "./initialize-firebase.js"; // Adjust the path if necessary 
 
-  // Function to update the budgets table may chnage since the form lets you 
-  // update a budget or create a a new one if it doesn;t exist 
- 
-  document.addEventListener('DOMContentLoaded', function() {
-    // Reference our firebase database
-    let database = firebase.database();
 
+document.addEventListener('DOMContentLoaded', function() {
     // Function to set date range for date input fields
     function setDateRange() {
         const dateBoxes = document.querySelectorAll(".date-field");
@@ -57,7 +53,7 @@
                 <th scope="row">${data.date}</th>
                 <td>${data.description}</td>
                 <td>${data.amount}</td>
-                <td>${data.category}</td>
+                <td>${data.category}</th>
                 <td class="table-btns col-1">
                     <div class="btn-group" role="group">
                         <button class="btn btn-secondary expense-edit-btn" onclick="showEditRow('expense', '${key}', '${data.date}', '${data.description}', '${data.amount}', '${data.category}')">Edit</button>
@@ -169,14 +165,15 @@
     // Function to confirm the edit for expense
     function confirmEditExpense(key) {
         let userId = localStorage.getItem('userId');
-        if (userId && userId !== '0') {
+        // since default value is 0, checks if an actual user is logged in, may add check fo bool isLoggedIn
+        if (userId !== '0') {
             let updatedData = {
                 date: document.getElementById(`edit-date-${key}`).value,
                 description: document.getElementById(`edit-description-${key}`).value,
                 amount: document.getElementById(`edit-amount-${key}`).value,
                 category: document.getElementById(`edit-category-${key}`).value
             };
-            database.ref('expenses/' + userId + '/' + key).update(updatedData);
+            update(ref(database, 'expenses/' + userId + '/' + key), updatedData);
             cancelEdit(key, 'expense'); // Hide the edit row and enable buttons
         } else {
             console.log('Cannot edit expense: invalid userId');
@@ -186,13 +183,13 @@
     // Function to confirm the edit for income
     function confirmEditIncome(key) {
         let userId = localStorage.getItem('userId');
-        if (userId && userId !== '0') {
+        if (userId !== '0') {
             let updatedData = {
                 description: document.getElementById(`edit-description-${key}`).value,
                 interval: document.getElementById(`edit-interval-${key}`).value,
                 amount: document.getElementById(`edit-amount-${key}`).value
             };
-            database.ref('income/' + userId + '/' + key).update(updatedData);
+            update(ref(database, 'income/' + userId + '/' + key), updatedData);
             cancelEdit(key, 'income'); // Hide the edit row and enable buttons
         } else {
             console.log('Cannot edit income: invalid userId');
@@ -213,8 +210,8 @@
     // Function to delete an expense entry
     function deleteExpense(key) {
         let userId = localStorage.getItem('userId');
-        if (userId && userId !== '0') {
-            database.ref('expenses/' + userId + '/' + key).remove();
+        if (userId !== '0') {
+            remove(ref(database, 'expenses/' + userId + '/' + key));
         } else {
             console.log('Cannot delete expense: invalid userId');
         }
@@ -223,8 +220,8 @@
     // Function to delete an income entry
     function deleteIncome(key) {
         let userId = localStorage.getItem('userId');
-        if (userId && userId !== '0') {
-            database.ref('income/' + userId + '/' + key).remove();
+        if (userId !== '0') {
+            remove(ref(database, 'income/' + userId + '/' + key));
         } else {
             console.log('Cannot delete income: invalid userId');
         }
@@ -235,34 +232,34 @@
     
     // the initial tables are populated once, then on is used to listen for any changes made to tables
     // containing user data.
-    if (userId && userId !== '0') {
+    if (userId !== '0') {
         // Listener for Budgets table change
-        database.ref('budgets/' + userId).on('value', function(snapshot) {
+        onValue(ref(database, 'budgets/' + userId), function(snapshot) {
             updateBudgetsTable(snapshot);
         });
 
         // Listener for Expenses table change
-        database.ref('expenses/' + userId).on('value', function(snapshot) {
+        onValue(ref(database, 'expenses/' + userId), function(snapshot) {
             updateExpensesTable(snapshot);
         });
 
         // Listener for Income table change
-        database.ref('income/' + userId).on('value', function(snapshot) {
+        onValue(ref(database, 'income/' + userId), function(snapshot) {
             updateIncomeTable(snapshot);
         });
 
         // Explicitly call functions to populate tables on initial load
-        database.ref('budgets/' + userId).once('value', function(snapshot) {
+        get(ref(database, 'budgets/' + userId)).then(function(snapshot) {
             updateBudgetsTable(snapshot);
         });
 
-        database.ref('expenses/' + userId).once('value', function(snapshot) {
+        get(ref(database, 'expenses/' + userId)).then(function(snapshot) {
             updateExpensesTable(snapshot);
             setDateRange(); // Apply date constraints once after the initial load
             getFormValidation(); // Apply money field validation once after the initial load
         });
 
-        database.ref('income/' + userId).once('value', function(snapshot) {
+        get(ref(database, 'income/' + userId)).then(function(snapshot) {
             updateIncomeTable(snapshot);
             setDateRange(); // Apply date constraints once after the initial load
             getFormValidation(); // Apply money field validation once after the initial load
