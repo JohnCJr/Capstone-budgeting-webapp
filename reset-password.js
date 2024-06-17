@@ -1,4 +1,5 @@
 // resets user password if the correct username, email, and phoneNumber provided.
+
 import { database, ref, get, orderByChild, equalTo, query, update } from "./initialize-firebase.js"; // Adjust the path if necessary
 
 document.addEventListener("DOMContentLoaded", () => {
