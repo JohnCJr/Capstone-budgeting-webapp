@@ -1,8 +1,7 @@
 // Will populate the tables based on firebase data, must test first, 
 // commented out portion in the dashboard.html for now
 
-import { database, ref, update, remove, onValue } from "./initialize-firebase.js"; // Adjust the path if necessary 
-
+import { database, ref, update, remove, onValue, get } from "./initialize-firebase.js"; // Adjust the path if necessary
 
 document.addEventListener('DOMContentLoaded', function() {
     // Function to set date range for date input fields
@@ -12,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const lastYear = new Date();
         lastYear.setFullYear(lastYear.getFullYear() - 1);
         const previousYear = lastYear.toISOString().split('T')[0];  // formats a date one year from the current date
-    
+
         // sets limit to any fields using a date
         dateBoxes.forEach(field => {
             field.setAttribute('max', todayDate);
@@ -21,20 +20,36 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Function to update the budgets table, no buttons added on purpose so no key needed 
-    function updateBudgetsTable(snapshot) {
+    // Function to update the budgets table
+    function updateBudgetsTable(budgetsSnapshot, expensesSnapshot) {
         let budgetsTableBody = document.getElementById('budgetsTableBody');
         budgetsTableBody.innerHTML = ''; // Clear previous data
 
-        snapshot.forEach(function(childSnapshot) {
-            let data = childSnapshot.val();
+        const categories = ['entertainment', 'food', 'utility', 'other'];
+
+        let budgetData = budgetsSnapshot.val();
+        let expenseData = expensesSnapshot.val();
+
+        categories.forEach(category => {
+            let budgetAmount = parseFloat(budgetData[category]) || 0;
+            let spentAmount = 0;
+
+            if (expenseData) {
+                Object.values(expenseData).forEach(expense => {
+                    if (expense.category === category) {
+                        spentAmount += parseFloat(expense.amount);
+                    }
+                });
+            }
+
+            let remainingAmount = budgetAmount - spentAmount;
 
             let row = document.createElement('tr');
             row.innerHTML = `
-                <th scope="row">${data.category}</th>
-                <td>${data.limit}</td>
-                <td>${data.spent}</td>
-                <td>${data.limit - data.spent}</td>`;
+                <th scope="row">${category.charAt(0).toUpperCase() + category.slice(1)}</th>
+                <td>$${budgetAmount.toFixed(2)}</td>
+                <td>$${spentAmount.toFixed(2)}</td>
+                <td>$${remainingAmount.toFixed(2)}</td>`;
             budgetsTableBody.appendChild(row);
         });
     }
@@ -50,10 +65,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
             let row = document.createElement('tr');
             row.innerHTML = `
-                <th scope="row">${data.date}</th>
-                <td>${data.description}</td>
-                <td>${data.amount}</td>
-                <td>${data.category}</th>
+                <th scope="row">${data.date || 'undefined'}</th>
+                <td>${data.description || 'undefined'}</td>
+                <td>${data.amount || 'undefined'}</td>
+                <td>${data.category || 'undefined'}</th>
                 <td class="table-btns col-1">
                     <div class="btn-group" role="group">
                         <button class="btn btn-secondary expense-edit-btn" onclick="showEditRow('expense', '${key}', '${data.date}', '${data.description}', '${data.amount}', '${data.category}')">Edit</button>
@@ -99,12 +114,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
             let row = document.createElement('tr');
             row.innerHTML = `
-                <th scope="row">${data.description}</th>
-                <td>${data.interval}</td>
-                <td>${data.amount}</td>
+                <th scope="row">${data.description || 'undefined'}</th>
+                <td>${data.type || 'undefined'}</td>
+                <td>${data.amount || 'undefined'}</td>
                 <td class="table-btns col-1">
                     <div class="btn-group" role="group">
-                        <button class="btn btn-secondary income-edit-btn" onclick="showEditRow('income', '${key}', '${data.description}', '${data.interval}', '${data.amount}')">Edit</button>
+                        <button class="btn btn-secondary income-edit-btn" onclick="showEditRow('income', '${key}', '${data.description}', '${data.type}', '${data.amount}')">Edit</button>
                         <button class="btn btn-danger income-delete-btn" onclick="confirmDelete('income', '${key}')">Delete</button>
                     </div>
                 </td>`;
@@ -118,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <input type="text" class="form-control" id="edit-description-${key}" value="${data.description}">
                 </td>
                 <td>
-                    <input type="text" class="form-control" id="edit-interval-${key}" value="${data.interval}">
+                    <input type="text" class="form-control" id="edit-type-${key}" value="${data.type}">
                 </td>
                 <td>
                     <input type="text" class="money-field form-control" id="edit-amount-${key}" value="${data.amount}">
@@ -134,7 +149,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Function to show the edit row based on the key associated with it
-    function showEditRow(type, key, ...data) {
+    window.showEditRow = function(type, key, ...data) {
         const editRow = document.getElementById(`edit-row-${key}`);
         editRow.classList.remove('d-none');
         const buttons = document.querySelectorAll(`.${type}-edit-btn, .${type}-delete-btn`);
@@ -148,7 +163,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Function to cancel the edit
-    function cancelEdit(key, type) {
+    window.cancelEdit = function(key, type) {
         const editRow = document.getElementById(`edit-row-${key}`);
         editRow.classList.add('d-none');
         // Clear the inputs in the edit row
@@ -163,7 +178,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Function to confirm the edit for expense
-    function confirmEditExpense(key) {
+    window.confirmEditExpense = function(key) {
         let userId = localStorage.getItem('userId');
         // since default value is 0, checks if an actual user is logged in, may add check fo bool isLoggedIn
         if (userId !== '0') {
@@ -181,12 +196,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Function to confirm the edit for income
-    function confirmEditIncome(key) {
+    window.confirmEditIncome = function(key) {
         let userId = localStorage.getItem('userId');
         if (userId !== '0') {
             let updatedData = {
                 description: document.getElementById(`edit-description-${key}`).value,
-                interval: document.getElementById(`edit-interval-${key}`).value,
+                type: document.getElementById(`edit-type-${key}`).value,
                 amount: document.getElementById(`edit-amount-${key}`).value
             };
             update(ref(database, 'income/' + userId + '/' + key), updatedData);
@@ -197,7 +212,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Function to confirm delete action
-    function confirmDelete(type, key) {
+    window.confirmDelete = function(type, key) {
         if (confirm("Are you sure you want to delete this item?")) {
             if (type === 'expense') {
                 deleteExpense(key);
@@ -229,13 +244,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Get the user ID from localStorage
     let userId = localStorage.getItem('userId');
-    
+
     // the initial tables are populated once, then on is used to listen for any changes made to tables
     // containing user data.
     if (userId !== '0') {
         // Listener for Budgets table change
-        onValue(ref(database, 'budgets/' + userId), function(snapshot) {
-            updateBudgetsTable(snapshot);
+        onValue(ref(database, 'budgets/' + userId), function(budgetsSnapshot) {
+            get(ref(database, 'expenses/' + userId)).then(function(expensesSnapshot) {
+                updateBudgetsTable(budgetsSnapshot, expensesSnapshot);
+            });
         });
 
         // Listener for Expenses table change
@@ -249,20 +266,20 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         // Explicitly call functions to populate tables on initial load
-        get(ref(database, 'budgets/' + userId)).then(function(snapshot) {
-            updateBudgetsTable(snapshot);
+        get(ref(database, 'budgets/' + userId)).then(function(budgetsSnapshot) {
+            get(ref(database, 'expenses/' + userId)).then(function(expensesSnapshot) {
+                updateBudgetsTable(budgetsSnapshot, expensesSnapshot);
+            });
         });
 
         get(ref(database, 'expenses/' + userId)).then(function(snapshot) {
             updateExpensesTable(snapshot);
             setDateRange(); // Apply date constraints once after the initial load
-            getFormValidation(); // Apply money field validation once after the initial load
         });
 
         get(ref(database, 'income/' + userId)).then(function(snapshot) {
             updateIncomeTable(snapshot);
             setDateRange(); // Apply date constraints once after the initial load
-            getFormValidation(); // Apply money field validation once after the initial load
         });
 
     } else {
