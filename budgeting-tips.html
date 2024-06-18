@@ -1,28 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Test1</title>
-    <link rel="stylesheet" href="reset.css" />
-    <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="bootstrap.min.css">
-    <script type="module" src="initialize-firebase.js"></script>
-  </head>
-  <body>
-    <div class="site_container">
-      <header class="header"></header>
-      <main class="main">
-        <img src="images/under_construction.jpg" alt="webpage under construction placeholder" width="100%">
-      </main>
-      <section class="left">
-        This is th left
-      </section>
-      <aside class="right">This is the right</aside>
-      </div>
-      <footer class="footer"></footer>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budgeting Tips</title>
+    <link rel="stylesheet" href="tips-styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Budgeting Tips for College Students</h1>
+        </header>
+        <main class="main-content">
+            <section class="tips-section">
+                <article class="tip">
+                    <h2>1. Track Your Spending</h2>
+                    <p>Keeping track of your daily expenses helps you understand where your money goes. Use a budgeting app or keep a journal.</p>
+                </article>
+                <article class="tip">
+                    <h2>2. Create a Budget</h2>
+                    <p>Establish a monthly budget based on your income and expenses. Make sure to categorize your spending.</p>
+                </article>
+                <article class="tip">
+                    <h2>3. Prioritize Needs Over Wants</h2>
+                    <p>Ensure that essential expenses like rent, groceries, and utilities are covered before spending on non-essentials.</p>
+                </article>
+                <article class="tip">
+                    <h2>4. Save for Emergencies</h2>
+                    <p>Set aside a small amount each month for unexpected expenses. An emergency fund can prevent financial stress.</p>
+                </article>
+                <article class="tip">
+                    <h2>5. Avoid Unnecessary Debt</h2>
+                    <p>Use credit cards wisely and avoid taking on debt for non-essential purchases. Pay off your balance each month if possible.</p>
+                </article>
+            </section>
+            <div class="home-button-container">
+                <button onclick="goHome()">Return to Home</button>
+            </div>
+        </main>
     </div>
-    <script src="bootstrap.min.js"></script>
-    <script type="module" src="load-template.js"></script>
-  </body>
+    <script src="tips-scripts.js"></script>
+</body>
 </html>
