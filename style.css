@@ -17,6 +17,10 @@
   padding: 0;
 }
 
+body {
+  background: linear-gradient(115deg, #aef5d5, #ffffff) !important;
+}
+
 /*mainly used for the tables in the according omn the dashboard to prevent horizontal scrollbar from appearing*/
 body, aside, section {
   overflow-x: hidden; /* Prevent horizontal overflow */
@@ -28,19 +32,19 @@ body, aside, section {
 
 .main {
   grid-area: main;
-  background-color: rgb(202, 87, 106);
+  /* background-color: rgb(202, 87, 106); */
   height: 100%;
   width: 100%;
 }
 
 .left {
   grid-area: left;
-  background-color: red;
+  /* background-color: red; */
 }
 
 .right {
   grid-area: right;
-  background-color: yellow;
+  /* background-color: yellow; */
 }
 
 .carousel-inner img {
@@ -76,6 +80,8 @@ body, aside, section {
   display: flex;
   flex-direction: column;
   padding: 4rem 5rem;
+  border: rgb(55, 39, 85) 1px solid;
+  box-shadow: rgb(55, 39, 85) 0px 16px 40px -10px;
   /* background-color: lightblue */
 }
 
@@ -133,7 +139,7 @@ h3 {
 /*****************************navbar styles***********************************************/
 /* important needed to override bootstrap margin and to add custom color*/
 nav.navbar {
-  background-color: purple !important;
+  background: linear-gradient(110deg, #624468, #718cad) !important;
   margin: 0 !important;
   padding: 0 !important;
 }
