@@ -23,7 +23,7 @@ body, aside, section {
 }
 
 .offcanvas.offcanvas-start {
-  max-width: 100%; /* Ensure offcanvas doesn't overflow */
+  max-width: 100%; /* offcanvas doesn't overflow */
 }
 
 .main {
@@ -76,7 +76,7 @@ body, aside, section {
   display: flex;
   flex-direction: column;
   padding: 4rem 5rem;
-  /* background-color: lightblue; */
+  /* background-color: lightblue */
 }
 
 .resetForm {
@@ -90,10 +90,10 @@ body, aside, section {
 .btn-group-vertical {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Center align buttons horizontally */
+  align-items: center; /* Puts bottom on the center */
   padding: 1rem;
   gap: 0.4rem;
-  width: 100%; /* Ensure button group takes full width */
+  width: 100%; 
 }
 
 h2,
@@ -214,7 +214,7 @@ arrows big no matter the screen size*/
 
 @media (max-width: 576px) {
   .main img{
-    height: 260px;
+    height: 340px;
   }
   
   .carousel-caption h5 {
