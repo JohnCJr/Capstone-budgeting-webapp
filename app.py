@@ -20,7 +20,7 @@ def compound_interest(principal, interest_rate, years):
 def index():
     # Request user inputs
     principal = 1000  # Initial principal amount
-    interest_rate = 5  # Annual interest rate (in percentage)
+    interest_rate = 15  # Annual interest rate (in percentage)
     years = 10  # Number of years
 
     # Calculate compound interest
