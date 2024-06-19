@@ -214,7 +214,7 @@ arrows big no matter the screen size*/
 
 @media (max-width: 576px) {
   .main img{
-    height: 260px;
+    height: 340px;
   }
   
   .carousel-caption h5 {

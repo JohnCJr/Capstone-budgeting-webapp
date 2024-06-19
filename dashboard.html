@@ -12,12 +12,12 @@
       // Perform authentication check before the DOM loads, must be placed
       // here to prevent page from even loading before redirecting an unathorized user
       // placing this script anywhere else causes a delay before redirecting
-      // const isLoggedIn = localStorage.getItem('isLoggedIn');
-      // const userId = localStorage.getItem('userId');
+      const isLoggedIn = localStorage.getItem("isLoggedIn");
+      const userId = localStorage.getItem("userId");
 
-      // if (isLoggedIn !== 'true' || userId === '0') {
-      //   window.location.href = 'home.html'; // Redirect to homepage
-      // }
+      if (isLoggedIn !== "true" || userId === "0") {
+        window.location.href = "home.html"; // Redirect to homepage
+      }
     </script>
   </head>
   <body>
@@ -68,7 +68,7 @@
         >
           <div class="card col-lg-3 col-md-4 col-sm-12">
             <!-- <img src="..." class="card-img-top" alt="..." /> -->
-            <div class="card-body">
+            <div class="card-body d-flex flex-column justify-content-between">
               <h5 class="card-title text-center mb-3">
                 <strong>Want to update your budget?</strong>
               </h5>
@@ -97,7 +97,7 @@
 
           <div class="card col-lg-3 col-md-4 col-sm-12">
             <!-- <img src="..." class="card-img-top" alt="..." /> -->
-            <div class="card-body">
+            <div class="card-body d-flex flex-column justify-content-between">
               <h5 class="card-title text-center mb-3">
                 <strong>Made new expense?</strong>
               </h5>
@@ -120,7 +120,7 @@
 
           <div class="card col-lg-3 col-md-4 col-sm-12">
             <!-- <img src="..." class="card-img-top" alt="..." /> -->
-            <div class="card-body">
+            <div class="card-body d-flex flex-column justify-content-between">
               <h5 class="card-title text-center mb-3">
                 <strong>Need to add a new source of income?</strong>
               </h5>
