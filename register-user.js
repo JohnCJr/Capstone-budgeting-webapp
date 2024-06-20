@@ -101,15 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
         displayError(error.message);
 
       }
-
       
-      // commented out for conveneince
-      // firstNameInput.value = "";
-      // lastNameInput.value = "";
-      // document.getElementById('userEmail').value = "";
-      // document.getElementById('userName').value = "";
-      // document.getElementById('password').value = "";
-      // phoneNumberInput.value = "";
     }
   });
 

@@ -1,4 +1,5 @@
 import { auth, database, ref, get, query, orderByChild, equalTo, signInWithEmailAndPassword } from "./initialize-firebase.js";
+import { sanitize, validateEmail } from './sanitize.js';  // Import the sanitize function
 
 document.addEventListener('DOMContentLoaded', () => {
   const signInForm = document.getElementById('signInForm');
@@ -7,14 +8,14 @@ document.addEventListener('DOMContentLoaded', () => {
   signInForm.addEventListener('submit', async (event) => {
     event.preventDefault();
 
-    const userInput = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
+    const userInput = sanitize(document.getElementById('username').value);
+    const password = sanitize(document.getElementById('password').value);
 
     try {
       let email;
 
-      if (userInput.includes('@')) {
-        // If the input contains "@", assume it's an email
+      if (validateEmail(userInput)) {
+        // If the input is a valid email
         email = userInput;
       } else {
         // Otherwise, assume it's a username and look up the corresponding email
@@ -25,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!snapshot.exists()) {
           displayError('Please enter a valid username/password');
-          console.log("user doens't exist");
+          console.log("user doesn't exist");
           return;
         }
 
@@ -44,11 +45,9 @@ document.addEventListener('DOMContentLoaded', () => {
           console.error("Authentication error:", error.code);
           if (error.code === 'auth/invalid-login-credentials') {
             displayError('Credentials don\'t match. Please try again.');
-          }
-          else if (error.code === "auth/too-many-requests"){
+          } else if (error.code === "auth/too-many-requests") {
             displayError('Too many failed attempts. Please try again later.');
-          } 
-          else {
+          } else {
             displayError('An issue occurred, please try again.');
           }
         });

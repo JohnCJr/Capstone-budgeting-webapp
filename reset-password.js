@@ -1,39 +1,11 @@
 // resets user password if the correct username, email, and phoneNumber provided.
 
 import { database, ref, get, orderByChild, equalTo, query, update } from "./initialize-firebase.js"; // Adjust the path if necessary
+import { sanitize, validateEmail } from './sanitize.js';  // Import the sanitize function
 
 document.addEventListener("DOMContentLoaded", () => {
   const resetForm = document.getElementById("resetForm");
   const errorMessage = document.getElementById("error-msg");
-
-  // Function to clean user names
-  const cleanName = (name) => {
-    // Replace invalid characters with a space
-    let cleanedName = name.replace(/[^A-Za-z-]/g, ' ');
-
-    // Ensure only one hyphen is present
-    const hyphenCount = (cleanedName.match(/-/g) || []).length;
-    if (hyphenCount > 1) {
-      let parts = cleanedName.split('-');
-      cleanedName = parts[0] + '-' + parts.slice(1).join(' ').replace(/-/g, ' ');
-    }
-
-    // Trim any leading or trailing spaces
-    return cleanedName.trim();
-  };
-
-  // Real-time validation for name inputs
-  const validateNameInput = (input) => {
-    input.addEventListener('input', (e) => {
-      e.target.value = cleanName(e.target.value);
-    });
-  };
-
-  // Apply real-time validation to first name and last name inputs
-  const firstNameInput = document.getElementById("firstName");
-  const lastNameInput = document.getElementById("lastName");
-  validateNameInput(firstNameInput);
-  validateNameInput(lastNameInput);
 
   // Real-time validation and formatting for phone number input
   const phoneNumberInput = document.getElementById('phoneNumber');
@@ -45,13 +17,17 @@ document.addEventListener("DOMContentLoaded", () => {
   resetForm.addEventListener("submit", async (e) => {
     e.preventDefault(); // Prevent the default form submission
 
-    // Get user input values
-    const firstName = cleanName(document.getElementById("firstName").value);
-    const lastName = cleanName(document.getElementById("lastName").value);
-    const userEmail = document.getElementById("userEmail").value;
-    const username = document.getElementById("username").value;
-    const phoneNumber = document.getElementById("phoneNumber").value.replace(/\D/g, ''); // Remove formatting
-    const newPassword = document.getElementById("newPassword").value;
+    // Get and sanitize user input values
+    const userEmail = sanitize(document.getElementById("userEmail").value);
+    const username = sanitize(document.getElementById("username").value);
+    const phoneNumber = sanitize(document.getElementById("phoneNumber").value.replace(/\D/g, '')); // Remove formatting
+    const newPassword = sanitize(document.getElementById("newPassword").value);
+
+    // Validate email format
+    if (!validateEmail(userEmail)) {
+      displayError("Please enter a valid email address");
+      return;
+    }
 
     try {
       // Queries the database to find the matching user information
@@ -64,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const userData = childSnapshot.val();
 
         // Check if all user information matches
-        if (userData.email === userEmail && userData.phoneNumber === phoneNumber && userData.firstName === firstName && userData.lastName === lastName) {
+        if (userData.email === userEmail && userData.phoneNumber === phoneNumber) {
           userFound = true;
           const userKey = childSnapshot.key;
 

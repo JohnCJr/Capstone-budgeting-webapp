@@ -7,17 +7,31 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to set date range for date input fields
     function setDateRange() {
         const dateBoxes = document.querySelectorAll(".date-field");
-        const todayDate = new Date().toISOString().split("T")[0]; // formats to date yy-mm-dd and removes everything else
+        const todayDate = new Date().toISOString().split("T")[0];
         const lastYear = new Date();
         lastYear.setFullYear(lastYear.getFullYear() - 1);
-        const previousYear = lastYear.toISOString().split('T')[0];  // formats a date one year from the current date
+        const previousYear = lastYear.toISOString().split('T')[0];
 
-        // sets limit to any fields using a date
         dateBoxes.forEach(field => {
             field.setAttribute('max', todayDate);
             field.setAttribute('min', previousYear);
             field.value = todayDate; // Set the default date to today
         });
+    }
+
+    // Helper function to sanitize data
+    function sanitize(input) {
+        if (typeof input !== 'string') {
+            return input;
+        }
+        return input.replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#39;')
+                    .replace(/\//g, '&#x2F;')
+                    .replace(/\\/g, '&#x5C;')
+                    .replace(/`/g, '&#x60;');
     }
 
     // Function to update the budgets table
@@ -33,6 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
         categories.forEach(category => {
             let budgetAmount = parseFloat(budgetData[category]) || 0;
             let spentAmount = 0;
+            let statusColor;
 
             if (expenseData) {
                 Object.values(expenseData).forEach(expense => {
@@ -42,6 +57,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
 
+            if (spentAmount > budgetAmount) {
+                statusColor = `style="color:red;"`;
+            } else {
+                statusColor = `style="color:green;"`;
+            }
+
             let remainingAmount = budgetAmount - spentAmount;
 
             let row = document.createElement('tr');
@@ -49,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <th scope="row">${category.charAt(0).toUpperCase() + category.slice(1)}</th>
                 <td>$${budgetAmount.toFixed(2)}</td>
                 <td>$${spentAmount.toFixed(2)}</td>
-                <td>$${remainingAmount.toFixed(2)}</td>`;
+                <td ${statusColor}>$${remainingAmount.toFixed(2)}</td>`;
             budgetsTableBody.appendChild(row);
         });
     }
@@ -63,15 +84,20 @@ document.addEventListener('DOMContentLoaded', function() {
             let key = childSnapshot.key; // Get the unique key for each row
             let data = childSnapshot.val();
 
+            let sanitizedDate = sanitize(data.date || 'undefined');
+            let sanitizedDescription = sanitize(data.description || 'undefined');
+            let sanitizedAmount = sanitize(data.amount || 'undefined');
+            let sanitizedCategory = sanitize(data.category || 'undefined');
+
             let row = document.createElement('tr');
             row.innerHTML = `
-                <th scope="row">${data.date || 'undefined'}</th>
-                <td>${data.description || 'undefined'}</td>
-                <td>${data.amount || 'undefined'}</td>
-                <td>${data.category || 'undefined'}</th>
+                <th scope="row">${sanitizedDate}</th>
+                <td>${sanitizedDescription}</td>
+                <td>${sanitizedAmount}</td>
+                <td>${sanitizedCategory}</td>
                 <td class="table-btns col-1">
                     <div class="btn-group" role="group">
-                        <button class="btn btn-secondary expense-edit-btn" onclick="showEditRow('expense', '${key}', '${data.date}', '${data.description}', '${data.amount}', '${data.category}')">Edit</button>
+                        <button class="btn btn-secondary expense-edit-btn" onclick="showEditRow('expense', '${key}', '${sanitizedDate}', '${sanitizedDescription}', '${sanitizedAmount}', '${sanitizedCategory}')">Edit</button>
                         <button class="btn btn-danger expense-delete-btn" onclick="confirmDelete('expense', '${key}')">Delete</button>
                     </div>
                 </td>`;
@@ -82,16 +108,16 @@ document.addEventListener('DOMContentLoaded', function() {
             editRow.id = `edit-row-${key}`;
             editRow.innerHTML = `
                 <td>
-                    <input type="date" class="date-field form-control" id="edit-date-${key}" value="${data.date}">
+                    <input type="date" class="date-field form-control" id="edit-date-${key}" value="${sanitizedDate}">
                 </td>
                 <td>
-                    <input type="text" class="form-control" id="edit-description-${key}" value="${data.description}">
+                    <input type="text" class="form-control" id="edit-description-${key}" value="${sanitizedDescription}">
                 </td>
                 <td>
-                    <input type="text" class="money-field form-control" id="edit-amount-${key}" value="${data.amount}">
+                    <input type="text" class="money-field form-control" id="edit-amount-${key}" value="${sanitizedAmount}">
                 </td>
                 <td>
-                    <input type="text" class="form-control" id="edit-category-${key}" value="${data.category}">
+                    <input type="text" class="form-control" id="edit-category-${key}" value="${sanitizedCategory}">
                 </td>
                 <td class="table-btns col-1">
                     <div class="btn-group" role="group">
@@ -112,14 +138,18 @@ document.addEventListener('DOMContentLoaded', function() {
             let key = childSnapshot.key; // Get the unique key for the row
             let data = childSnapshot.val();
 
+            let sanitizedDescription = sanitize(data.description || 'undefined');
+            let sanitizedType = sanitize(data.type || 'undefined');
+            let sanitizedAmount = sanitize(data.amount || 'undefined');
+
             let row = document.createElement('tr');
             row.innerHTML = `
-                <th scope="row">${data.description || 'undefined'}</th>
-                <td>${data.type || 'undefined'}</td>
-                <td>${data.amount || 'undefined'}</td>
+                <th scope="row">${sanitizedDescription}</th>
+                <td>${sanitizedType}</td>
+                <td>${sanitizedAmount}</td>
                 <td class="table-btns col-1">
                     <div class="btn-group" role="group">
-                        <button class="btn btn-secondary income-edit-btn" onclick="showEditRow('income', '${key}', '${data.description}', '${data.type}', '${data.amount}')">Edit</button>
+                        <button class="btn btn-secondary income-edit-btn" onclick="showEditRow('income', '${key}', '${sanitizedDescription}', '${sanitizedType}', '${sanitizedAmount}')">Edit</button>
                         <button class="btn btn-danger income-delete-btn" onclick="confirmDelete('income', '${key}')">Delete</button>
                     </div>
                 </td>`;
@@ -130,13 +160,13 @@ document.addEventListener('DOMContentLoaded', function() {
             editRow.id = `edit-row-${key}`;
             editRow.innerHTML = `
                 <td>
-                    <input type="text" class="form-control" id="edit-description-${key}" value="${data.description}">
+                    <input type="text" class="form-control" id="edit-description-${key}" value="${sanitizedDescription}">
                 </td>
                 <td>
-                    <input type="text" class="form-control" id="edit-type-${key}" value="${data.type}">
+                    <input type="text" class="form-control" id="edit-type-${key}" value="${sanitizedType}">
                 </td>
                 <td>
-                    <input type="text" class="money-field form-control" id="edit-amount-${key}" value="${data.amount}">
+                    <input type="text" class="money-field form-control" id="edit-amount-${key}" value="${sanitizedAmount}">
                 </td>
                 <td class="table-btns col-1">
                     <div class="btn-group" role="group">
@@ -150,6 +180,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Function to show the edit row based on the key associated with it
     window.showEditRow = function(type, key, ...data) {
+        console.log(`showEditRow called with type: ${type}, key: ${key}, data: ${data}`);
         const editRow = document.getElementById(`edit-row-${key}`);
         editRow.classList.remove('d-none');
         const buttons = document.querySelectorAll(`.${type}-edit-btn, .${type}-delete-btn`);
@@ -160,7 +191,18 @@ document.addEventListener('DOMContentLoaded', function() {
         editRow.querySelectorAll('button').forEach(button => {
             button.disabled = false;
         });
-    }
+        // Populate the form fields with the current data
+        if (type === 'expense') {
+            document.getElementById(`edit-date-${key}`).value = data[0];
+            document.getElementById(`edit-description-${key}`).value = data[1];
+            document.getElementById(`edit-amount-${key}`).value = data[2];
+            document.getElementById(`edit-category-${key}`).value = data[3];
+        } else if (type === 'income') {
+            document.getElementById(`edit-description-${key}`).value = data[0];
+            document.getElementById(`edit-type-${key}`).value = data[1];
+            document.getElementById(`edit-amount-${key}`).value = data[2];
+        }
+    };
 
     // Function to cancel the edit
     window.cancelEdit = function(key, type) {
@@ -175,12 +217,11 @@ document.addEventListener('DOMContentLoaded', function() {
         buttons.forEach(button => {
             button.disabled = false;
         });
-    }
+    };
 
     // Function to confirm the edit for expense
     window.confirmEditExpense = function(key) {
         let userId = localStorage.getItem('userId');
-        // since default value is 0, checks if an actual user is logged in, may add check fo bool isLoggedIn
         if (userId !== '0') {
             let updatedData = {
                 date: document.getElementById(`edit-date-${key}`).value,
@@ -188,28 +229,40 @@ document.addEventListener('DOMContentLoaded', function() {
                 amount: document.getElementById(`edit-amount-${key}`).value,
                 category: document.getElementById(`edit-category-${key}`).value
             };
-            update(ref(database, 'expenses/' + userId + '/' + key), updatedData);
+            update(ref(database, 'expenses/' + userId + '/' + key), updatedData)
+                .then(() => {
+                    console.log('Expense updated successfully');
+                })
+                .catch((error) => {
+                    console.error('Error updating expense:', error);
+                });
             cancelEdit(key, 'expense'); // Hide the edit row and enable buttons
         } else {
             console.log('Cannot edit expense: invalid userId');
         }
-    }
+    };
 
     // Function to confirm the edit for income
     window.confirmEditIncome = function(key) {
         let userId = localStorage.getItem('userId');
         if (userId !== '0') {
             let updatedData = {
-                description: document.getElementById(`edit-description-${key}`).value,
+                description: sanitize(document.getElementById(`edit-description-${key}`).value),
                 type: document.getElementById(`edit-type-${key}`).value,
                 amount: document.getElementById(`edit-amount-${key}`).value
             };
-            update(ref(database, 'income/' + userId + '/' + key), updatedData);
+            update(ref(database, 'income/' + userId + '/' + key), updatedData)
+                .then(() => {
+                    console.log('Income updated successfully');
+                })
+                .catch((error) => {
+                    console.error('Error updating income:', error);
+                });
             cancelEdit(key, 'income'); // Hide the edit row and enable buttons
         } else {
             console.log('Cannot edit income: invalid userId');
         }
-    }
+    };
 
     // Function to confirm delete action
     window.confirmDelete = function(type, key) {
@@ -220,13 +273,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 deleteIncome(key);
             }
         }
-    }
+    };
 
     // Function to delete an expense entry
     function deleteExpense(key) {
         let userId = localStorage.getItem('userId');
         if (userId !== '0') {
-            remove(ref(database, 'expenses/' + userId + '/' + key));
+            remove(ref(database, 'expenses/' + userId + '/' + key))
+                .then(() => {
+                    console.log('Expense deleted successfully');
+                })
+                .catch((error) => {
+                    console.error('Error deleting expense:', error);
+                });
         } else {
             console.log('Cannot delete expense: invalid userId');
         }
@@ -236,7 +295,13 @@ document.addEventListener('DOMContentLoaded', function() {
     function deleteIncome(key) {
         let userId = localStorage.getItem('userId');
         if (userId !== '0') {
-            remove(ref(database, 'income/' + userId + '/' + key));
+            remove(ref(database, 'income/' + userId + '/' + key))
+                .then(() => {
+                    console.log('Income deleted successfully');
+                })
+                .catch((error) => {
+                    console.error('Error deleting income:', error);
+                });
         } else {
             console.log('Cannot delete income: invalid userId');
         }

@@ -1,7 +1,7 @@
 // This code validates and sends user input to update their budget
 // If budget doesn't exist then one will be created and sent to firebase
 // currently has some checks for erros that shouldn't be possible for testing purposes
-import {auth, onAuthStateChanged, getDatabase, ref, update} from '/initialize-firebase.js';
+import {auth, onAuthStateChanged, getDatabase, ref, update, get} from '/initialize-firebase.js';
 
 function getFormValidation() {
   const budgetForm = document.getElementById("updateBudget");
@@ -30,6 +30,41 @@ function getFormValidation() {
     }
     clearErrorMessage();
     return true;
+  }
+
+  // Will set the default value of each field in the form if a budget for the user already exists
+  function setDefaultValues(budgetData) {
+    if (budgetData) {
+      console.log('Setting default values:', budgetData);
+      document.getElementById("totalBudget").value = budgetData.total || "";
+      document.getElementById("foodBudget").value = budgetData.food || "";
+      document.getElementById("utilityBudget").value = budgetData.utility || "";
+      document.getElementById("entertainmentBudget").value = budgetData.entertainment || "";
+      document.getElementById("otherBudget").value = budgetData.other || "";
+    }
+  }
+
+  function fetchAndSetDefaultValues() {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const userId = user.uid;
+        const database = getDatabase();
+        const budgetReference = ref(database, '/budgets/' + userId);
+
+        get(budgetReference).then((snapshot) => {
+          if (snapshot.exists()) {
+            const budgetData = snapshot.val();
+            setDefaultValues(budgetData);
+          } else {
+            console.log("No budget data available");
+          }
+        }).catch((error) => {
+          console.error("Error fetching budget data:", error);
+        });
+      } else {
+        console.log('No user is signed in.');
+      }
+    });
   }
 
   budgetForm.addEventListener("submit", (event) => {
@@ -99,6 +134,8 @@ function getFormValidation() {
       checkCategorySum();
     });
   });
+
+  fetchAndSetDefaultValues();
 }
 
 // Assign the function to the window object to ensure it can be called asynchronously
