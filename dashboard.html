@@ -168,7 +168,7 @@
             >
               <div class="accordion-body">
                 <div class="table-responsive">
-                  <table class="table table-active table-striped">
+                  <table class="table table-striped">
                     <thead>
                       <tr class="table-primary">
                         <th scope="col">Category</th>
@@ -177,7 +177,14 @@
                         <th scope="col">Remaining</th>
                       </tr>
                     </thead>
-                    <tbody id="budgetsTableBody"></tbody>
+                    <tbody
+                      class="table-group-divider"
+                      id="budgetsTableBody"
+                    ></tbody>
+                    <tfoot
+                      class="table-group-divider"
+                      id="budgetsTableFoot"
+                    ></tfoot>
                   </table>
                 </div>
               </div>
@@ -205,6 +212,38 @@
             >
               <div class="accordion-body">
                 <div class="table-responsive">
+                  <div class="d-flex justify-content-center mb-3 gap-5">
+                    <div>
+                      <label for="sortField">Sort by:</label>
+                      <select id="sortField" class="form-select form-select-sm">
+                        <option value="all" selected>All</option>
+                        <option value="date">Date</option>
+                        <option value="description">Description</option>
+                        <option value="amount">Amount</option>
+                        <option value="category">Category</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label for="sortOrder">Order:</label>
+                      <select id="sortOrder" class="form-select form-select-sm">
+                        <option value="asc" selected>Ascending</option>
+                        <option value="desc">Descending</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label for="filterField">Filter:</label>
+                      <select
+                        id="filterField"
+                        class="form-select form-select-sm"
+                      >
+                        <option value="none" selected>None</option>
+                        <option value="food">Food</option>
+                        <option value="utility">Utility</option>
+                        <option value="entertainment">Entertainment</option>
+                        <option value="other">Other</option>
+                      </select>
+                    </div>
+                  </div>
                   <table class="table table-info table-striped">
                     <thead>
                       <tr class="table-primary">
@@ -215,6 +254,7 @@
                       </tr>
                     </thead>
                     <tbody id="expensesTableBody"></tbody>
+                    <tfoot id="expensesTableFoot"></tfoot>
                   </table>
                 </div>
               </div>
@@ -250,6 +290,7 @@
                       </tr>
                     </thead>
                     <tbody id="incomeTableBody"></tbody>
+                    <tfoot id="incomeTableFoot"></tfoot>
                   </table>
                 </div>
               </div>
@@ -315,5 +356,6 @@
     <script src="bootstrap.min.js"></script>
     <script type="module" src="load-template.js"></script>
     <script type="module" src="populateTables.js"></script>
+    <script src="scripts/savy_script.js"></script>
   </body>
 </html>

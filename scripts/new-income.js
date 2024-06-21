@@ -2,10 +2,19 @@
 import { auth, onAuthStateChanged, getDatabase, ref, push, update } from '/initialize-firebase.js'; // Adjust the path if necessary
 import { sanitize } from '/sanitizeStrings.js'; // Import the sanitize function
 
+
 function getFormValidation() {
   const incomeForm = document.getElementById("newIncome");
   const errorMessage = document.getElementById("new-income-error-msg");
   const incomeSelect = document.getElementById("incomeSelect");
+
+  function getCurrentFormattedDate() {
+    const date = new Date();
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+    const yyyy = date.getFullYear();
+    return mm + '-' + dd + '-' + yyyy;
+  }
 
   incomeForm.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -13,6 +22,7 @@ function getFormValidation() {
     // Gather income data entered by the user
     const incomeAmount = sanitize(document.getElementById("incomeAmount").value);
     const incomeDescription = sanitize(document.getElementById("incomeDescription").value);
+    const currentDate = getCurrentFormattedDate(); // Get the current date
     let incomeType;
 
     // used to decide which input for income type to accept based on the screen size
@@ -34,6 +44,7 @@ function getFormValidation() {
       amount: incomeAmount,
       type: incomeType,
       description: incomeDescription,
+      date: currentDate // Add the date to the data object
     };
 
     // Try to connect to Firebase and handle form submission

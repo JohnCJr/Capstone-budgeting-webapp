@@ -6,7 +6,15 @@ function getFormValidation() {
   // Will store the form and error message div into variables
   const expenseForm = document.getElementById("newExpense");
   const errorMessage = document.getElementById("new-expense-error-msg");
-  const expenseSelect = document.getElementById("incomeSelect");
+  const expenseSelect = document.getElementById("expenseSelect");
+
+  function getCurrentFormattedDate() {
+    const date = new Date();
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+    const yyyy = date.getFullYear();
+    return mm + '-' + dd + '-' + yyyy;
+  }
 
   expenseForm.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -14,6 +22,7 @@ function getFormValidation() {
     // Gather expense data entered by the user
     const description = sanitize(document.getElementById("exdescription").value);
     const amount = sanitize(document.getElementById("examount").value);
+    const currentDate = getCurrentFormattedDate(); // Get the current date
     let selectedCategory;
 
     // used to decide which input for expense type to accept based on the screen size
@@ -35,6 +44,7 @@ function getFormValidation() {
       description: description,
       amount: amount,
       category: selectedCategory,
+      date: currentDate // Add the date to the data object
     };
 
     // Attempt to connect to Firebase and handle form submission

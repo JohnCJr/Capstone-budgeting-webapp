@@ -57,19 +57,24 @@
     </div>
   </div>
   <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
-      <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">User Name</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">User Name</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body d-flex flex-column">
+      <img class="canvas-profile-pic d-flex mx-auto mb-3" src="images/logo.jpg" width="260px" alt="" id="profileImage"/>
+      <input type="file" id="uploadProfileImage" class="d-none"/>
+      <div class="row gap-1 justify-content-center mb-3">
+        <button class="btn btn-primary col-8 col-md-5" id="editProfileButton">Edit Profile</button>
+        <button class="btn btn-primary col-8 col-md-5" id="dashboardButton">My Dashboard</button>
+        <button class="btn btn-success col-8 col-md-5 d-none" id="saveProfileButton">Save</button>
+        <button class="btn btn-secondary col-8 col-md-5 d-none" id="cancelProfileButton">Cancel</button>
       </div>
-      <div class="offcanvas-body d-flex flex-column">
-        <img class="canvas-profile-pic d-flex mx-auto mb-3" src="images/logo.jpg" width="260px"alt=""/>
-        <div class="row gap-1 justify-content-center mb-3">
-          <a class="btn btn-primary col-8 col-md-5" href="#">Edit Profile</a>
-          <a class="btn btn-primary col-8 col-md-5" href="dashboard.html">My Dashboard</a>
-        </div>
-        <p>Brief description about the user.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Unde nesciunt necessitatibus, fuga deleniti mollitia atque molestias aut, nemo nihil quis labore iste natus. Debitis voluptatem velit possimus, dolores quasi est, et labore aperiam doloribus reprehenderit ut sapiente similique earum. Perferendis obcaecati magnam omnis! Accusamus velit ipsum enim fuga ea quidem facere delectus pariatur placeat dicta suscipit mollitia facilis cum, voluptatum distinctio reiciendis voluptates aspernatur soluta officia vel exercitationem hic ipsam laboriosam possimus! Laborum amet expedita tempore quis corrupti rem! Molestias, nemo qui exercitationem assumenda recusandae dolorem iste nulla nisi maxime nam ad non dolore doloremque, porro maiores dolorum error beatae?</p>
-      </div>
+      <textarea id="profileDescription" class="d-none" maxlength="99"></textarea>
+      <p id="descriptionCounter" class="d-none">99 characters left</p>
+      <p id="profileText">Brief description about the user.</p>
+      <p id="profilePlaceholder">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Unde nesciunt necessitatibus, fuga deleniti mollitia atque molestias aut, nemo nihil quis labore iste natus. Debitis voluptatem velit possimus, dolores quasi est, et labore aperiam doloribus reprehenderit ut sapiente similique earum. Perferendis obcaecati magnam omnis! Accusamus velit ipsum enim fuga ea quidem facere delectus pariatur placeat dicta suscipit mollitia facilis cum, voluptatum distinctio reiciendis voluptates aspernatur soluta officia vel exercitationem hic ipsam laboriosam possimus! Laborum amet expedita tempore quis corrupti rem! Molestias, nemo qui exercitationem assumenda recusandae dolorem iste nulla nisi maxime nam ad non dolore doloremque, porro maiores dolorum error beatae?</p>
+    </div>
   </div>
   </body>
     <script src="bootstrap.min.js"></script>

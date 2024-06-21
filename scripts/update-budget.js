@@ -68,6 +68,14 @@ function getFormValidation() {
     });
   }
 
+  function getCurrentFormattedDate() {
+    const date = new Date();
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+    const yyyy = date.getFullYear();
+    return mm + '-' + dd + '-' + yyyy;
+  }
+
   budgetForm.addEventListener("submit", (event) => {
     event.preventDefault();
 
@@ -82,6 +90,7 @@ function getFormValidation() {
     const utilityBudget = sanitize(document.getElementById("utilityBudget").value);
     const entertainmentBudget = sanitize(document.getElementById("entertainmentBudget").value);
     const otherBudget = sanitize(document.getElementById("otherBudget").value);
+    const currentDate = getCurrentFormattedDate(); // Get the current date
 
     // Create the data object of user input values to be sent to Firebase Realtime Database
     const data = {
@@ -90,6 +99,7 @@ function getFormValidation() {
       utility: utilityBudget,
       entertainment: entertainmentBudget,
       other: otherBudget,
+      date: currentDate // Add the date to the data object
     };
 
     // Try to connect to Firebase Realtime Database and handle form submission

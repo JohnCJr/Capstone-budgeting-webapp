@@ -1,6 +1,6 @@
 // function that will be used to santiize data from the front-end
 
-function sanitize(input) {
+export function sanitize(input) {
     if (typeof input !== 'string') {
         return input;
     }
@@ -26,9 +26,7 @@ function sanitize(input) {
 }
 
 // Function to validate email format, checks if @ exists
-function validateEmail(email) {
+export function validateEmail(email) {
     const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return re.test(String(email).toLowerCase());
-}
-
-export {sanitize, validateEmail}
+  }

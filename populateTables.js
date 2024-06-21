@@ -5,17 +5,19 @@ import { database, ref, update, remove, onValue, get } from "./initialize-fireba
 import { sanitize } from './sanitizeStrings.js'; // Import the sanitize function
 
 document.addEventListener('DOMContentLoaded', function() {
+    let expensesData = [];
+
     // Function to set date range for date input fields
     function setDateRange() {
         const dateBoxes = document.querySelectorAll(".date-field");
         const todayDate = new Date().toISOString().split("T")[0];
-        const lastYear = new Date();
-        lastYear.setFullYear(lastYear.getFullYear() - 1);
-        const previousYear = lastYear.toISOString().split('T')[0];
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        const pastDate = sevenDaysAgo.toISOString().split('T')[0];
 
         dateBoxes.forEach(field => {
             field.setAttribute('max', todayDate);
-            field.setAttribute('min', previousYear);
+            field.setAttribute('min', pastDate);
             field.value = todayDate; // Set the default date to today
         });
     }
@@ -23,136 +25,219 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to update the budgets table
     function updateBudgetsTable(budgetsSnapshot, expensesSnapshot) {
         let budgetsTableBody = document.getElementById('budgetsTableBody');
+        let budgetsTableFoot = document.getElementById('budgetsTableFoot');
+        budgetsTableFoot.innerHTML = ''; 
         budgetsTableBody.innerHTML = ''; // Clear previous data
-
+    
         const categories = ['entertainment', 'food', 'utility', 'other'];
-
+    
         let budgetData = budgetsSnapshot.val();
         let expenseData = expensesSnapshot.val();
-
+        let totalSpent = 0;
+        let statusColor = 'black';
+    
         categories.forEach(category => {
             let budgetAmount = parseFloat(budgetData[category]) || 0;
             let spentAmount = 0;
-            let statusColor;
-
+    
             if (expenseData) {
                 Object.values(expenseData).forEach(expense => {
-                    if (expense.category === category) {
+                    if (expense.category.toLowerCase() === category) {
                         spentAmount += parseFloat(expense.amount);
                     }
                 });
             }
-
+    
             if (spentAmount > budgetAmount) {
                 statusColor = `style="color:red;"`;
-            } else {
+            } else if (spentAmount === budgetAmount) {
+                statusColor = `style="color:black;"`;
+            } 
+            else {
                 statusColor = `style="color:green;"`;
             }
-
+    
             let remainingAmount = budgetAmount - spentAmount;
-
+            totalSpent += spentAmount;
+    
             let row = document.createElement('tr');
             row.innerHTML = `
-                <th scope="row">${category.charAt(0).toUpperCase() + category.slice(1)}</th>
+                <th scope="row">${capitalize(category)}</th>
                 <td>$${budgetAmount.toFixed(2)}</td>
                 <td>$${spentAmount.toFixed(2)}</td>
                 <td ${statusColor}>$${remainingAmount.toFixed(2)}</td>`;
             budgetsTableBody.appendChild(row);
         });
+    
+        totalSpent = parseFloat(totalSpent.toFixed(2)); // Round totalSpent to 2 decimal places
+    
+        if (budgetData.total > totalSpent) {
+            statusColor = `style="color:green;"`;
+        } else if (budgetData.total === totalSpent){
+            statusColor = `style="color:black;"`;
+        } 
+        else {
+            statusColor = `style="color:red;"`;
+        }
+    
+        let footRow = document.createElement('tr');
+        footRow.classList.add("table-primary");
+        footRow.innerHTML = ` <th scope="row">Total:</th>
+                              <td>$${budgetData.total}</td>
+                              <td>$${totalSpent}</td>
+                              <td ${statusColor}>$${(budgetData.total - totalSpent).toFixed(2)}</td>`;
+        budgetsTableFoot.appendChild(footRow);
     }
 
     // Function to update the expenses table
     function updateExpensesTable(snapshot) {
-        let expensesTableBody = document.getElementById('expensesTableBody');
-        expensesTableBody.innerHTML = ''; // Clear previous data
-
+        expensesData = [];
         snapshot.forEach(function(childSnapshot) {
-            let key = childSnapshot.key; // Get the unique key for each row
             let data = childSnapshot.val();
-
-            let sanitizedDate = sanitize(data.date || 'undefined');
+            data.key = childSnapshot.key;
+            expensesData.push(data);
+        });
+        console.log('Expenses data:', expensesData); // Debugging log
+        renderExpensesTable();
+        setDateRange();
+    }
+    
+    function renderExpensesTable() {
+        let expensesTableBody = document.getElementById('expensesTableBody');
+        expensesTableBody.innerHTML = '';
+        let expensesTableFoot = document.getElementById('expensesTableFoot');
+        expensesTableFoot.innerHTML = '';
+        let currentTotalExpense = 0;
+    
+        const sortField = document.getElementById('sortField').value;
+        const sortOrder = document.getElementById('sortOrder').value;
+        const filterField = document.getElementById('filterField').value;
+    
+        console.log('Sort Field:', sortField, 'Sort Order:', sortOrder, 'Filter Field:', filterField);
+    
+        let filteredData = expensesData.filter(expense => filterField === 'none' || expense.category.toLowerCase() === filterField);
+        console.log('Filtered data:', filteredData); // Debugging log
+    
+        if (sortField !== 'all') {
+            filteredData.sort((a, b) => {
+                if (sortOrder === 'asc') {
+                    return a[sortField] > b[sortField] ? 1 : -1;
+                } else {
+                    return a[sortField] < b[sortField] ? 1 : -1;
+                }
+            });
+        }
+    
+        filteredData.forEach(data => {
+            let sanitizedDate = sanitize(data.date || new Date().toISOString().split("T")[0]);
             let sanitizedDescription = sanitize(data.description || 'undefined');
             let sanitizedAmount = sanitize(data.amount || 'undefined');
-            let sanitizedCategory = sanitize(data.category || 'undefined');
-
+            let sanitizedCategory = capitalize(sanitize(data.category || 'undefined'));
+    
+            currentTotalExpense += parseFloat(data.amount);
+    
             let row = document.createElement('tr');
             row.innerHTML = `
                 <th scope="row">${sanitizedDate}</th>
-                <td>${sanitizedDescription}</td>
-                <td>${sanitizedAmount}</td>
+                <td>${decodeHTMLEntities(sanitizedDescription)}</td>
+                <td>$${parseFloat(sanitizedAmount).toFixed(2)}</td>
                 <td>${sanitizedCategory}</td>
                 <td class="table-btns col-1">
                     <div class="btn-group" role="group">
-                        <button class="btn btn-secondary expense-edit-btn" onclick="showEditRow('expense', '${key}', '${sanitizedDate}', '${sanitizedDescription}', '${sanitizedAmount}', '${sanitizedCategory}')">Edit</button>
-                        <button class="btn btn-danger expense-delete-btn" onclick="confirmDelete('expense', '${key}')">Delete</button>
+                        <button class="btn btn-secondary expense-edit-btn" onclick='showEditRow("expense", "${data.key}", ${JSON.stringify(sanitizedDate)}, ${JSON.stringify(decodeHTMLEntities(sanitizedDescription))}, ${JSON.stringify(parseFloat(sanitizedAmount).toFixed(2))}, ${JSON.stringify(sanitizedCategory)})'>Edit</button>
+                        <button class="btn btn-danger expense-delete-btn" onclick="confirmDelete('expense', '${data.key}')">Delete</button>
                     </div>
                 </td>`;
             expensesTableBody.appendChild(row);
-
+    
             let editRow = document.createElement('tr');
             editRow.classList.add('edit-row', 'd-none');
-            editRow.id = `edit-row-${key}`;
+            editRow.id = `edit-row-${data.key}`;
             editRow.innerHTML = `
                 <td>
-                    <input type="date" class="date-field form-control" id="edit-date-${key}" value="${sanitizedDate}">
+                    <input type="date" class="date-field form-control" id="edit-date-${data.key}" value="${sanitizedDate}" required>
                 </td>
                 <td>
-                    <input type="text" class="form-control" id="edit-description-${key}" value="${sanitizedDescription}">
+                    <input type="text" class="form-control" id="edit-description-${data.key}" value="${decodeHTMLEntities(sanitizedDescription)}">
                 </td>
                 <td>
-                    <input type="text" class="money-field form-control" id="edit-amount-${key}" value="${sanitizedAmount}">
+                    <input type="text" class="money-field form-control" id="edit-amount-${data.key}" value="${parseFloat(sanitizedAmount).toFixed(2)}" required>
                 </td>
                 <td>
-                    <input type="text" class="form-control" id="edit-category-${key}" value="${sanitizedCategory}">
+                    <select class="form-select form-select-md" id="edit-category-${data.key}" aria-label="Small type select" required>
+                        <option value="food" ${sanitizedCategory === 'Food' ? 'selected' : ''}>Food</option>
+                        <option value="utility" ${sanitizedCategory === 'Utility' ? 'selected' : ''}>Utility</option>
+                        <option value="entertainment" ${sanitizedCategory === 'Entertainment' ? 'selected' : ''}>Entertainment</option>
+                        <option value="other" ${sanitizedCategory === 'Other' ? 'selected' : ''}>Other</option>
+                    </select>
                 </td>
                 <td class="table-btns col-1">
                     <div class="btn-group" role="group">
-                        <button class="btn btn-success" onclick="confirmEditExpense('${key}')">Confirm</button>
-                        <button class="btn btn-secondary" onclick="cancelEdit('${key}', 'expense')">Cancel</button>
+                        <button class="btn btn-success" onclick="confirmEditExpense('${data.key}')">Confirm</button>
+                        <button class="btn btn-secondary" onclick="cancelEdit('${data.key}', 'expense')">Cancel</button>
                     </div>
                 </td>`;
             expensesTableBody.appendChild(editRow);
         });
+    
+        currentTotalExpense = parseFloat(currentTotalExpense.toFixed(2)); // Round total expense to 2 decimal places
+    
+        let editRowFoot = document.createElement('tr');
+        editRowFoot.classList.add("table-primary");
+        editRowFoot.innerHTML = `<td>Total:</td>
+                                 <td></td>
+                                 <td>$${currentTotalExpense.toFixed(2)}</td>
+                                 <td></td>`;
+        expensesTableFoot.appendChild(editRowFoot);
     }
 
     // Function to update the income table
     function updateIncomeTable(snapshot) {
         let incomeTableBody = document.getElementById('incomeTableBody');
         incomeTableBody.innerHTML = ''; // Clear previous data
-
+        let incomeTableFoot = document.getElementById('incomeTableFoot');
+        incomeTableFoot.innerHTML = ''; // Clear previous data
+        let currentTotalIncome = 0;
+    
         snapshot.forEach(function(childSnapshot) {
             let key = childSnapshot.key; // Get the unique key for the row
             let data = childSnapshot.val();
-
+    
             let sanitizedDescription = sanitize(data.description || 'undefined');
-            let sanitizedType = sanitize(data.type || 'undefined');
-            let sanitizedAmount = sanitize(data.amount || 'undefined');
-
+            let sanitizedType = capitalizeInterval(sanitize(data.type || 'undefined').toLowerCase());
+            let sanitizedAmount = parseFloat(sanitize(data.amount || 'undefined')).toFixed(2);
+            currentTotalIncome += parseFloat(sanitizedAmount);
+    
             let row = document.createElement('tr');
             row.innerHTML = `
                 <th scope="row">${sanitizedDescription}</th>
                 <td>${sanitizedType}</td>
-                <td>${sanitizedAmount}</td>
+                <td>$${sanitizedAmount}</td>
                 <td class="table-btns col-1">
                     <div class="btn-group" role="group">
-                        <button class="btn btn-secondary income-edit-btn" onclick="showEditRow('income', '${key}', '${sanitizedDescription}', '${sanitizedType}', '${sanitizedAmount}')">Edit</button>
+                        <button class="btn btn-secondary income-edit-btn" onclick='showEditRow("income", "${key}", ${JSON.stringify(decodeHTMLEntities(sanitizedDescription))}, ${JSON.stringify(data.type)}, ${JSON.stringify(sanitizedAmount)})'>Edit</button>
                         <button class="btn btn-danger income-delete-btn" onclick="confirmDelete('income', '${key}')">Delete</button>
                     </div>
                 </td>`;
             incomeTableBody.appendChild(row);
-
+    
             let editRow = document.createElement('tr');
             editRow.classList.add('edit-row', 'd-none');
             editRow.id = `edit-row-${key}`;
             editRow.innerHTML = `
                 <td>
-                    <input type="text" class="form-control" id="edit-description-${key}" value="${sanitizedDescription}">
+                    <input type="text" class="form-control" id="edit-description-${key}" value="${decodeHTMLEntities(sanitizedDescription)}" required>
                 </td>
                 <td>
-                    <input type="text" class="form-control" id="edit-type-${key}" value="${sanitizedType}">
+                    <select class="form-select form-select-md" id="edit-type-${key}" aria-label="Small type select" required>
+                        <option value="weekly" ${data.type.toLowerCase() === 'weekly' ? 'selected' : ''}>Weekly</option>
+                        <option value="biweekly" ${data.type.toLowerCase() === 'biweekly' ? 'selected' : ''}>Bi-weekly</option>
+                        <option value="monthly" ${data.type.toLowerCase() === 'monthly' ? 'selected' : ''}>Monthly</option>
+                        <option value="once" ${data.type.toLowerCase() === 'once' ? 'selected' : ''}>One-time</option>
+                    </select>
                 </td>
                 <td>
-                    <input type="text" class="money-field form-control" id="edit-amount-${key}" value="${sanitizedAmount}">
+                    <input type="text" class="money-field form-control" id="edit-amount-${key}" value="${sanitizedAmount}" required>
                 </td>
                 <td class="table-btns col-1">
                     <div class="btn-group" role="group">
@@ -162,6 +247,38 @@ document.addEventListener('DOMContentLoaded', function() {
                 </td>`;
             incomeTableBody.appendChild(editRow);
         });
+    
+        currentTotalIncome = parseFloat(currentTotalIncome.toFixed(2)); // Round total income to 2 decimal places
+    
+        let editRowFoot = document.createElement('tr');
+        editRowFoot.classList.add("table-primary");
+        editRowFoot.innerHTML = `<td>Total:</td>
+                                 <td></td>
+                                 <td>$${currentTotalIncome.toFixed(2)}</td>`;
+        incomeTableFoot.appendChild(editRowFoot);
+    
+        // Apply date range to all date fields
+        setDateRange();
+    }
+
+    // Function to decode HTML entities
+    function decodeHTMLEntities(text) {
+        const textArea = document.createElement('textarea');
+        textArea.innerHTML = text;
+        return textArea.value;
+    }
+
+    // Function to capitalize the first letter of a string
+    function capitalize(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
+    // Function to capitalize intervals and adjust biweekly to Bi-weekly
+    function capitalizeInterval(interval) {
+        if (interval.toLowerCase() === 'biweekly') {
+            return 'Bi-weekly';
+        }
+        return capitalize(interval);
     }
 
     // Function to show the edit row based on the key associated with it
@@ -179,15 +296,21 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         // Populate the form fields with the current data
         if (type === 'expense') {
-            document.getElementById(`edit-date-${key}`).value = data[0];
-            document.getElementById(`edit-description-${key}`).value = data[1];
+            document.getElementById(`edit-date-${key}`).value = data[0] || new Date().toISOString().split("T")[0];
+            document.getElementById(`edit-description-${key}`).value = decodeHTMLEntities(data[1]);
             document.getElementById(`edit-amount-${key}`).value = data[2];
-            document.getElementById(`edit-category-${key}`).value = data[3];
+            document.getElementById(`edit-category-${key}`).value = data[3].toLowerCase();
         } else if (type === 'income') {
-            document.getElementById(`edit-description-${key}`).value = data[0];
-            document.getElementById(`edit-type-${key}`).value = data[1];
+            document.getElementById(`edit-description-${key}`).value = decodeHTMLEntities(data[0]);
+            document.getElementById(`edit-type-${key}`).value = data[1].toLowerCase();
             document.getElementById(`edit-amount-${key}`).value = data[2];
         }
+        // Call the script to format monetary fields
+        if (window.getFormValidationShared) {
+            window.getFormValidationShared();
+        }
+        // Apply date range to new date fields
+        setDateRange();
     };
 
     // Function to cancel the edit
@@ -308,6 +431,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Listener for Expenses table change
         onValue(ref(database, 'expenses/' + userId), function(snapshot) {
+            console.log('Expenses snapshot:', snapshot.val()); // Debugging log
             updateExpensesTable(snapshot);
         });
 
@@ -324,6 +448,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         get(ref(database, 'expenses/' + userId)).then(function(snapshot) {
+            console.log('Initial expenses snapshot:', snapshot.val()); // Debugging log
             updateExpensesTable(snapshot);
             setDateRange(); // Apply date constraints once after the initial load
         });
@@ -336,4 +461,9 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         console.log('User ID not found or invalid in localStorage');
     }
+
+    document.getElementById('sortField').addEventListener('change', renderExpensesTable);
+    document.getElementById('sortOrder').addEventListener('change', renderExpensesTable);
+    document.getElementById('filterField').addEventListener('change', renderExpensesTable);
+
 });
