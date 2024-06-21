@@ -1,7 +1,7 @@
 // resets user password if the correct username, email, and phoneNumber provided.
 
 import { database, ref, get, orderByChild, equalTo, query, update } from "./initialize-firebase.js"; // Adjust the path if necessary
-import { sanitize, validateEmail } from './sanitize.js';  // Import the sanitize function
+import { sanitize, validateEmail } from './sanitizeStrings.js';  // Import the sanitize function
 
 document.addEventListener("DOMContentLoaded", () => {
   const resetForm = document.getElementById("resetForm");

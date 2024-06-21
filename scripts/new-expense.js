@@ -1,5 +1,6 @@
 // This set of code will send user's expense input to a database
-import { auth, onAuthStateChanged, getDatabase, ref, push, update } from '/initialize-firebase.js';// Adjust the path if necessary
+import { auth, onAuthStateChanged, getDatabase, ref, push, update } from '/initialize-firebase.js'; // Adjust the path if necessary
+import { sanitize } from '/sanitizeStrings.js'; // Import the sanitize function
 
 function getFormValidation() {
   // Will store the form and error message div into variables
@@ -11,15 +12,15 @@ function getFormValidation() {
     event.preventDefault();
 
     // Gather expense data entered by the user
-    const description = document.getElementById("exdescription").value;
-    const amount = document.getElementById("examount").value;
+    const description = sanitize(document.getElementById("exdescription").value);
+    const amount = sanitize(document.getElementById("examount").value);
     let selectedCategory;
 
     // used to decide which input for expense type to accept based on the screen size
     if (window.innerWidth < 576) { // Small screen
-      selectedCategory = expenseSelect.value;
+      selectedCategory = sanitize(expenseSelect.value);
     } else { // Larger screen
-      selectedCategory = document.querySelector('input[name="expenseTypes"]:checked').value;
+      selectedCategory = sanitize(document.querySelector('input[name="expenseTypes"]:checked').value);
     }
 
     // Validates user input data

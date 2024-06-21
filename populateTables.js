@@ -2,6 +2,7 @@
 // commented out portion in the dashboard.html for now
 
 import { database, ref, update, remove, onValue, get } from "./initialize-firebase.js"; // Adjust the path if necessary
+import { sanitize } from './sanitizeStrings.js'; // Import the sanitize function
 
 document.addEventListener('DOMContentLoaded', function() {
     // Function to set date range for date input fields
@@ -17,21 +18,6 @@ document.addEventListener('DOMContentLoaded', function() {
             field.setAttribute('min', previousYear);
             field.value = todayDate; // Set the default date to today
         });
-    }
-
-    // Helper function to sanitize data
-    function sanitize(input) {
-        if (typeof input !== 'string') {
-            return input;
-        }
-        return input.replace(/&/g, '&amp;')
-                    .replace(/</g, '&lt;')
-                    .replace(/>/g, '&gt;')
-                    .replace(/"/g, '&quot;')
-                    .replace(/'/g, '&#39;')
-                    .replace(/\//g, '&#x2F;')
-                    .replace(/\\/g, '&#x5C;')
-                    .replace(/`/g, '&#x60;');
     }
 
     // Function to update the budgets table
@@ -224,10 +210,10 @@ document.addEventListener('DOMContentLoaded', function() {
         let userId = localStorage.getItem('userId');
         if (userId !== '0') {
             let updatedData = {
-                date: document.getElementById(`edit-date-${key}`).value,
-                description: document.getElementById(`edit-description-${key}`).value,
-                amount: document.getElementById(`edit-amount-${key}`).value,
-                category: document.getElementById(`edit-category-${key}`).value
+                date: sanitize(document.getElementById(`edit-date-${key}`).value),
+                description: sanitize(document.getElementById(`edit-description-${key}`).value),
+                amount: sanitize(document.getElementById(`edit-amount-${key}`).value),
+                category: sanitize(document.getElementById(`edit-category-${key}`).value)
             };
             update(ref(database, 'expenses/' + userId + '/' + key), updatedData)
                 .then(() => {
@@ -248,8 +234,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (userId !== '0') {
             let updatedData = {
                 description: sanitize(document.getElementById(`edit-description-${key}`).value),
-                type: document.getElementById(`edit-type-${key}`).value,
-                amount: document.getElementById(`edit-amount-${key}`).value
+                type: sanitize(document.getElementById(`edit-type-${key}`).value),
+                amount: sanitize(document.getElementById(`edit-amount-${key}`).value)
             };
             update(ref(database, 'income/' + userId + '/' + key), updatedData)
                 .then(() => {

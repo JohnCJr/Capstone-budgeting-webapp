@@ -1,5 +1,5 @@
 import { auth, database, ref, get, query, orderByChild, equalTo, signInWithEmailAndPassword } from "./initialize-firebase.js";
-import { sanitize, validateEmail } from './sanitize.js';  // Import the sanitize function
+import { sanitize, validateEmail } from './sanitizeStrings.js';  // Import the sanitize function
 
 document.addEventListener('DOMContentLoaded', () => {
   const signInForm = document.getElementById('signInForm');
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Sign in with email and password
       signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
+        .then(() => {
           errorMsg.style.display = 'none';
           window.location.href = '/dashboard.html';
         })

@@ -1,7 +1,8 @@
 // This code validates and sends user input to update their budget
 // If budget doesn't exist then one will be created and sent to firebase
 // currently has some checks for erros that shouldn't be possible for testing purposes
-import {auth, onAuthStateChanged, getDatabase, ref, update, get} from '/initialize-firebase.js';
+import { auth, onAuthStateChanged, getDatabase, ref, update, get } from '/initialize-firebase.js';
+import { sanitize } from '/sanitizeStrings.js'; // Import the sanitize function
 
 function getFormValidation() {
   const budgetForm = document.getElementById("updateBudget");
@@ -36,11 +37,11 @@ function getFormValidation() {
   function setDefaultValues(budgetData) {
     if (budgetData) {
       console.log('Setting default values:', budgetData);
-      document.getElementById("totalBudget").value = budgetData.total || "";
-      document.getElementById("foodBudget").value = budgetData.food || "";
-      document.getElementById("utilityBudget").value = budgetData.utility || "";
-      document.getElementById("entertainmentBudget").value = budgetData.entertainment || "";
-      document.getElementById("otherBudget").value = budgetData.other || "";
+      document.getElementById("totalBudget").value = sanitize(budgetData.total) || "";
+      document.getElementById("foodBudget").value = sanitize(budgetData.food) || "";
+      document.getElementById("utilityBudget").value = sanitize(budgetData.utility) || "";
+      document.getElementById("entertainmentBudget").value = sanitize(budgetData.entertainment) || "";
+      document.getElementById("otherBudget").value = sanitize(budgetData.other) || "";
     }
   }
 
@@ -76,11 +77,11 @@ function getFormValidation() {
     }
 
     // Gather budget data entered by the user
-    const totalBudget = document.getElementById("totalBudget").value;
-    const foodBudget = document.getElementById("foodBudget").value;
-    const utilityBudget = document.getElementById("utilityBudget").value;
-    const entertainmentBudget = document.getElementById("entertainmentBudget").value;
-    const otherBudget = document.getElementById("otherBudget").value;
+    const totalBudget = sanitize(document.getElementById("totalBudget").value);
+    const foodBudget = sanitize(document.getElementById("foodBudget").value);
+    const utilityBudget = sanitize(document.getElementById("utilityBudget").value);
+    const entertainmentBudget = sanitize(document.getElementById("entertainmentBudget").value);
+    const otherBudget = sanitize(document.getElementById("otherBudget").value);
 
     // Create the data object of user input values to be sent to Firebase Realtime Database
     const data = {
@@ -129,7 +130,7 @@ function getFormValidation() {
   // Updates the new budget header to be the total entered by the user on the input field totalBudget
   moneyBoxes.forEach((input) => {
     input.addEventListener("blur", function () {
-      const newTotalBudget = document.getElementById("totalBudget").value;
+      const newTotalBudget = sanitize(document.getElementById("totalBudget").value);
       document.getElementById("newBudget").textContent = "$" + newTotalBudget;
       checkCategorySum();
     });

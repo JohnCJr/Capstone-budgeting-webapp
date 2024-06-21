@@ -1,5 +1,6 @@
 // This set of code is intended to validate a user's attempt to submit a new source of income
-import { auth, onAuthStateChanged, getDatabase, ref, push, update } from '/initialize-firebase.js';// Adjust the path if necessary
+import { auth, onAuthStateChanged, getDatabase, ref, push, update } from '/initialize-firebase.js'; // Adjust the path if necessary
+import { sanitize } from '/sanitizeStrings.js'; // Import the sanitize function
 
 function getFormValidation() {
   const incomeForm = document.getElementById("newIncome");
@@ -10,15 +11,15 @@ function getFormValidation() {
     event.preventDefault();
 
     // Gather income data entered by the user
-    const incomeAmount = document.getElementById("incomeAmount").value;
-    const incomeDescription = document.getElementById("incomeDescription").value;
+    const incomeAmount = sanitize(document.getElementById("incomeAmount").value);
+    const incomeDescription = sanitize(document.getElementById("incomeDescription").value);
     let incomeType;
 
     // used to decide which input for income type to accept based on the screen size
     if (window.innerWidth < 576) { // Small screen
-      incomeType = incomeSelect.value;
+      incomeType = sanitize(incomeSelect.value);
     } else { // Larger screen
-      incomeType = document.querySelector('input[name="incomeTypes"]:checked').value;
+      incomeType = sanitize(document.querySelector('input[name="incomeTypes"]:checked').value);
     }
 
     // Validate input data

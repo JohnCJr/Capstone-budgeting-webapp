@@ -1,6 +1,7 @@
 // handles registering the user
 
 import { auth, database, ref, get, orderByChild, equalTo, query, set, createUserWithEmailAndPassword } from "./initialize-firebase.js"; // Adjust the path if necessary
+import { sanitize, validateEmail } from './sanitize.js';  // Import the sanitize and validateEmail functions
 
 document.addEventListener("DOMContentLoaded", () => {
   const registerForm = document.getElementById('registerForm');
@@ -36,12 +37,12 @@ document.addEventListener("DOMContentLoaded", () => {
   registerForm.addEventListener('submit', async (event) => {
     event.preventDefault();
 
-    const firstName = firstNameInput.value;
-    const lastName = lastNameInput.value;
-    const userEmail = document.getElementById('userEmail').value;
-    const userName = document.getElementById('userName').value;
-    const password = document.getElementById('password').value;
-    const phoneNumber = phoneNumberInput.value.replace(/\D/g, '');
+    const firstName = sanitize(firstNameInput.value);
+    const lastName = sanitize(lastNameInput.value);
+    const userEmail = sanitize(document.getElementById('userEmail').value);
+    const userName = sanitize(document.getElementById('userName').value);
+    const password = sanitize(document.getElementById('password').value);
+    const phoneNumber = sanitize(phoneNumberInput.value.replace(/\D/g, ''));
 
     if (phoneNumber.length !== 10) {
       displayError("Phone number must be exactly 10 digits.");
@@ -53,6 +54,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!cleanedFirstName || !cleanedLastName) {
       displayError("First name and last name can only contain letters and one optional hyphen.");
+      return;
+    }
+
+    if (!validateEmail(userEmail)) {
+      displayError("Please enter a valid email address.");
       return;
     }
 
@@ -94,14 +100,12 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     } catch (error) {
       if (error.code === "auth/weak-password") {
-        displayError("weak password, must have at least 6 characters");
+        displayError("Weak password, must have at least 6 characters");
       } else {
         console.error('Error:', error);
         console.log(error.code);
         displayError(error.message);
-
       }
-      
     }
   });
 
