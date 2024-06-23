@@ -22,34 +22,34 @@
   </head>
   <body>
     <div class="site_container">
-      <header class="header"></header>
-      <main class="main">
-        <div
-          class="modal fade"
-          id="actionModal"
-          tabindex="-1"
-          data-bs-backdrop="static"
-          aria-labelledby="actionModalLabel"
-          aria-hidden="true"
-        >
-          <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-              <div class="modal-header">
-                <div
-                  id="modal-header-container"
-                  class="mx-auto d-flex flex-column justify-content-center"
-                ></div>
-                <button
-                  type="button"
-                  class="btn-close position-absolute top-0 end-0 m-2"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                ></button>
-              </div>
-              <div class="modal-body" id="modal-body"></div>
+      <div
+        class="modal fade"
+        id="actionModal"
+        tabindex="-1"
+        data-bs-backdrop="static"
+        aria-labelledby="actionModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <div
+                id="modal-header-container"
+                class="mx-auto d-flex flex-column justify-content-center"
+              ></div>
+              <button
+                type="button"
+                class="btn-close position-absolute top-0 end-0 m-2"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
             </div>
+            <div class="modal-body" id="modal-body"></div>
           </div>
         </div>
+      </div>
+      <header class="header"></header>
+      <main class="main">
         <div class="db-graph-1 card col-12">
           <img src="..." class="card-img-top" alt="..." />
           <div class="card-body">
@@ -84,11 +84,19 @@
                 data-bs-target="#actionModal"
                 data-source="forms/update-budget.html"
                 data-title="
-                <h2>Update your budget</h2>
-                <h3>Current Budget:</h3>
-                <h3>$300.00</h3>
-                <h3>Updated Budget:</h3>
-                <h3 id='newBudget'>$300.00</h3>"
+                <h2>Update Budget</h2>
+                <div class='container mt-3'>
+                  <div class='row d-flex justify-content-between gap-5'>
+                    <div class='budgetContainer d-flex flex-column align-items-center col border border-success-subtle border-3 p-4 rounded-2'>
+                      <h4 class='d-flex text-center'>Current Budget:</h4>
+                      <h4 id='currentBudget'>$300.00</h4>
+                    </div>
+                    <div class='budgetContainer d-flex flex-column align-items-center col border border-success-subtle border-3 p-4 rounded-2'>
+                      <h4 class='d-flex text-center'>New<br>Budget:</h4>
+                      <h4 id='newBudget'>$300.00</h4>
+                    </div>
+                  </div>
+                </div>"
               >
                 Update Budget
               </button>
@@ -178,7 +186,7 @@
                       </tr>
                     </thead>
                     <tbody
-                      class="table-group-divider"
+                      class="table-group-divider col-4"
                       id="budgetsTableBody"
                     ></tbody>
                     <tfoot
@@ -215,7 +223,7 @@
                   <div class="d-flex justify-content-center mb-3 gap-5">
                     <div>
                       <label for="sortField">Sort by:</label>
-                      <select id="sortField" class="form-select form-select-sm">
+                      <select id="sortField" class="form-select form-select-md">
                         <option value="all" selected>All</option>
                         <option value="date">Date</option>
                         <option value="description">Description</option>
@@ -225,7 +233,7 @@
                     </div>
                     <div>
                       <label for="sortOrder">Order:</label>
-                      <select id="sortOrder" class="form-select form-select-sm">
+                      <select id="sortOrder" class="form-select form-select-md">
                         <option value="asc" selected>Ascending</option>
                         <option value="desc">Descending</option>
                       </select>
@@ -234,7 +242,7 @@
                       <label for="filterField">Filter:</label>
                       <select
                         id="filterField"
-                        class="form-select form-select-sm"
+                        class="form-select form-select-md"
                       >
                         <option value="none" selected>None</option>
                         <option value="food">Food</option>
@@ -244,7 +252,7 @@
                       </select>
                     </div>
                   </div>
-                  <table class="table table-info table-striped">
+                  <table class="table table-striped">
                     <thead>
                       <tr class="table-primary">
                         <th scope="col">Date</th>
@@ -281,9 +289,10 @@
             >
               <div class="accordion-body">
                 <div class="table-responsive">
-                  <table class="table table-success table-striped">
+                  <table class="table table-striped">
                     <thead>
                       <tr class="table-primary">
+                        <th scope="col">Date</th>
                         <th scope="col">Description</th>
                         <th scope="col">Interval</th>
                         <th scope="col">Amount</th>

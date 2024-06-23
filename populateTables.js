@@ -4,6 +4,7 @@
 import { database, ref, update, remove, onValue, get } from "./initialize-firebase.js"; // Adjust the path if necessary
 import { sanitize } from './sanitizeStrings.js'; // Import the sanitize function
 
+
 document.addEventListener('DOMContentLoaded', function() {
     let expensesData = [];
 
@@ -62,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
             let row = document.createElement('tr');
             row.innerHTML = `
-                <th scope="row">${capitalize(category)}</th>
+                <td>${capitalize(category)}</td>
                 <td>$${budgetAmount.toFixed(2)}</td>
                 <td>$${spentAmount.toFixed(2)}</td>
                 <td ${statusColor}>$${remainingAmount.toFixed(2)}</td>`;
@@ -82,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
         let footRow = document.createElement('tr');
         footRow.classList.add("table-primary");
-        footRow.innerHTML = ` <th scope="row">Total:</th>
+        footRow.innerHTML = ` <th>Total:</th>
                               <td>$${budgetData.total}</td>
                               <td>$${totalSpent}</td>
                               <td ${statusColor}>$${(budgetData.total - totalSpent).toFixed(2)}</td>`;
@@ -138,7 +139,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
             let row = document.createElement('tr');
             row.innerHTML = `
-                <th scope="row">${sanitizedDate}</th>
+                <td>${sanitizedDate}</td>
                 <td>${decodeHTMLEntities(sanitizedDescription)}</td>
                 <td>$${parseFloat(sanitizedAmount).toFixed(2)}</td>
                 <td>${sanitizedCategory}</td>
@@ -184,7 +185,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
         let editRowFoot = document.createElement('tr');
         editRowFoot.classList.add("table-primary");
-        editRowFoot.innerHTML = `<td>Total:</td>
+        editRowFoot.innerHTML = `<th>Total:</th>
                                  <td></td>
                                  <td>$${currentTotalExpense.toFixed(2)}</td>
                                  <td></td>`;
@@ -202,15 +203,17 @@ document.addEventListener('DOMContentLoaded', function() {
         snapshot.forEach(function(childSnapshot) {
             let key = childSnapshot.key; // Get the unique key for the row
             let data = childSnapshot.val();
-    
+            let sanitizedDate = sanitize(data.date || new Date().toISOString().split("T")[0]);
             let sanitizedDescription = sanitize(data.description || 'undefined');
-            let sanitizedType = capitalizeInterval(sanitize(data.type || 'undefined').toLowerCase());
+            let sanitizedType = capitalize(sanitize(data.type || 'undefined').toLowerCase());
+            sanitizedType = "Biweekly" ? "Bi-weekly" : sanitizedType;
             let sanitizedAmount = parseFloat(sanitize(data.amount || 'undefined')).toFixed(2);
             currentTotalIncome += parseFloat(sanitizedAmount);
     
             let row = document.createElement('tr');
             row.innerHTML = `
-                <th scope="row">${sanitizedDescription}</th>
+                <td>${sanitizedDate}</td>
+                <td>${sanitizedDescription}</td>
                 <td>${sanitizedType}</td>
                 <td>$${sanitizedAmount}</td>
                 <td class="table-btns col-1">
@@ -225,6 +228,9 @@ document.addEventListener('DOMContentLoaded', function() {
             editRow.classList.add('edit-row', 'd-none');
             editRow.id = `edit-row-${key}`;
             editRow.innerHTML = `
+                <td>
+                    <input type="date" class="date-field form-control" id="edit-date-${data.key}" value="${sanitizedDate}" required>
+                </td>
                 <td>
                     <input type="text" class="form-control" id="edit-description-${key}" value="${decodeHTMLEntities(sanitizedDescription)}" required>
                 </td>
@@ -252,7 +258,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
         let editRowFoot = document.createElement('tr');
         editRowFoot.classList.add("table-primary");
-        editRowFoot.innerHTML = `<td>Total:</td>
+        editRowFoot.innerHTML = `<th>Total:</th>
+                                 <td></td>
                                  <td></td>
                                  <td>$${currentTotalIncome.toFixed(2)}</td>`;
         incomeTableFoot.appendChild(editRowFoot);
@@ -271,14 +278,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to capitalize the first letter of a string
     function capitalize(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
-    }
-
-    // Function to capitalize intervals and adjust biweekly to Bi-weekly
-    function capitalizeInterval(interval) {
-        if (interval.toLowerCase() === 'biweekly') {
-            return 'Bi-weekly';
-        }
-        return capitalize(interval);
     }
 
     // Function to show the edit row based on the key associated with it
@@ -341,6 +340,12 @@ document.addEventListener('DOMContentLoaded', function() {
             update(ref(database, 'expenses/' + userId + '/' + key), updatedData)
                 .then(() => {
                     console.log('Expense updated successfully');
+                    // Call updateBudgetsTable here to refresh the budgets table
+                    get(ref(database, 'budgets/' + userId)).then(function(budgetsSnapshot) {
+                        get(ref(database, 'expenses/' + userId)).then(function(expensesSnapshot) {
+                            updateBudgetsTable(budgetsSnapshot, expensesSnapshot);
+                        });
+                    });
                 })
                 .catch((error) => {
                     console.error('Error updating expense:', error);

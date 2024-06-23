@@ -2,7 +2,7 @@
 import { auth, onAuthStateChanged, getDatabase, ref, push, update } from '/initialize-firebase.js'; // Adjust the path if necessary
 import { sanitize } from '/sanitizeStrings.js'; // Import the sanitize function
 
-function getFormValidation() {
+function getExpenseFormValidation() {
   // Will store the form and error message div into variables
   const expenseForm = document.getElementById("newExpense");
   const errorMessage = document.getElementById("new-expense-error-msg");
@@ -16,8 +16,58 @@ function getFormValidation() {
     return mm + '-' + dd + '-' + yyyy;
   }
 
+  function validateFields() {
+    const description = document.getElementById("exdescription").value.trim();
+    const amount = document.getElementById("examount").value.trim();
+    let selectedCategory;
+
+    if (window.innerWidth < 576) { // Small screen
+      selectedCategory = expenseSelect.value;
+    } else { // Larger screen
+      selectedCategory = document.querySelector('input[name="expenseTypes"]:checked')?.value;
+    }
+
+    let isValid = true;
+
+    if (!description) {
+      document.getElementById("exdescription").classList.add("is-invalid");
+      isValid = false;
+    } else {
+      document.getElementById("exdescription").classList.remove("is-invalid");
+    }
+
+    if (!amount) {
+      document.getElementById("examount").classList.add("is-invalid");
+      isValid = false;
+    } else {
+      document.getElementById("examount").classList.remove("is-invalid");
+    }
+
+    return isValid;
+  }
+
+  // Add event listeners to remove "is-invalid" class when the user starts typing
+  document.getElementById("exdescription").addEventListener("input", function () {
+    this.classList.remove("is-invalid");
+    errorMessage.textContent = "";
+    errorMessage.style.display = "none";
+  });
+
+  document.getElementById("examount").addEventListener("input", function () {
+    this.classList.remove("is-invalid");
+    errorMessage.textContent = "";
+    errorMessage.style.display = "none";
+  });
+
+
   expenseForm.addEventListener("submit", (event) => {
     event.preventDefault();
+
+    if (!validateFields()) {
+      errorMessage.textContent = "All fields are required.";
+      errorMessage.style.display = "flex";
+      return;
+    }
 
     // Gather expense data entered by the user
     const description = sanitize(document.getElementById("exdescription").value);
@@ -30,13 +80,6 @@ function getFormValidation() {
       selectedCategory = sanitize(expenseSelect.value);
     } else { // Larger screen
       selectedCategory = sanitize(document.querySelector('input[name="expenseTypes"]:checked').value);
-    }
-
-    // Validates user input data
-    if (!amount || !selectedCategory || !description) {
-      errorMessage.textContent = "All fields are required.";
-      errorMessage.style.display = "flex";
-      return;
     }
 
     // Create the data object to be sent user input to the back-end
@@ -90,4 +133,4 @@ function getFormValidation() {
 }
 
 // Assign the function to the window object to ensure it can be called asynchronously
-window.getFormValidation = getFormValidation;
+window.getExpenseFormValidation = getExpenseFormValidation;

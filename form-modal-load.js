@@ -45,10 +45,23 @@ document.addEventListener("DOMContentLoaded", () => {
         return loadScript(formScript);
       })
       .then(() => {
-        // Initialize the form-specific script
-        if (typeof window.getFormValidation === "function") {
-          window.getFormValidation();
+        // Ensure the form element exists before calling the specific validation function
+        const formElement = document.querySelector("form"); // or use the specific ID of the form
+        if (formElement) {
+          if (form === "forms/new-income.html" && typeof window.getIncomeFormValidation === "function") {
+            window.getIncomeFormValidation();
+          } else if (form === "forms/new-expense.html" && typeof window.getExpenseFormValidation === "function") {
+            window.getExpenseFormValidation();
+          } else if (form === "forms/update-budget.html" && typeof window.getBudgetFormValidation === "function") {
+            window.getBudgetFormValidation();
+          } else {
+            throw new Error("Form validation function not found.");
+          }
+        } else {
+          throw new Error("Form element not found.");
         }
+
+        // Determine message type for notifications
         if (form === "forms/new-income.html") {
           msg = "income form";
         } else if (form === "forms/new-expense.html") {

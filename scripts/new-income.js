@@ -3,7 +3,7 @@ import { auth, onAuthStateChanged, getDatabase, ref, push, update } from '/initi
 import { sanitize } from '/sanitizeStrings.js'; // Import the sanitize function
 
 
-function getFormValidation() {
+function getIncomeFormValidation() {
   const incomeForm = document.getElementById("newIncome");
   const errorMessage = document.getElementById("new-income-error-msg");
   const incomeSelect = document.getElementById("incomeSelect");
@@ -90,4 +90,4 @@ function getFormValidation() {
 }
 
 // Assign the function to the window object to ensure it can be called asynchronously
-window.getFormValidation = getFormValidation;
+window.getIncomeFormValidation = getIncomeFormValidation;
