@@ -4,25 +4,36 @@ import { sanitize, validateEmail } from './sanitizeStrings.js';  // Import the s
 document.addEventListener('DOMContentLoaded', () => {
   const signInForm = document.getElementById('signInForm');
   const errorMsg = document.getElementById('error-msg');
+  const passwordBox = document.getElementById('password');
+  const passwordTextToggle = document.getElementById('passwordTextToggle');
+
+
+  // allows the user to toggle between hiding and display password
+  passwordTextToggle.addEventListener('change', () => {
+    const type = passwordTextToggle.checked ? 'text' : 'password';
+    passwordBox.setAttribute('type', type);
+  });
+
 
   signInForm.addEventListener('submit', async (event) => {
     event.preventDefault();
 
-    const userInput = sanitize(document.getElementById('username').value);
+    const userInput = sanitize(document.getElementById('username').value, true); // must be sanitized as a email since user can enter username or email
     const password = sanitize(document.getElementById('password').value);
 
     try {
       let email;
 
+      // Assumes that email address is being entered, if not found then asssumes username is entered
       if (validateEmail(userInput)) {
         // If the input is a valid email
         email = userInput;
       } else {
-        // Otherwise, assume it's a username and look up the corresponding email
-        const usersRef = ref(database, 'users');
-        const userQuery = query(usersRef, orderByChild('username'), equalTo(userInput));
+        // Username looked up to assign the corresponding email
+        const usersRef = ref(database, 'users');  // gets the users "table" from firebase
+        const userQuery = query(usersRef, orderByChild('username'), equalTo(userInput));  // filters result from user input
         console.log(userQuery);
-        const snapshot = await get(userQuery);
+        const snapshot = await get(userQuery);  // funcion puases until snapshot is assigned the value of the query
 
         if (!snapshot.exists()) {
           displayError('Please enter a valid username/password');
@@ -35,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       }
 
-      // Sign in with email and password
+      // Sign in with email and password and redirects to dashboard paeg if successful
       signInWithEmailAndPassword(auth, email, password)
         .then(() => {
           errorMsg.style.display = 'none';

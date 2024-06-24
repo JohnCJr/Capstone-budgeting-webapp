@@ -24,7 +24,6 @@
                   class="form-control form-control-md"
                   id="firstName"
                   placeholder="first name"
-                  required
                 />
               </div>
               <div class="col-12 col-sm-6">
@@ -34,27 +33,22 @@
                   class="form-control form-control-md"
                   id="lastName"
                   placeholder="last name"
-                  required
                 />
               </div>
             </div>
-
             <label for="userEmail" class="form-label">Email address</label>
             <input
               type="email"
               class="form-control"
               id="userEmail"
               placeholder="example@gmail.com"
-              required
             />
-
             <label for="userName" class="form-label">Username</label>
             <input
               type="text"
               class="form-control form-control-md"
               id="userName"
               placeholder="username"
-              required
             />
             <div class="row">
               <div class="col-12 col-sm-6">
@@ -64,8 +58,20 @@
                   id="password"
                   class="form-control form-control-md"
                   placeholder="password"
-                  required
                 />
+                <div class="form-check form-switch mt-2 ms-1">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    role="switch"
+                    id="passwordTextToggle"
+                  />
+                  <label
+                    class="form-check-label text-body-tertiary"
+                    for="passwordTextToggle"
+                    >show password</label
+                  >
+                </div>
               </div>
               <div class="col-12 col-sm-6">
                 <label for="phoneNumber" class="form-label">Phone Number</label>
@@ -74,7 +80,6 @@
                   class="form-control"
                   id="phoneNumber"
                   placeholder="123-456-7890"
-                  required
                 />
               </div>
             </div>

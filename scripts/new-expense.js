@@ -13,7 +13,7 @@ function getExpenseFormValidation() {
     const mm = String(date.getMonth() + 1).padStart(2, '0');
     const dd = String(date.getDate()).padStart(2, '0');
     const yyyy = date.getFullYear();
-    return mm + '-' + dd + '-' + yyyy;
+    return mm + '/' + dd + '/' + yyyy;
   }
 
   function validateFields() {
@@ -72,7 +72,7 @@ function getExpenseFormValidation() {
     // Gather expense data entered by the user
     const description = sanitize(document.getElementById("exdescription").value);
     const amount = sanitize(document.getElementById("examount").value);
-    const currentDate = getCurrentFormattedDate(); // Get the current date
+    const currentDate = getCurrentFormattedDate(); // Get the current date and assigns it to the expense submitted
     let selectedCategory;
 
     // used to decide which input for expense type to accept based on the screen size
@@ -102,8 +102,9 @@ function getExpenseFormValidation() {
 
           update(ref(database), updates)
             .then(() => {
-              // Redirect to the dashboard once successfully added expense
-              window.location.href = "/dashboard.html";
+               // Show success notification
+               const modal = bootstrap.Modal.getInstance(document.getElementById('actionModal'));
+               modal.hide();
             })
             .catch((error) => {
               console.error("Error:", error);

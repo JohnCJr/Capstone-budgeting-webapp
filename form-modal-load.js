@@ -72,7 +72,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const cancelButtons = modalBody.querySelectorAll('.btn-cancel, [data-bs-dismiss="modal"]');
         cancelButtons.forEach(button => {
-          button.addEventListener('click', () => showCancelNotification(msg, "cancelled"));
+          button.addEventListener('click', () => {
+            formModal.classList.add('was-cancelled');
+            showCancelNotification(msg, "cancelled");
+          });
+        });
+
+        // Add event listener for form submission
+        formElement.addEventListener('submit', () => {
+          formModal.classList.add('was-submitted');
         });
       })
       .catch((error) => {
@@ -87,6 +95,13 @@ document.addEventListener("DOMContentLoaded", () => {
     modalBody.innerHTML = '';
     removeScripts(["scripts/savy_script.js", ...Object.values(scriptMap)]);
     modalHeader.innerHTML = "";
+
+    if (formModal.classList.contains('was-submitted')) {
+      showSubmitNotification(msg, "submitted");
+    } else if (!formModal.classList.contains('was-cancelled')) {
+      showCancelNotification(msg, "closed");
+    }
+    formModal.classList.remove('was-cancelled', 'was-submitted');
   });
 
   function showCancelNotification(msg, action) {
@@ -103,6 +118,40 @@ document.addEventListener("DOMContentLoaded", () => {
     toast.ariaAtomic = 'true';
 
     const actionText = action === "closed" ? "was closed" : "action was cancelled";
+
+    toast.innerHTML = `
+      <div class="toast-header">
+        <img src="images/logo.jpg" class="rounded me-2" width="50px" alt="...">
+        <strong class="me-auto">Notification</strong>
+        <small class="text-body-secondary" data-timestamp="${timestamp.toISOString()}">just now</small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body">
+        The ${msg} ${actionText}.
+      </div>
+    `;
+
+    toasterContainer.appendChild(toast);
+    const bsToast = new bootstrap.Toast(toast, { autohide: false });
+    bsToast.show();
+
+    updateTimestamps();
+  }
+
+  function showSubmitNotification(msg, action) {
+    const toasterContainer = document.getElementById('toasterContainer');
+    if (toasterContainer.children.length >= 4) {
+      toasterContainer.removeChild(toasterContainer.firstChild);
+    }
+
+    const timestamp = new Date();
+    const toast = document.createElement('div');
+    toast.className = 'toast align-items-center text-bg-success border-0';
+    toast.role = 'alert';
+    toast.ariaLive = 'assertive';
+    toast.ariaAtomic = 'true';
+
+    const actionText = "was successfully submitted";
 
     toast.innerHTML = `
       <div class="toast-header">

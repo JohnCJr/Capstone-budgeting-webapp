@@ -1,8 +1,20 @@
 // function that will be used to santiize data from the front-end
 
-export function sanitize(input) {
+export function sanitize(input, isEmail = false) {
     if (typeof input !== 'string') {
         return input;
+    }
+    // refined to specifically handle email inputs since sanitizing the @ symbol would causes issues
+    if (isEmail) {
+        return input.replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#39;')
+                    .replace(/\//g, '&#x2F;')
+                    .replace(/\\/g, '&#x5C;')
+                    .replace(/`/g, '&#x60;')
+                    .replace(/=/g, '&#x3D;');
     }
     return input.replace(/&/g, '&amp;')
                 .replace(/</g, '&lt;')
@@ -24,7 +36,6 @@ export function sanitize(input) {
                 .replace(/\(/g, '&#40;')
                 .replace(/\)/g, '&#41;');
 }
-
 // Function to validate email format, checks if @ exists
 export function validateEmail(email) {
     const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;

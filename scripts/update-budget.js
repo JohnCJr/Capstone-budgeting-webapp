@@ -54,7 +54,7 @@ function getBudgetFormValidation() {
     const total = foodBudget + utilityBudget + entertainmentBudget + otherBudget;
 
     if (total > totalBudget) {
-      displayError("Categories total exceeds total budget amount. Please adjust a category or your budget");
+      displayError("Categories total exceeds total budget amount. Please adjust a category or your budget.");
       return false;
     }
     clearErrorMessage();
@@ -148,8 +148,9 @@ function getBudgetFormValidation() {
 
           update(ref(database), updates)
             .then(() => {
-              // Redirect to the dashboard once successfully updated budget
-              window.location.href = "/dashboard.html";
+              // Show success notification
+              const modal = bootstrap.Modal.getInstance(document.getElementById('actionModal'));
+              modal.hide();
             })
             .catch((error) => {
               console.error("Error:", error);

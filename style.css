@@ -309,3 +309,7 @@ arrows big no matter the screen size*/
   margin: 0 !important;
   padding: auto 0 !important;
 }
+
+.is-invalid {
+  padding: .375rem .75rem !important; 
+}
