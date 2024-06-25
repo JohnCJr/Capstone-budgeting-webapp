@@ -71,10 +71,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
             let row = document.createElement('tr');
             row.innerHTML = `
-                <td>${capitalize(category)}</td>
-                <td>$${budgetAmount.toFixed(2)}</td>
-                <td>$${spentAmount.toFixed(2)}</td>
-                <td ${statusColor}>$${remainingAmount.toFixed(2)}</td>`;
+                 <td data-label="Category">${capitalize(category)}</td>
+                <td data-label="Limit">$${budgetAmount.toFixed(2)}</td>
+                <td data-label="Spent">$${spentAmount.toFixed(2)}</td>
+                <td data-label="Remaining" ${statusColor}>$${remainingAmount.toFixed(2)}</td>`;
             budgetsTableBody.appendChild(row);
         });
 
@@ -92,9 +92,9 @@ document.addEventListener('DOMContentLoaded', function() {
         let footRow = document.createElement('tr');
         footRow.classList.add("table-primary");
         footRow.innerHTML = ` <th>Total:</th>
-                              <td>$${totalBudget.toFixed(2)}</td>
-                              <td>$${totalSpent.toFixed(2)}</td>
-                              <td ${statusColor}>$${(totalBudget - totalSpent).toFixed(2)}</td>`;
+                              <td data-label="Budget">$${totalBudget.toFixed(2)}</td>
+                              <td data-label="Spent">$${totalSpent.toFixed(2)}</td>
+                              <td data-label="Remaining" ${statusColor}>$${(totalBudget - totalSpent).toFixed(2)}</td>`;
         budgetsTableFoot.appendChild(footRow);
     }
 
@@ -147,16 +147,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
             let row = document.createElement('tr');
             row.innerHTML = `
-                <td>${sanitizedDate}</td>
-                <td>${decodeHTMLEntities(sanitizedDescription)}</td>
-                <td>$${parseFloat(sanitizedAmount).toFixed(2)}</td>
-                <td>${sanitizedCategory}</td>
-                <td class="table-btns col-1">
-                    <div class="btn-group" role="group">
-                        <button class="btn btn-secondary expense-edit-btn" onclick='showEditRow("expense", "${data.key}", ${JSON.stringify(sanitizedDate)}, ${JSON.stringify(decodeHTMLEntities(sanitizedDescription))}, ${JSON.stringify(parseFloat(sanitizedAmount).toFixed(2))}, ${JSON.stringify(sanitizedCategory)})'>Edit</button>
-                        <button class="btn btn-danger expense-delete-btn" onclick="confirmDelete('expense', '${data.key}')">Delete</button>
-                    </div>
-                </td>`;
+            <td data-label="Date">${sanitizedDate}</td>
+            <td data-label="Description">${decodeHTMLEntities(sanitizedDescription)}</td>
+            <td data-label="Amount">$${parseFloat(sanitizedAmount).toFixed(2)}</td>
+            <td data-label="Category">${sanitizedCategory}</td>
+            <td class="table-btns col-md-1 col-sm-8 mx-sm-auto mx-0 col-12">
+                <div class="btn-group" role="group">
+                    <button class="btn btn-secondary expense-edit-btn" onclick='showEditRow("expense", "${data.key}", ${JSON.stringify(sanitizedDate)}, ${JSON.stringify(decodeHTMLEntities(sanitizedDescription))}, ${JSON.stringify(parseFloat(sanitizedAmount).toFixed(2))}, ${JSON.stringify(sanitizedCategory)})'>Edit</button>
+                    <button class="btn btn-danger expense-delete-btn" onclick="confirmDelete('expense', '${data.key}')">Delete</button>
+                </div>
+            </td>`;
             expensesTableBody.appendChild(row);
 
             let editRow = document.createElement('tr');
@@ -180,7 +180,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <option value="other" ${sanitizedCategory === 'Other' ? 'selected' : ''}>Other</option>
                     </select>
                 </td>
-                <td class="table-btns col-1">
+                <td class="table-btns col-md-1 col-sm-8 mx-sm-auto mx-0 col-12">
                     <div class="btn-group" role="group">
                         <button class="btn btn-success" onclick="confirmEditExpense('${data.key}')">Confirm</button>
                         <button class="btn btn-secondary" onclick="cancelEdit('${data.key}', 'expense')">Cancel</button>
@@ -194,9 +194,9 @@ document.addEventListener('DOMContentLoaded', function() {
         let editRowFoot = document.createElement('tr');
         editRowFoot.classList.add("table-primary");
         editRowFoot.innerHTML = `<th>Total:</th>
-                                 <td></td>
-                                 <td>$${currentTotalExpense.toFixed(2)}</td>
-                                 <td></td>`;
+                                 <td class='empty-td'></td>
+                                 <td data-label="Expenses:">$${currentTotalExpense.toFixed(2)}</td>
+                                 <td class='empty-td'></td>`;
         expensesTableFoot.appendChild(editRowFoot);
     }
 
@@ -222,11 +222,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
             let row = document.createElement('tr');
             row.innerHTML = `
-                <td>${sanitizedDate}</td>
-                <td>${sanitizedDescription}</td>
-                <td>${sanitizedType}</td>
-                <td>$${sanitizedAmount}</td>
-                <td class="table-btns col-1">
+                <td data-label="Date">${sanitizedDate}</td>
+                <td data-label="Description">${sanitizedDescription}</td>
+                <td data-label="Type">${sanitizedType}</td>
+                <td data-label="Amount">$${sanitizedAmount}</td>
+                <td class="table-btns col-md-1 col-sm-8 mx-sm-auto mx-0 col-12">
                     <div class="btn-group" role="group">
                         <button class="btn btn-secondary income-edit-btn" onclick='showEditRow("income", "${key}", ${JSON.stringify(sanitizedDate)}, ${JSON.stringify(decodeHTMLEntities(sanitizedDescription))}, ${JSON.stringify(sanitizedType)}, ${JSON.stringify(sanitizedAmount)})'>Edit</button>
                         <button class="btn btn-danger income-delete-btn" onclick="confirmDelete('income', '${key}')">Delete</button>
@@ -257,7 +257,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <td>
                     <input type="text" class="money-field form-control" id="edit-amount-${key}" value="${sanitizedAmount}" required>
                 </td>
-                <td class="table-btns col-1">
+                <td class="table-btns col-md-1 col-sm-8 mx-sm-auto mx-0 col-12">
                     <div class="btn-group" role="group">
                         <button class="btn btn-success" onclick="confirmEditIncome('${key}')">Confirm</button>
                         <button class="btn btn-secondary" onclick="cancelEdit('${key}', 'income')">Cancel</button>
@@ -271,9 +271,9 @@ document.addEventListener('DOMContentLoaded', function() {
         let editRowFoot = document.createElement('tr');
         editRowFoot.classList.add("table-primary");
         editRowFoot.innerHTML = `<th>Total:</th>
-                                 <td></td>
-                                 <td></td>
-                                 <td>$${currentTotalIncome.toFixed(2)}</td>`;
+                                 <td class='empty-td'></td>
+                                 <td class='empty-td'></td>
+                                 <td data-label='Income:'>$${currentTotalIncome.toFixed(2)}</td>`;
         incomeTableFoot.appendChild(editRowFoot);
 
         // Apply date range to all date fields

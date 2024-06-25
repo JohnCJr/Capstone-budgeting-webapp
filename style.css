@@ -58,6 +58,7 @@ body, aside, section {
   display: flex;
   justify-content: center;
   align-items: center;
+  text-align: center;
   grid-area: footer;
   background-color: black;
   font-size: 1rem;
@@ -85,8 +86,9 @@ body, aside, section {
   /* background-color: lightblue */
 }
 
-.resetForm {
-  padding: 5rem 8rem;
+
+.table {
+  max-width: 1600px;
 }
 
 .form-container h2 {
@@ -151,6 +153,10 @@ nav.navbar {
   margin-bottom: 5px;
 }
 
+.navbar-nav li {
+  text-align: center;
+}
+
 .navbar-brand img {
   width: 3rem;
   height: 3rem;
@@ -170,6 +176,7 @@ a.nav-link:hover {
   margin-right: auto;
   margin-left: auto;
 }
+
 /*****************************************************************************************/
 
 /*****************************home carousel styles****************************************/
@@ -196,9 +203,26 @@ arrows big no matter the screen size*/
   color: white;
 }
 /*****************************************************************************************/
+@media (max-width: 374px) {
+  #navabar-logo {
+      display: none;
+  }
+}
 
+/* Show the logo image when the screen width is 375px or greater */
+@media (min-width: 375px) {
+  #navabar-logo {
+      display: block;
+  }
+}
 
 @media only screen and (max-width: 375px) {
+
+  .main.logon {
+    margin-bottom: 2rem !important;
+    margin-top: 2rem !important;
+  }
+
   .form-container {
     margin-bottom: 5rem ;
     margin-top: 5rem;
@@ -266,6 +290,16 @@ arrows big no matter the screen size*/
     margin-left: 1rem;
   }
 
+  nav .navbar-nav {
+    background-color: #718cad;
+    margin: 0 !important;
+    border: 1px solid rgb(153, 153, 153);
+  }
+  
+  nav > .container-fluid {
+    padding: 0 !important;
+  }
+
 }
 
 @media only screen and (min-width: 767px) and (max-width: 878px) {
@@ -312,4 +346,69 @@ arrows big no matter the screen size*/
 
 .is-invalid {
   padding: .375rem .75rem !important; 
+}
+
+.table-responsive {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch; /* for smooth scrolling */
+}
+
+@media (max-width: 768px) {
+  table, thead, tbody, th, td, tr, tfoot {
+    display: block;
+  }
+
+  thead tr {
+    display: none;
+  }
+
+  tr {
+    margin-bottom: 1rem;
+  }
+
+  td, th {
+    border: none;
+    position: relative;
+    padding-left: 50%;
+    text-align: right;
+  }
+
+  td[data-label]::before, th[data-label]::before {
+    content: attr(data-label);
+    font-weight: bold;
+    display: inline-block;
+    position: absolute;
+    left: 10px;
+    width: calc(50% - 10px);
+    white-space: nowrap;
+    text-align: left;
+  }
+
+  td[data-label="Actions"] {
+    text-align: center;
+    padding-left: 0;
+  }
+
+  .table-btns {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .table-primary {
+    background-color: #d9edf7; /* Change to your desired background color */
+    border-top: 2px solid #bce8f1;
+  }
+
+  #expensesTableFoot > .table-primary > td, #incomeTableFoot > .table-primary > td, #budgetsTableFoot > .table-primary > td {
+    border: none; 
+    text-align: right;
+  }
+
+  .empty-td {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
 }

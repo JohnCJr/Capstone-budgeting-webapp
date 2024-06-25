@@ -108,7 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <nav class="navbar navbar-expand-md bg-body-tertiary">
         <div class="container-fluid px-lg-5 px-md-2 px-0 d-flex py-1 justify-content-between align-items-center">
           <a class="navbar-brand fs-1 d-flex align-items-center ms-2" href="home.html">
-            <img src="images/logo.jpg" alt="SavvyStudent brand logo" />
+            <img id='navabar-logo' src="images/logo.jpg" alt="SavvyStudent brand logo" />
             SavvyStudents
           </a>
           <div class="d-flex align-items-center ms-auto order-md-2">
@@ -136,7 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <nav class="navbar navbar-expand-md bg-body-tertiary">
         <div class="container-fluid px-lg-5 px-md-2 px-0 d-flex py-1 justify-content-between align-items-center">
           <a class="navbar-brand fs-1 d-flex align-items-center ms-2" href="home.html">
-            <img src="images/logo.jpg" alt="SavvyStudent brand logo" />
+            <img id='navabar-logo' src="images/logo.jpg" alt="SavvyStudent brand logo" />
             SavvyStudents
           </a>
           <div class="d-flex align-items-center ms-auto order-md-2">
