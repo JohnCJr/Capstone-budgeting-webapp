@@ -6,7 +6,7 @@
     <title>SavyStudents</title>
     <link rel="stylesheet" href="reset.css" />
     <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="bootstrap.min.css"/>
+    <link rel="stylesheet" href="bootstrap.min.css" />
     <script type="module" src="initialize-firebase.js"></script>
     <script>
       // Perform authentication check before the DOM loads, must be placed
@@ -42,21 +42,36 @@
               placeholder="password"
             />
             <div class="form-check form-switch mt-2 ms-1">
-              <input class="form-check-input" type="checkbox" role="switch" id="passwordTextToggle">
-              <label class="form-check-label text-body-tertiary" for="passwordTextToggle">show password</label>
+              <input
+                class="form-check-input"
+                type="checkbox"
+                role="switch"
+                id="passwordTextToggle"
+              />
+              <label
+                class="form-check-label text-body-tertiary"
+                for="passwordTextToggle"
+                >show password</label
+              >
             </div>
             <div
               id="error-msg"
               class="text-danger mt-2 justify-content-center"
               style="display: none"
             ></div>
-              <button type="submit" class="btn btn-primary btn-success btn-md d-flex mx-auto mt-3">
-                Submit
-              </button>
-              <div class="d-flex justify-content-center">
-                <a href="register.html" class="logon-links btn fs-6"> Register </a>
-                <a href="reset-password.html" class="logon-links btn fs-6"> Forgot Password </a>
-              </div>
+            <button
+              type="submit"
+              class="btn btn-primary btn-success btn-md d-flex mx-auto mt-3"
+            >
+              Submit
+            </button>
+            <div class="d-flex justify-content-center">
+              <a href="register.html" class="logon-links btn fs-6">
+                Register
+              </a>
+              <a href="reset-password.html" class="logon-links btn fs-6">
+                Forgot Password
+              </a>
             </div>
           </form>
         </div>

@@ -14,101 +14,13 @@ document.addEventListener("DOMContentLoaded", () => {
     <br>Designed by Cajoe Bits Team
   `;
 
-  // const loadOffcanvas = (user, username) => {
-  //   const offcanvasContainer = document.querySelector(".offcanvas-container");
-
-  //   offcanvasContainer.innerHTML = `
-  //     <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
-  //       <div class="offcanvas-header">
-  //         <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">${username || "User Name"}</h5>
-  //         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-  //       </div>
-  //       <div class="offcanvas-body d-flex flex-column">
-  //         <img class="canvas-profile-pic d-flex mx-auto mb-3" src="${user.photoURL || 'images/logo.jpg'}" width="260px" alt=""/>
-  //         <div class="row gap-1 justify-content-center mb-3">
-  //           <button class="btn btn-primary col-8 col-md-5" id="edit-profile-btn">Edit Profile</button>
-  //           <button class="btn btn-primary col-8 col-md-5 d-none" id="save-profile-btn">Confirm</button>
-  //           <a class="btn btn-primary col-8 col-md-5" href="dashboard.html" id="dashboard-btn">My Dashboard</a>
-  //           <button class="btn btn-secondary col-8 col-md-5 d-none" id="cancel-edit-btn">Cancel</button>
-  //         </div>
-  //         <textarea class="form-control d-none" id="profile-description" maxlength="99"></textarea>
-  //         <small class="text-end d-none" id="char-count">99 characters remaining</small>
-  //         <p id="profile-description-text">Brief description about the user.</p>
-  //       </div>
-  //     </div>
-  //   `;
-
-  //   const editProfileBtn = document.getElementById("edit-profile-btn");
-  //   const saveProfileBtn = document.getElementById("save-profile-btn");
-  //   const cancelEditBtn = document.getElementById("cancel-edit-btn");
-  //   const dashboardBtn = document.getElementById("dashboard-btn");
-  //   const profileDescription = document.getElementById("profile-description");
-  //   const profileDescriptionText = document.getElementById("profile-description-text");
-  //   const charCount = document.getElementById("char-count");
-
-  //   const cancelEdit = () => {
-  //     editProfileBtn.classList.remove("d-none");
-  //     saveProfileBtn.classList.add("d-none");
-  //     cancelEditBtn.classList.add("d-none");
-  //     dashboardBtn.classList.remove("d-none");
-  //     profileDescription.classList.add("d-none");
-  //     profileDescriptionText.classList.remove("d-none");
-  //     charCount.classList.add("d-none");
-  //   };
-
-  //   editProfileBtn.addEventListener("click", () => {
-  //     editProfileBtn.classList.add("d-none");
-  //     saveProfileBtn.classList.remove("d-none");
-  //     cancelEditBtn.classList.remove("d-none");
-  //     dashboardBtn.classList.add("d-none");
-  //     profileDescription.classList.remove("d-none");
-  //     profileDescriptionText.classList.add("d-none");
-  //     charCount.classList.remove("d-none");
-
-  //     profileDescription.value = profileDescriptionText.textContent.trim();
-  //     charCount.textContent = `${99 - profileDescription.value.length} characters remaining`;
-  //   });
-
-  //   saveProfileBtn.addEventListener("click", () => {
-  //     // Save to Firebase
-  //     const userId = user.uid;
-  //     const database = getDatabase();
-  //     const updates = {};
-  //     updates[`/users/${userId}/description`] = profileDescription.value.trim();
-
-  //     update(ref(database), updates)
-  //       .then(() => {
-  //         profileDescriptionText.textContent = profileDescription.value.trim();
-  //         cancelEdit();
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error updating description:", error);
-  //       });
-  //   });
-
-  //   cancelEditBtn.addEventListener("click", cancelEdit);
-
-  //   profileDescription.addEventListener("input", () => {
-  //     charCount.textContent = `${99 - profileDescription.value.length} characters remaining`;
-  //   });
-
-  //   // Load user's profile description if available
-  //   const database = getDatabase();
-  //   const userId = user.uid;
-  //   get(ref(database, `/users/${userId}/description`)).then((snapshot) => {
-  //     if (snapshot.exists()) {
-  //       profileDescriptionText.textContent = snapshot.val();
-  //     }
-  //   });
-  // };
-
   // loads default navbar and footer to pages
   const loadDefaultNavbarFooter = () => {
     navbarHTML = `
       <nav class="navbar navbar-expand-md bg-body-tertiary">
         <div class="container-fluid px-lg-5 px-md-2 px-0 d-flex py-1 justify-content-between align-items-center">
           <a class="navbar-brand fs-1 d-flex align-items-center ms-2" href="home.html">
-            <img id='navabar-logo' src="images/logo.jpg" alt="SavvyStudent brand logo" />
+            <img id='navabar-logo' src="images/Cajoe-bits-logo.png" alt="SavvyStudent brand logo" />
             SavvyStudents
           </a>
           <div class="d-flex align-items-center ms-auto order-md-2">
@@ -132,12 +44,12 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const loadLoggedInNavbar = () => {
-    navbarHTML = `
+    const navbarHTML = `
       <nav class="navbar navbar-expand-md bg-body-tertiary">
         <div class="container-fluid px-lg-5 px-md-2 px-0 d-flex py-1 justify-content-between align-items-center">
-          <a class="navbar-brand fs-1 d-flex align-items-center ms-2" href="home.html">
-            <img id='navabar-logo' src="images/logo.jpg" alt="SavvyStudent brand logo" />
-            SavvyStudents
+          <a class="navbar-brand fs-2 d-flex align-items-center ms-2" href="home.html">
+            <img id='navabar-logo' src="images/Cajoe-bits-logo.png" alt="SavvyStudent brand logo" />
+            <div id="navbar-header">SavvyStudents</div>
           </a>
           <div class="d-flex align-items-center ms-auto order-md-2">
             <button class="navbar-toggler d-md-none me-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -152,6 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
               <li class="nav-item"><a class="nav-link" aria-current="page" href="home.html">Home</a></li>
               <li class="nav-item"><a class="nav-link" aria-current="page" href="about-us.html">About Us</a></li>
               <li class="nav-item"><a class="nav-link" aria-current="page" href="budgeting-tips.html">Budgeting Tips</a></li>
+              <li class="nav-item"><a class="nav-link" aria-current="page" href="dashboard.html">Dashboard</a></li>
               <li class="nav-item"><a class="nav-link sign-out" aria-current="page">Sign Out</a></li>
             </ul>
           </div>
@@ -160,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
     document.querySelector(".header").innerHTML = navbarHTML;
     document.querySelector(".footer").innerHTML = footerHTML;
-
+  
     // adds an event listener for sign out link that will clear user information and redirect them to the sign-on.html page
     document.querySelector('.sign-out').addEventListener('click', () => {
       signOut(auth).then(() => {
@@ -174,24 +87,21 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error('Sign out error:', error);
       });
     });
-
-  //   onAuthStateChanged(auth, (user) => {
-  //     if (user) {
-  //       const database = getDatabase();
-  //       const userId = user.uid;
-  //       get(ref(database, `/users/${userId}/username`)).then((snapshot) => {
-  //         if (snapshot.exists()) {
-  //           const username = snapshot.val();
-  //           loadOffcanvas(user, username);
-  //         } else {
-  //           loadOffcanvas(user, "User Name");
-  //         }
-  //       }).catch((error) => {
-  //         console.error("Error fetching username:", error);
-  //         loadOffcanvas(user, "User Name");
-  //       });
-  //     }
-  //   });
+  
+    // Add the custom styles for the specific screen size range
+    const style = document.createElement('style');
+    style.innerHTML = `
+      @media only screen and (min-width: 768px) and (max-width: 912px) {
+        .navbar-nav .nav-item{
+          font-size: 1rem !important;
+        }
+  
+        #navbar-header {
+          font-size: calc(1rem + 1vw) !important;
+        }
+      }
+    `;
+    document.head.appendChild(style);
   };
 
   // Check if user is logged in and displays the correct navbar

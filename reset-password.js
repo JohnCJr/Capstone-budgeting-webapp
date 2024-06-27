@@ -1,13 +1,12 @@
 // resets user password if the correct username, email, and phoneNumber provided.
 
-import { database, ref, get, orderByChild, equalTo, query, update } from "./initialize-firebase.js"; // Adjust the path if necessary
+import { auth, database, ref, get, orderByChild, equalTo, query, sendPasswordResetEmail } from "./initialize-firebase.js"; // Adjust the path if necessary
 import { sanitize, validateEmail } from './sanitizeStrings.js';  // Import the sanitize function
 
 document.addEventListener("DOMContentLoaded", () => {
   const resetForm = document.getElementById("resetForm");
   const errorMessage = document.getElementById("error-msg");
-  const passwordBox = document.getElementById('newPassword');
-  const passwordTextToggle = document.getElementById('passwordTextToggle');
+  const cancelButton = document.querySelector(".logon-links");
 
   // Real-time validation and formatting for phone number input
   const phoneNumberInput = document.getElementById('phoneNumber');
@@ -19,13 +18,6 @@ document.addEventListener("DOMContentLoaded", () => {
       hideErrorMessage();
     }
   });
-
-   // allows the user to toggle between hiding and displaying password
-   passwordTextToggle.addEventListener('change', () => {
-    const type = passwordTextToggle.checked ? 'text' : 'password';
-    passwordBox.setAttribute('type', type);
-  });
-
 
   // Add event listeners for real-time validation of all fields
   document.querySelectorAll('#resetForm input').forEach(input => {
@@ -44,7 +36,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const userEmail = sanitize(document.getElementById("userEmail").value, true);
     const username = sanitize(document.getElementById("username").value);
     const phoneNumber = sanitize(document.getElementById("phoneNumber").value.replace(/\D/g, '')); // Remove formatting
-    const newPassword = sanitize(document.getElementById("newPassword").value);
 
     // Validate fields are not empty
     let formValid = true;
@@ -74,6 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const snapshot = await get(userRef);
 
       let userFound = false;
+      let userKey = null;
 
       snapshot.forEach(childSnapshot => {
         const userData = childSnapshot.val();
@@ -81,39 +73,23 @@ document.addEventListener("DOMContentLoaded", () => {
         // Check if all user information matches
         if (userData.email === userEmail && userData.phoneNumber === phoneNumber) {
           userFound = true;
-          const userKey = childSnapshot.key;
-
-          // Update the password in the Realtime Database
-          update(ref(database, 'users/' + userKey), { password: newPassword })
-            .then(() => {
-              // Display success message in green and start countdown
-              let countdown = 3;
-              errorMessage.style.color = "green";
-              errorMessage.textContent = `Password reset successful. Redirecting in ${countdown} seconds...`;
-              errorMessage.style.display = "flex";
-
-              const countdownInterval = setInterval(() => {
-                countdown -= 1;
-                errorMessage.textContent = `Password reset successful. Redirecting in ${countdown} seconds...`;
-                if (countdown === 0) {
-                  clearInterval(countdownInterval);
-                  window.location.href = "/sign-on.html";
-                }
-              }, 1000);
-            })
-            .catch(error => {
-              console.error("Error updating password:", error);
-              displayError("An error occurred. Please try again.");
-            });
+          userKey = childSnapshot.key;
         }
       });
 
-      if (!userFound) {
-        // Display error message if user information does not match
+      if (!userFound || !userKey) {
         displayError("Incorrect information");
+        return;
       }
+
+      // Send password reset email
+      await sendPasswordResetEmail(auth, userEmail);
+
+      // Display success message
+      displaySuccess("Password reset email sent. If you haven't received an email, click the button again.");
+      cancelButton.textContent = "Return";
     } catch (error) {
-      console.error("Error querying Firebase:", error);
+      console.error("Error sending password reset email:", error);
       displayError("An error occurred. Please try again.");
     }
   });
@@ -121,6 +97,13 @@ document.addEventListener("DOMContentLoaded", () => {
   // Function to display error messages
   function displayError(message) {
     errorMessage.style.color = "red";
+    errorMessage.textContent = message;
+    errorMessage.style.display = "flex";
+  }
+
+  // Function to display success messages
+  function displaySuccess(message) {
+    errorMessage.style.color = "green";
     errorMessage.textContent = message;
     errorMessage.style.display = "flex";
   }

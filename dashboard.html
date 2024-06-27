@@ -27,7 +27,7 @@
         id="actionModal"
         tabindex="-1"
         data-bs-backdrop="static"
-        aria-labelledby="actionModalLabel"
+        aria-labelledby="actionModal"
         aria-hidden="true"
       >
         <div class="modal-dialog modal-dialog-centered">
@@ -89,11 +89,11 @@
                   <div class='row d-flex justify-content-between gap-5'>
                     <div class='budgetContainer d-flex flex-column align-items-center col border border-success-subtle border-3 p-4 rounded-2'>
                       <h4 class='d-flex text-center'>Current Budget:</h4>
-                      <h4 id='currentBudget'>$0.00</h4>
+                      <h4 id='currentBudget'></h4>
                     </div>
                     <div class='budgetContainer d-flex flex-column align-items-center col border border-success-subtle border-3 p-4 rounded-2'>
                       <h4 class='d-flex text-center'>New<br>Budget:</h4>
-                      <h4 id='newBudget'>$0.00</h4>
+                      <h4 id='newBudget'></h4>
                     </div>
                   </div>
                 </div>"
@@ -156,7 +156,7 @@
         <!-- eperimental html code to populate the tables based on database information -->
         <div class="accordion" id="accordionTransactions">
           <div class="accordion-item">
-            <h2 class="accordion-header" id="headingOne">
+            <h2 class="accordion-header d-flex mx-auto" id="headingOne">
               <button
                 class="accordion-button"
                 type="button"

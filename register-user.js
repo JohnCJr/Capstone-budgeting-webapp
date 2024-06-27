@@ -1,6 +1,6 @@
 // handles registering the user
 
-import { auth, database, ref, get, orderByChild, equalTo, query, set, createUserWithEmailAndPassword } from "./initialize-firebase.js"; // Adjust the path if necessary
+import { auth, database, ref, get, orderByChild, equalTo, query, set, createUserWithEmailAndPassword, signOut } from "./initialize-firebase.js"; // Adjust the path if necessary
 import { sanitize, validateEmail } from './sanitizeStrings.js';  // Import the sanitize and validateEmail functions
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -208,6 +208,9 @@ document.addEventListener("DOMContentLoaded", () => {
             username: userName,  // Store the normalized (lower case) username
             phoneNumber: phoneNumber
           });
+
+          // Sign out the user after registration
+          await signOut(auth);
 
           alert('Registration successful! Redirecting to sign-on page.');
           window.location.href = '/sign-on.html';

@@ -3,6 +3,16 @@
 
 // must update include toast for successful submission
 
+function logWindowWidth() {
+  console.log(`Window width: ${window.innerWidth}px`);
+}
+
+// Log the window width when the page loads
+window.addEventListener('load', logWindowWidth);
+
+// Log the window width whenever the window is resized
+window.addEventListener('resize', logWindowWidth);
+
 document.addEventListener("DOMContentLoaded", () => {
   const formModal = document.getElementById("actionModal");
   const modalHeader = document.getElementById("modal-header-container");

@@ -1,6 +1,5 @@
 // This code validates and sends user input to update their budget
-// If budget doesn't exist then one will be created and sent to firebase
-// currently has some checks for erros that shouldn't be possible for testing purposes
+
 import { auth, onAuthStateChanged, getDatabase, ref, update, get } from '/initialize-firebase.js';
 import { sanitize } from '/sanitizeStrings.js'; // Import the sanitize function
 
@@ -9,6 +8,7 @@ function getBudgetFormValidation() {
   const errorMessage = document.getElementById("update-budget-error-msg");
   const moneyBoxes = document.querySelectorAll(".money-field");
   const currentBudget = document.getElementById("currentBudget");
+  const newBudget = document.getElementById("newBudget");
 
   // Used to clear error text when user makes correction
   function clearErrorMessage() {
@@ -71,7 +71,19 @@ function getBudgetFormValidation() {
       document.getElementById("entertainmentBudget").value = sanitize(budgetData.entertainment) || "";
       document.getElementById("otherBudget").value = sanitize(budgetData.other) || "";
 
-      currentBudget.textContent = sanitize(budgetData.total) === "" ? '$0' : `$${sanitize(budgetData.total)}`; // Sets the value of current budget displayed in the modal header
+      // Sets the value of current budget displayed in the modal header defaults to zero if data doesn't exist
+      currentBudget.textContent = sanitize(budgetData.total) === "" ? '$0.00' : `$${sanitize(budgetData.total)}`;
+      newBudget.textContent = sanitize(budgetData.total) === "" ? '$0.00' : `$${sanitize(budgetData.total)}`; 
+    } else {
+      // Set default values to $0.00 if no budget data exists
+      document.getElementById("totalBudget").value = "0.00";
+      document.getElementById("foodBudget").value = "0.00";
+      document.getElementById("utilityBudget").value = "0.00";
+      document.getElementById("entertainmentBudget").value = "0.00";
+      document.getElementById("otherBudget").value = "0.00";
+
+      currentBudget.textContent = '$0.00';
+      newBudget.textContent = '$0.00';
     }
   }
 
@@ -88,6 +100,7 @@ function getBudgetFormValidation() {
             setDefaultValues(budgetData);
           } else {
             console.log("No budget data available");
+            setDefaultValues(null); // Call with null to set default values
           }
         }).catch((error) => {
           console.error("Error fetching budget data:", error);
@@ -177,7 +190,7 @@ function getBudgetFormValidation() {
   moneyBoxes.forEach((input) => {
     input.addEventListener("blur", function () {
       const newTotalBudget = sanitize(document.getElementById("totalBudget").value);
-      document.getElementById("newBudget").textContent = "$" + newTotalBudget;
+      newBudget.textContent = "$" + newTotalBudget;
       checkCategorySum();
     });
 

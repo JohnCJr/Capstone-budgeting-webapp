@@ -8,22 +8,41 @@ document.addEventListener('DOMContentLoaded', function() {
     let expensesData = [];
 
     // Function to set date range for date input fields
+    // needed to properly get the current date, don't touch
+    function formatDateToYYYYMMDD(date) {
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+    
+    // sets range for date input fields
     function setDateRange() {
         const dateBoxes = document.querySelectorAll(".date-field");
-        const todayDate = new Date().toISOString().split("T")[0];
-        const sevenDaysAgo = new Date();
-        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-        const pastDate = sevenDaysAgo.toISOString().split('T')[0];
-
+    
+        // Get today's date
+        const today = new Date();
+    
+        // Calculate the start of the current month
+        const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+        const startOfMonthFormatted = formatDateToYYYYMMDD(startOfMonth);
+    
+        // Calculate the end of the current month
+        const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+        const endOfMonthFormatted = formatDateToYYYYMMDD(endOfMonth);
+    
+        // Format today's date as yyyy-mm-dd for the input field
+        const todayFormatted = formatDateToYYYYMMDD(today);
+    
         dateBoxes.forEach(field => {
-            field.setAttribute('max', todayDate);
-            field.setAttribute('min', pastDate);
-            field.value = todayDate; // Set the default date to today
+            field.setAttribute('max', endOfMonthFormatted);
+            field.setAttribute('min', startOfMonthFormatted);
+            field.value = todayFormatted; // Set the default date to today in yyyy-mm-dd format
         });
     }
 
-    // Function to get current formatted date
-    function getCurrentFormattedDate(date) {
+    // Function to get the formatted date in mm/dd/yyyy
+    function getFormattedDate(date) {
         const [year, month, day] = date.split('-');
         const d = new Date(year, month - 1, day);
         const mm = String(d.getMonth() + 1).padStart(2, '0');
@@ -139,6 +158,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         filteredData.forEach(data => {
             let sanitizedDate = sanitize(data.date || new Date().toISOString().split("T")[0]);
+            console.log("Sanitized date: " + sanitizedDate);
+            console.log("New date: " + new Date().toISOString().split("T")[0]);
             let sanitizedDescription = sanitize(data.description || 'undefined');
             let sanitizedAmount = sanitize(data.amount || 'undefined');
             let sanitizedCategory = capitalize(sanitize(data.category || 'undefined'));
@@ -351,7 +372,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let userId = localStorage.getItem('userId');
         if (userId !== '0') {
             let updatedData = {
-                date: getCurrentFormattedDate(document.getElementById(`edit-date-${key}`).value),
+                date: getFormattedDate(document.getElementById(`edit-date-${key}`).value),
                 description: sanitize(document.getElementById(`edit-description-${key}`).value),
                 amount: sanitize(document.getElementById(`edit-amount-${key}`).value),
                 category: sanitize(document.getElementById(`edit-category-${key}`).value)
@@ -380,7 +401,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let userId = localStorage.getItem('userId');
         if (userId !== '0') {
             let updatedData = {
-                date: getCurrentFormattedDate(document.getElementById(`edit-date-${key}`).value),
+                date: getFormattedDate(document.getElementById(`edit-date-${key}`).value),
                 description: sanitize(document.getElementById(`edit-description-${key}`).value),
                 type: sanitize(document.getElementById(`edit-type-${key}`).value),
                 amount: sanitize(document.getElementById(`edit-amount-${key}`).value)
