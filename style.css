@@ -80,6 +80,12 @@ body {
   max-width:  220px;
 }
 
+/* styling for the information icon in the dashboard page */
+.custom-tooltip .tooltip-inner {
+  background-color: #742ff5 !important; 
+  color: #ffffff !important; 
+}
+
 /******************************************** Carousel Styles *****************************************/
 .carousel-inner img {
   height: 45vw;

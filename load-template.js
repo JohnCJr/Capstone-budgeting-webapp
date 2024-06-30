@@ -3,7 +3,7 @@
 
 // for testing purposes, the navbar will cotian th user icon to acess the dashboard even when not logged in,'
 // navbar will display sign out when user is signed in and vice versa.
-import { auth, onAuthStateChanged, getDatabase, ref, update, get, signOut } from "./initialize-firebase.js";
+import { auth, signOut } from "./initialize-firebase.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   let navbarHTML = '';

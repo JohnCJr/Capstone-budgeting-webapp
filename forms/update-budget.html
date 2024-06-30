@@ -3,6 +3,22 @@ and serves as the template to generate a new expense. -->
 
 <form id="updateBudget" autocomplete="off">
   <div class="row m-1">
+    <label for="utilityBudget" class="col-sm-6 col-form-label">Budget type</label>
+    <div class="col-12">
+      <select
+        class="form-select form-select-md"
+        id="budgetType"
+        aria-label="Small type select"
+      >
+        <option value="yearly" selected>Yearly</option>
+        <option value="monthly">Monthly</option>
+        <option value="weekly">Weekly</option>
+      </select>
+    </div>
+    </div>
+  </div>
+
+  <div class="row m-1">
     <label for="totalBudget" class="col-sm-2 col-form-label">Total</label>
     <div class="col-12">
       <div class="input-group">

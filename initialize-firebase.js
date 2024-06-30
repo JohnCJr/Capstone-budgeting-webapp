@@ -1,6 +1,6 @@
 import {initializeApp} from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
 import {getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, sendPasswordResetEmail} from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-import {getDatabase, ref, get, orderByChild, equalTo, query, update, set, remove, onValue, push} from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+import {getDatabase, ref, get, orderByChild, equalTo, query, update, set, remove, onValue, push, onChildAdded, onChildChanged, onChildRemoved} from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
 // const firebaseConfig = {
 
@@ -59,4 +59,4 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-export {getAuth, auth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, getDatabase, ref, get, orderByChild, equalTo, query, update, set, remove, onValue, push, database, signOut, sendPasswordResetEmail};
+export {getAuth, auth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, getDatabase, ref, get, orderByChild, equalTo, query, update, set, remove, onValue, push, database, signOut, sendPasswordResetEmail, onChildAdded, onChildChanged, onChildRemoved};
