@@ -30,14 +30,20 @@ body {
   grid-area: main;
   height: 100%;
   width: 100%;
+  box-shadow: inset 0 18px 40px rgba(4, 99, 62, 0.678);
 }
 
 .left {
   grid-area: left;
+  background-color: #E6E6FA;
+  padding: 60px 0;
+  box-shadow: inset 0 18px 40px rgba(209, 19, 209, 0.349);
 }
 
 .right {
   grid-area: right;
+  padding: 60px 0;
+  box-shadow: inset 0 18px 40px rgba(4, 99, 62, 0.678);
 }
 
 /* Contains the footer content style */
@@ -85,6 +91,19 @@ body {
   background-color: #742ff5 !important; 
   color: #ffffff !important; 
 }
+
+.home-card-body {
+  position: relative;
+  padding-bottom: 2.5rem; 
+}
+
+.blockquote-footer {
+  position: absolute;
+  bottom: 0.5rem;
+  right: 1rem;
+  text-align: right;
+}
+
 
 /******************************************** Carousel Styles *****************************************/
 .carousel-inner img {
@@ -193,13 +212,12 @@ h3 {
 
 /*************************************************** Card Styles *******************************************/
 .card {
-  max-width: 400px;
   margin-left: auto;
   margin-right: auto;
 }
 
 .card-shadow {
-  box-shadow: rgb(12, 26, 41) 0px 16px 40px -10px; /* Shadow effect */
+  box-shadow: rgb(12, 26, 41) 0px 16px 40px -10px;
 }
 
 .home.card-img-top {
@@ -210,6 +228,10 @@ h3 {
   object-fit: fit;
   border-radius: 50%;
   border: 2px solid black;
+}
+
+.home-card {
+  max-width: 400px !important;
 }
 
 /***********************************************************************************************************/

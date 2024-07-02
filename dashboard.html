@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SavyStudents</title>
+    <title>Dashboard</title>
     <link rel="stylesheet" href="reset.css" />
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="bootstrap.min.css" />
@@ -66,7 +66,7 @@
         <div
           class="row d-flex justify-content-center mx-auto my-5 col-12 gap-lg-5 gap-md-0 gap-5"
         >
-          <div class="card col-10 col-lg-8 py-lg-5">
+          <div class="card card-shadow col-10 col-lg-8 py-lg-5">
             <!-- <img src="..." class="card-img-top" alt="..." /> -->
             <div class="card-body d-flex flex-column justify-content-between">
               <h3 class="card-title text-center mb-3">
@@ -113,7 +113,6 @@
                         name="budgetTypes"
                         id="expenseType1"
                         value="yearly"
-                        checked
                       />
                       <label class="form-check-label" for="expenseType1"> Yearly </label>
                     </div>
@@ -190,9 +189,9 @@
             </div>
           </div>
         <div
-          class="row d-flex justify-content-center mx-auto my-5 col-12 gap-lg-5 gap-md-0 gap-5"
+          class="row d-flex justify-content-center mx-auto my-5 col-12 gap-5"
         >
-          <div class="card col-lg-3 col-md-4 col-sm-12">
+          <div class="card card-shadow col-lg-3 col-md-10 col-sm-12 py-xxl-4">
             <!-- <img src="..." class="card-img-top" alt="..." /> -->
             <div class="card-body d-flex flex-column justify-content-between">
               <h5 class="card-title text-center mb-3">
@@ -229,7 +228,7 @@
             </div>
           </div>
 
-          <div class="card col-lg-3 col-md-4 col-sm-12">
+          <div class="card card-shadow col-lg-3 col-md-10 col-sm-12">
             <!-- <img src="..." class="card-img-top" alt="..." /> -->
             <div class="card-body d-flex flex-column justify-content-between">
               <h5 class="card-title text-center mb-3">
@@ -252,7 +251,7 @@
             </div>
           </div>
 
-          <div class="card col-lg-3 col-md-4 col-sm-12">
+          <div class="card card-shadow col-lg-3 col-md-10 col-sm-12">
             <!-- <img src="..." class="card-img-top" alt="..." /> -->
             <div class="card-body d-flex flex-column justify-content-between">
               <h5 class="card-title text-center mb-3">
@@ -280,7 +279,7 @@
       </section>
       <aside class="right">
         <!-- eperimental html code to populate the tables based on database information -->
-        <div class="accordion" id="accordionTransactions">
+        <div class="accordion my-5" id="accordionTransactions">
           <div class="accordion-item">
             <h2 class="accordion-header d-flex mx-auto" id="headingOne">
               <button
