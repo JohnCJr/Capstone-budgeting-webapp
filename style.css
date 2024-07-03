@@ -86,24 +86,6 @@ body {
   max-width:  220px;
 }
 
-/* styling for the information icon in the dashboard page */
-.custom-tooltip .tooltip-inner {
-  background-color: #742ff5 !important; 
-  color: #ffffff !important; 
-}
-
-.home-card-body {
-  position: relative;
-  padding-bottom: 2.5rem; 
-}
-
-.blockquote-footer {
-  position: absolute;
-  bottom: 0.5rem;
-  right: 1rem;
-  text-align: right;
-}
-
 
 /******************************************** Carousel Styles *****************************************/
 .carousel-inner img {
@@ -234,6 +216,24 @@ h3 {
   max-width: 400px !important;
 }
 
+/* styling for the information icon for the budget suggestion card in the dashboard page */
+.custom-tooltip .tooltip-inner {
+  background-color: #742ff5 !important; 
+  color: #ffffff !important; 
+}
+
+.home-card-body {
+  position: relative;
+  padding-bottom: 2.5rem; 
+}
+
+.blockquote-footer {
+  position: absolute;
+  bottom: 0.5rem;
+  right: 1rem;
+  text-align: right;
+}
+
 /***********************************************************************************************************/
 
 /********************************************** Navbar Styles ***********************************************/
@@ -320,6 +320,7 @@ a.nav-link:hover {
   }
 }
 
+/* Controls the size of the carousel buttons and navbar display for small-sized screens */
 @media (max-width: 576px) {
   .main img {
     height: 340px;
@@ -351,7 +352,7 @@ a.nav-link:hover {
   }
 }
 
-/* Controls the size of the carousel buttons and navbar display */
+/* Controls the size of the carousel buttons and navbar display for medium-sized screens */
 @media only screen and (max-width: 767px) {
   .carousel-control-prev,
   .carousel-control-next {
@@ -407,18 +408,20 @@ a.nav-link:hover {
 /* handles displaying the dashboard budget, expense, and income tables
 for small tablets and mobile devices to prevent horizontal overflow */
 @media (max-width: 768px) {
+  /* Used to verticallly stack table cells to improve useability on mobile devices */
   table, thead, tbody, th, td, tr, tfoot {
     display: block;
   }
 
   thead tr {
-    display: none;
+    display: none;  /* Hides the head of the table */
   }
 
   tr {
-    margin-bottom: 1rem;
+    margin-bottom: 1rem;  /* gives some space at the bottom of each row, now vertically stacked */
   }
 
+  /* places table data to the right and adds padding that will provide space for the data label */
   td, th {
     border: none;
     position: relative;
@@ -427,13 +430,13 @@ for small tablets and mobile devices to prevent horizontal overflow */
   }
 
   td[data-label]::before, th[data-label]::before {
-    content: attr(data-label);
+    content: attr(data-label);  /* grabs the data-label atttribute, which contains the information that the thead contained*/
     font-weight: bold;
     display: inline-block;
-    position: absolute;
-    left: 10px;
-    width: calc(50% - 10px);
-    white-space: nowrap;
+    position: absolute; /* Sets the label in a position relative to the table cell, which is to the left*/
+    left: 10px; /* data-label placed to the left of the cell by the value placed */
+    width: calc(50% - 10px); /* width is 50% of cell width minus the number of pixels used for the left attribute to account for it */
+    white-space: nowrap;  /* used to prevent text from wrapping to the next line */
     text-align: left;
   }
 

@@ -12,8 +12,6 @@ function logWindowWidth() {
 // Log the window width when the page loads
 window.addEventListener('load', logWindowWidth);
 
-// Log the window width whenever the window is resized
-window.addEventListener('resize', logWindowWidth);
 
 document.addEventListener("DOMContentLoaded", () => {
   const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
@@ -32,10 +30,22 @@ document.addEventListener("DOMContentLoaded", () => {
   let totalAmount;
   let selectedValue;
   let msg;
-
   let initialLoadComplete = false;
 
   setBudgetAmount.value = '';
+
+  // Log the window width whenever the window is resized
+window.addEventListener('resize', toggleFieldsetSelectVisibility);
+
+  function toggleFieldsetSelectVisibility() {
+    if (window.innerWidth < 576) {
+      budgetTypeFieldset.style.display = 'none';
+      budgetTypeSelect.style.display = 'flex';
+    } else {
+      budgetTypeFieldset.style.display = 'flex';
+      budgetTypeSelect.style.display = 'none';
+    }
+  }
 
   function updateAndSynchronizeSelections() {
     const selectedRadio = document.querySelector('input[name="budgetTypes"]:checked');
