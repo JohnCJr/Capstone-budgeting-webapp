@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="tips-styles.css" />
     <link rel="stylesheet" href="bootstrap.min.css" />
     <script type="module" src="initialize-firebase.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   </head>
   <body>
     <div class="site_container">
@@ -18,6 +19,66 @@
           <header class="header">
             <h1>Budgeting Tips for College Students</h1>
           </header>
+          <div id="compound-interest-chart" style="width: 100%; height: 600px;"></div>
+          <script>
+            // Parameters
+            const P = 0;  // Initial principal amount (assuming no initial deposit)
+            const r = 0.10;  // Annual interest rate
+            const n = 1;  // Number of times interest is compounded per year (annually)
+            const PMT = 1000; // Monthly contribution
+            const years = 30;
+            const months = years * 12;
+            const t = Array.from({length: months + 1}, (_, i) => i / 12);  // Time in years (0 to 30)
+    
+            // Compound interest formula with monthly contributions
+            function futureValue(months, rate, annualCompounds, monthlyContribution) {
+                let fv = 0;
+                for (let i = 1; i <= months; i++) {
+                    fv += monthlyContribution * Math.pow(1 + rate / annualCompounds, annualCompounds * (i / 12));
+                }
+                return fv;
+            }
+    
+            const A = t.map((time, index) => futureValue(index, r, n, PMT));
+    
+            // Total contributions over time (grows monthly by PMT)
+            const totalContributions = t.map((time, index) => PMT * index);
+    
+            // Data for Plotly
+            const data = [
+                {
+                    x: t,
+                    y: totalContributions,
+                    type: 'scatter',
+                    mode: 'lines',
+                    name: 'Total Contributions',
+                    line: {dash: 'dash', color: 'blue'}
+                },
+                {
+                    x: t,
+                    y: A,
+                    type: 'scatter',
+                    mode: 'lines',
+                    name: 'Principal + Interest',
+                    line: {color: 'green'}
+                }
+            ];
+    
+            // Layout for the plot
+            const layout = {
+                title: 'Compound Interest with Monthly Contributions Over Time',
+                xaxis: {
+                    title: 'Time (years)'
+                },
+                yaxis: {
+                    title: 'Amount ($)'
+                }
+            };
+    
+            // Render the plot
+            Plotly.newPlot('compound-interest-chart', data, layout);
+        </script>
+        <br>
           <div class="main-content">
             <section class="tips-section">
               <article class="tip">
