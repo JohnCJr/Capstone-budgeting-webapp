@@ -9,6 +9,46 @@
     <link rel="stylesheet" href="tips-styles.css" />
     <link rel="stylesheet" href="bootstrap.min.css" />
     <script type="module" src="initialize-firebase.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 20px;
+      }
+      .controls {
+          display: flex;
+          gap: 15px;
+          margin-bottom: 20px;
+      }
+      .controls label {
+          display: inline-block;
+          margin-right: 5px;
+      }
+      .controls input {
+          padding: 8px;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          width: 100px;
+      }
+      .controls button {
+          padding: 8px 15px;
+          border: none;
+          background-color: #007bff;
+          color: white;
+          border-radius: 4px;
+          cursor: pointer;
+      }
+      .controls button:hover {
+          background-color: #0056b3;
+      }
+      .chart-container {
+            width: 100%;
+            height: 600px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+      }
+  </style>
   </head>
   <body>
     <div class="site_container">
@@ -18,6 +58,91 @@
           <header class="header">
             <h1>Budgeting Tips for College Students</h1>
           </header>
+          <div class="chart-container">
+            <div id="compound-interest-chart" style="width: 100%; height: 100%;"></div>
+        </div>
+        <br>
+        <div class="controls">
+            <div>
+                <label for="interestRate">Annual Interest Rate (%): </label>
+                <input type="number" id="interestRate" value="10" step="0.1">
+            </div>
+            <div>
+                <label for="monthlyContribution">Monthly Contribution ($): </label>
+                <input type="number" id="monthlyContribution" value="1000" step="10">
+            </div>
+            <div>
+                <label for="timePeriod">Time Period (years): </label>
+                <input type="number" id="timePeriod" value="30" step="1">
+            </div>
+            <div>
+                <button onclick="updateChart()">Update Chart</button>
+            </div>
+        </div>
+        <script>
+            function calculateCompoundInterest(P, r, n, PMT, years) {
+                const months = years * 12;
+                const t = Array.from({length: months + 1}, (_, i) => i / 12);
+    
+                function futureValue(months, rate, annualCompounds, monthlyContribution) {
+                    let fv = 0;
+                    for (let i = 1; i <= months; i++) {
+                        fv += monthlyContribution * Math.pow(1 + rate / annualCompounds, annualCompounds * (i / 12));
+                    }
+                    return fv;
+                }
+    
+                const A = t.map((time, index) => futureValue(index, r, n, PMT));
+                const totalContributions = t.map((time, index) => PMT * index);
+    
+                return { t, A, totalContributions };
+            }
+    
+            function updateChart() {
+                const P = 0;  // Initial principal amount (assuming no initial deposit)
+                const r = parseFloat(document.getElementById('interestRate').value) / 100;  // Annual interest rate
+                const n = 1;  // Number of times interest is compounded per year (annually)
+                const PMT = parseFloat(document.getElementById('monthlyContribution').value); // Monthly contribution
+                const years = parseInt(document.getElementById('timePeriod').value); // Time period
+    
+                const { t, A, totalContributions } = calculateCompoundInterest(P, r, n, PMT, years);
+    
+                const data = [
+                    {
+                        x: t,
+                        y: totalContributions,
+                        type: 'scatter',
+                        mode: 'lines',
+                        name: 'Total Contributions',
+                        line: {dash: 'dash', color: 'blue'}
+                    },
+                    {
+                        x: t,
+                        y: A,
+                        type: 'scatter',
+                        mode: 'lines',
+                        name: 'Principal + Interest',
+                        line: {color: 'green'}
+                    }
+                ];
+    
+                const layout = {
+                    title: 'Compound Interest with Monthly Contributions Over Time',
+                    xaxis: {
+                        title: 'Time (years)'
+                    },
+                    yaxis: {
+                        title: 'Amount ($)'
+                    }
+                };
+    
+                Plotly.newPlot('compound-interest-chart', data, layout);
+            }
+    
+            // Initial chart render
+            updateChart();
+        </script>
+        <br>
           <div class="main-content">
             <section class="tips-section">
               <article class="tip">
