@@ -6,8 +6,19 @@
     <title>SavyStudents</title>
     <link rel="stylesheet" href="reset.css" />
     <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="bootstrap.min.css"/>
+    <link rel="stylesheet" href="bootstrap.min.css" />
     <script type="module" src="initialize-firebase.js"></script>
+    <script>
+      // Perform authentication check before the DOM loads, must be placed
+      // here to prevent page from even loading before redirecting an signed-in user
+      // placing this script anywhere else causes a delay before redirecting
+      const isLoggedIn = localStorage.getItem("isLoggedIn");
+      const userId = localStorage.getItem("userId");
+
+      if (isLoggedIn === "true" || userId !== "0") {
+        window.location.href = "home.html"; // Redirect to homepage
+      }
+    </script>
   </head>
   <body>
     <div class="site_container">
@@ -21,8 +32,7 @@
               type="text"
               class="form-control form-control-md"
               id="username"
-              placeholder="username"
-              required
+              placeholder="username or email"
             />
             <label for="password" class="form-label">Password</label>
             <input
@@ -30,21 +40,38 @@
               id="password"
               class="form-control form-control-md"
               placeholder="password"
-              required
             />
+            <div class="form-check form-switch mt-2 ms-1">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                role="switch"
+                id="passwordTextToggle"
+              />
+              <label
+                class="form-check-label text-body-tertiary"
+                for="passwordTextToggle"
+                >show password</label
+              >
+            </div>
             <div
               id="error-msg"
               class="text-danger mt-2 justify-content-center"
               style="display: none"
             ></div>
-              <button type="submit" class="btn btn-primary btn-success btn-md d-flex mx-auto mt-3">
-                Submit
-              </button>
-              <div class="d-flex justify-content-center">
-                <a href="register.html" class="logon-links btn fs-6"> Register </a>
-                <a href="reset-password.html" class="logon-links btn fs-6"> Forgot Password </a>
-              </div>
-             
+            <button
+              type="submit"
+              class="btn btn-primary btn-success btn-md d-flex mx-auto mt-3"
+            >
+              Submit
+            </button>
+            <div class="d-flex justify-content-center">
+              <a href="register.html" class="logon-links btn fs-6">
+                Register
+              </a>
+              <a href="reset-password.html" class="logon-links btn fs-6">
+                Forgot Password
+              </a>
             </div>
           </form>
         </div>

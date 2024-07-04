@@ -22,34 +22,34 @@
   </head>
   <body>
     <div class="site_container">
-      <header class="header"></header>
-      <main class="main">
-        <div
-          class="modal fade"
-          id="actionModal"
-          tabindex="-1"
-          data-bs-backdrop="static"
-          aria-labelledby="actionModalLabel"
-          aria-hidden="true"
-        >
-          <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-              <div class="modal-header">
-                <div
-                  id="modal-header-container"
-                  class="mx-auto d-flex flex-column justify-content-center"
-                ></div>
-                <button
-                  type="button"
-                  class="btn-close position-absolute top-0 end-0 m-2"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                ></button>
-              </div>
-              <div class="modal-body" id="modal-body"></div>
+      <div
+        class="modal fade"
+        id="actionModal"
+        tabindex="-1"
+        data-bs-backdrop="static"
+        aria-labelledby="actionModal"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <div
+                id="modal-header-container"
+                class="mx-auto d-flex flex-column justify-content-center"
+              ></div>
+              <button
+                type="button"
+                class="btn-close position-absolute top-0 end-0 m-2"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
             </div>
+            <div class="modal-body" id="modal-body"></div>
           </div>
         </div>
+      </div>
+      <header class="header"></header>
+      <main class="main">
         <div class="db-graph-1 card col-12">
           <img src="..." class="card-img-top" alt="..." />
           <div class="card-body">
@@ -84,11 +84,19 @@
                 data-bs-target="#actionModal"
                 data-source="forms/update-budget.html"
                 data-title="
-                <h2>Update your budget</h2>
-                <h3>Current Budget:</h3>
-                <h3>$300.00</h3>
-                <h3>Updated Budget:</h3>
-                <h3 id='newBudget'>$300.00</h3>"
+                <h2>Update Budget</h2>
+                <div class='container mt-3'>
+                  <div class='row d-flex justify-content-between gap-5'>
+                    <div class='budgetContainer d-flex flex-column align-items-center col border border-success-subtle border-3 p-4 rounded-2'>
+                      <h4 class='d-flex text-center'>Current Budget:</h4>
+                      <h4 id='currentBudget'></h4>
+                    </div>
+                    <div class='budgetContainer d-flex flex-column align-items-center col border border-success-subtle border-3 p-4 rounded-2'>
+                      <h4 class='d-flex text-center'>New<br>Budget:</h4>
+                      <h4 id='newBudget'></h4>
+                    </div>
+                  </div>
+                </div>"
               >
                 Update Budget
               </button>
@@ -145,265 +153,10 @@
         </div>
       </section>
       <aside class="right">
-        <!-- <div
-          class="accordion justify-content-center mx-auto col-12 col-md-10 col-sm-12 my-5"
-          id="accordionTransactions"
-        >
-          <div class="accordion-item">
-            <h2 class="accordion-header">
-              <button
-                class="accordion-button"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#collapseOne"
-                aria-expanded="true"
-                aria-controls="collapseOne"
-              >
-                Budgets
-              </button>
-            </h2>
-            <div
-              id="collapseOne"
-              class="accordion-collapse collapse show"
-              data-bs-parent="#accordionTransactions"
-            >
-              <div class="accordion-body">
-                <div class="table-responsive">
-                  <table class="table table-danger table-striped">
-                    <thead>
-                      <tr class="table-primary">
-                        <th scope="col">Category</th>
-                        <th scope="col">Limit</th>
-                        <th scope="col">Spent</th>
-                        <th scope="col">Remaining</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <th scope="row">Entertainment</th>
-                        <td>$100.00</td>
-                        <td>$22.33</td>
-                        <td>$77.77</td>
-                        <td class="table-btns col-1">
-                          <div class="btn-group" role="group">
-                            <button class="btn btn-secondary" value="1">
-                              Edit
-                            </button>
-                            <button class="btn btn-danger" value="1">
-                              Delete
-                            </button>
-                          </div>
-                        </td>
-                        <tr>
-                          <td>
-                            <input type="text" class="form-control" id="edit-category-${key}" value="${data.category}">
-                          </td>
-                            <td>
-                    
-                                <input type="number" class="form-control" id="edit-limit-${key}" value="${data.limit}">
-                            </td>
-                            <td>
-                                <input type="number" class="form-control" id="edit-spent-${key}" value="${data.spent}">
-                            </td>
-                            <td class="table-btns col-1">
-                              <div class="btn-group" role="group">
-                                <button class="btn btn-success">Confirm</button>
-                                <button class="btn btn-secondary">Cancel</button>
-                              </div>
-                            </td>
-                        </td>
-                        </tr>
-                      </tr>
-                      <tr>
-                        <th scope="row">Food</th>
-                        <td>$100.00</td>
-                        <td>$32.33</td>
-                        <td>$77.77</td>
-                        <td class="table-btns col-1">
-                          <div class="btn-group" role="group">
-                            <button class="btn btn-primary btn-md">Edit</button>
-                            <button class="btn btn-danger btn-md">
-                              Delete
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Utility</th>
-                        <td>$100.00</td>
-                        <td>$32.33</td>
-                        <td>$77.77</td>
-                        <td class="table-btns col-1">
-                          <div class="btn-group gap-2" role="group">
-                            <button class="btn btn-primary btn-md">Edit</button>
-                            <button class="btn btn-danger btn-md">
-                              Delete
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
-                    <tfoot>
-                      <tr class="table-dark">
-                        <th scope="row">Total:</th>
-                        <td>$300.00</td>
-                        <td>$60.22</td>
-                        <td>$276.66</td>
-                      </tr>
-                    </tfoot>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="accordion-item">
-            <h2 class="accordion-header">
-              <button
-                class="accordion-button collapsed"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#collapseTwo"
-                aria-expanded="false"
-                aria-controls="collapseTwo"
-              >
-                Expenses
-              </button>
-            </h2>
-            <div
-              id="collapseTwo"
-              class="accordion-collapse collapse"
-              data-bs-parent="#accordionTransactions"
-            >
-              <div class="accordion-body">
-                <div class="table-responsive">
-                  <table class="table table-info table-striped">
-                    <thead>
-                      <tr class="table-primary">
-                        <th scope="col">Date</th>
-                        <th scope="col">Description</th>
-                        <th scope="col">Amount</th>
-                        <th scope="col">Category</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <th scope="row">11/12/2024</th>
-                        <td>Add a description of your transaction</td>
-                        <td>$12.33</td>
-                        <td>Entertainment</td>
-                        <tr>
-                          <td>
-                              <input type="date" class="date-field form-control" id="edit-date-${key}" value="">
-                          </td>
-                          <td>
-                              <input type="text" class="form-control" id="edit-description-${key}" value="${data.description}">
-                          </td>
-                          <td>
-                              <input type="text" class="money-field form-control" id="edit-amount-${key}" value="${data.amount}">
-                          </td>
-                          <td>
-                              <input type="text" class="form-control" id="edit-category-${key}" value="${data.category}">
-                          </td>
-                          <td class="table-btns col-1">
-                            <div class="btn-group" role="group">
-                              <button class="btn btn-secondary" value="1">
-                                Confirm
-                              </button>
-                              <button class="btn btn-danger" value="1">
-                                Cancel
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      <tr>
-                        <th scope="row">11/12/2024</th>
-                        <td>Add a description of your transaction</td>
-                        <td>$12.33</td>
-                        <td>Food</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">11/12/2024</th>
-                        <td>Add a description of your transaction</td>
-                        <td>$12.33</td>
-                        <td>Utility</td>
-                      </tr>
-                    </tbody>
-                    <tfoot>
-                      <tr class="table-dark">
-                        <th scope="row"></th>
-                        <td class="d-flex justify-content-end">Total:</td>
-                        <td>$276.66</td>
-                        <td></td>
-                      </tr>
-                    </tfoot>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="accordion-item">
-            <h2 class="accordion-header">
-              <button
-                class="accordion-button collapsed"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#collapseThree"
-                aria-expanded="false"
-                aria-controls="collapseThree"
-              >
-                Income
-              </button>
-            </h2>
-            <div
-              id="collapseThree"
-              class="accordion-collapse collapse"
-              data-bs-parent="#accordionTransactions"
-            >
-              <div class="accordion-body">
-                <div class="table-responsive">
-                  <table class="table table-success table-striped">
-                    <thead>
-                      <tr class="table-primary">
-                        <th scope="col">Description</th>
-                        <th scope="col">Interval</th>
-                        <th scope="col">Amount</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <th scope="row">Best Buy check</th>
-                        <td>Weekly</td>
-                        <td>$12.33</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Walmart check</th>
-                        <td>Weekly</td>
-                        <td>$12.33</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Christmas Gift</th>
-                        <td>One-time</td>
-                        <td>$12.33</td>
-                      </tr>
-                    </tbody>
-                    <tfoot>
-                      <tr class="table-dark">
-                        <th scope="row"></th>
-                        <td>Total:</td>
-                        <td>$276.66</td>
-                      </tr>
-                    </tfoot>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div> -->
-
         <!-- eperimental html code to populate the tables based on database information -->
         <div class="accordion" id="accordionTransactions">
           <div class="accordion-item">
-            <h2 class="accordion-header" id="headingOne">
+            <h2 class="accordion-header d-flex mx-auto" id="headingOne">
               <button
                 class="accordion-button"
                 type="button"
@@ -422,8 +175,10 @@
               data-bs-parent="#accordionTransactions"
             >
               <div class="accordion-body">
-                <div class="table-responsive">
-                  <table class="table table-danger table-striped">
+                <div
+                  class="table-responsive d-flex flex-column align-items-center"
+                >
+                  <table class="table table-striped">
                     <thead>
                       <tr class="table-primary">
                         <th scope="col">Category</th>
@@ -433,6 +188,7 @@
                       </tr>
                     </thead>
                     <tbody id="budgetsTableBody"></tbody>
+                    <tfoot id="budgetsTableFoot"></tfoot>
                   </table>
                 </div>
               </div>
@@ -459,8 +215,42 @@
               data-bs-parent="#accordionTransactions"
             >
               <div class="accordion-body">
-                <div class="table-responsive">
-                  <table class="table table-info table-striped">
+                <div
+                  class="table-responsive d-flex flex-column align-items-center"
+                >
+                  <div class="d-flex justify-content-center mb-3 gap-5">
+                    <div>
+                      <label for="sortField">Sort by:</label>
+                      <select id="sortField" class="form-select form-select-md">
+                        <option value="all" selected>All</option>
+                        <option value="date">Date</option>
+                        <option value="description">Description</option>
+                        <option value="amount">Amount</option>
+                        <option value="category">Category</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label for="sortOrder">Order:</label>
+                      <select id="sortOrder" class="form-select form-select-md">
+                        <option value="asc" selected>Ascending</option>
+                        <option value="desc">Descending</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label for="filterField">Filter:</label>
+                      <select
+                        id="filterField"
+                        class="form-select form-select-md"
+                      >
+                        <option value="none" selected>None</option>
+                        <option value="food">Food</option>
+                        <option value="utility">Utility</option>
+                        <option value="entertainment">Entertainment</option>
+                        <option value="other">Other</option>
+                      </select>
+                    </div>
+                  </div>
+                  <table class="table table-striped">
                     <thead>
                       <tr class="table-primary">
                         <th scope="col">Date</th>
@@ -470,6 +260,7 @@
                       </tr>
                     </thead>
                     <tbody id="expensesTableBody"></tbody>
+                    <tfoot id="expensesTableFoot"></tfoot>
                   </table>
                 </div>
               </div>
@@ -495,16 +286,20 @@
               data-bs-parent="#accordionTransactions"
             >
               <div class="accordion-body">
-                <div class="table-responsive">
-                  <table class="table table-success table-striped">
+                <div
+                  class="table-responsive d-flex flex-column align-items-center"
+                >
+                  <table class="table table-striped">
                     <thead>
                       <tr class="table-primary">
+                        <th scope="col">Date</th>
                         <th scope="col">Description</th>
                         <th scope="col">Interval</th>
                         <th scope="col">Amount</th>
                       </tr>
                     </thead>
                     <tbody id="incomeTableBody"></tbody>
+                    <tfoot id="incomeTableFoot"></tfoot>
                   </table>
                 </div>
               </div>
@@ -570,5 +365,6 @@
     <script src="bootstrap.min.js"></script>
     <script type="module" src="load-template.js"></script>
     <script type="module" src="populateTables.js"></script>
+    <script src="scripts/savy_script.js"></script>
   </body>
 </html>

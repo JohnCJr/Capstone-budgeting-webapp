@@ -1,38 +1,118 @@
 // This set of code is intended to validate a user's attempt to submit a new source of income
-import { auth, onAuthStateChanged, getDatabase, ref, push, update } from '/initialize-firebase.js';// Adjust the path if necessary
+import { auth, onAuthStateChanged, getDatabase, ref, push, update } from '/initialize-firebase.js'; // Adjust the path if necessary
+import { sanitize } from '/sanitizeStrings.js'; // Import the sanitize function
 
-function getFormValidation() {
+
+function getIncomeFormValidation() {
   const incomeForm = document.getElementById("newIncome");
   const errorMessage = document.getElementById("new-income-error-msg");
   const incomeSelect = document.getElementById("incomeSelect");
 
+  function getCurrentFormattedDate() {
+    const date = new Date();
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+    const yyyy = date.getFullYear();
+    return mm + '/' + dd + '/' + yyyy;
+  }
+
+  function validateFields() {
+    const description = document.getElementById("incomeDescription").value.trim();
+    const amount = document.getElementById("incomeAmount").value.trim();
+    let selectedType;
+
+    if (window.innerWidth < 576) { // Small screen
+      selectedType = incomeSelect.value;
+    } else { // Larger screen
+      selectedType = document.querySelector('input[name="incomeTypes"]:checked')?.value;
+    }
+
+    let isValid = true;
+
+    if (!description) {
+      document.getElementById("incomeDescription").classList.add("is-invalid");
+      isValid = false;
+    } else {
+      document.getElementById("incomeDescription").classList.remove("is-invalid");
+    }
+
+    if (!amount) {
+      document.getElementById("incomeAmount").classList.add("is-invalid");
+      isValid = false;
+    } else {
+      document.getElementById("incomeAmount").classList.remove("is-invalid");
+    }
+
+    if (!selectedType) {
+      if (window.innerWidth < 576) {
+        incomeSelect.classList.add("is-invalid");
+      } else {
+        document.querySelectorAll('input[name="incomeTypes"]').forEach(input => input.classList.add("is-invalid"));
+      }
+      isValid = false;
+    } else {
+      incomeSelect.classList.remove("is-invalid");
+      document.querySelectorAll('input[name="incomeTypes"]').forEach(input => input.classList.remove("is-invalid"));
+    }
+
+    return isValid;
+  }
+
+  // Add event listeners to remove "is-invalid" class when the user starts typing
+  document.getElementById("incomeDescription").addEventListener("input", function () {
+    this.classList.remove("is-invalid");
+    errorMessage.textContent = "";
+    errorMessage.style.display = "none";
+  });
+
+  document.getElementById("incomeAmount").addEventListener("input", function () {
+    this.classList.remove("is-invalid");
+    errorMessage.textContent = "";
+    errorMessage.style.display = "none";
+  });
+
+  incomeSelect.addEventListener("change", function () {
+    this.classList.remove("is-invalid");
+    errorMessage.textContent = "";
+    errorMessage.style.display = "none";
+  });
+
+  document.querySelectorAll('input[name="incomeTypes"]').forEach(input => {
+    input.addEventListener("change", function () {
+      document.querySelectorAll('input[name="incomeTypes"]').forEach(input => input.classList.remove("is-invalid"));
+      errorMessage.textContent = "";
+      errorMessage.style.display = "none";
+    });
+  });
+
   incomeForm.addEventListener("submit", (event) => {
     event.preventDefault();
 
-    // Gather income data entered by the user
-    const incomeAmount = document.getElementById("incomeAmount").value;
-    const incomeDescription = document.getElementById("incomeDescription").value;
-    let incomeType;
-
-    // used to decide which input for income type to accept based on the screen size
-    if (window.innerWidth < 576) { // Small screen
-      incomeType = incomeSelect.value;
-    } else { // Larger screen
-      incomeType = document.querySelector('input[name="incomeTypes"]:checked').value;
-    }
-
-    // Validate input data
-    if (!incomeAmount || !incomeType || !incomeDescription) {
+    if (!validateFields()) {
       errorMessage.textContent = "All fields are required.";
       errorMessage.style.display = "flex";
       return;
     }
 
+    // Gather income data entered by the user
+    const description = sanitize(document.getElementById("incomeDescription").value);
+    const amount = sanitize(document.getElementById("incomeAmount").value);
+    const currentDate = getCurrentFormattedDate(); // Get the current date
+    let selectedType;
+
+    // used to decide which input for income type to accept based on the screen size
+    if (window.innerWidth < 576) { // Small screen
+      selectedType = sanitize(incomeSelect.value);
+    } else { // Larger screen
+      selectedType = sanitize(document.querySelector('input[name="incomeTypes"]:checked').value);
+    }
+
     // Create the data object to be sent to Firebase
     const data = {
-      amount: incomeAmount,
-      type: incomeType,
-      description: incomeDescription,
+      amount: amount,
+      type: selectedType,
+      description: description,
+      date: currentDate // Add the date to the data object
     };
 
     // Try to connect to Firebase and handle form submission
@@ -47,8 +127,9 @@ function getFormValidation() {
 
           update(ref(database), updates)
             .then(() => {
-              // Redirect to the dashboard once successfully updated income
-              window.location.href = "/dashboard.html";
+               // Show success notification
+               const modal = bootstrap.Modal.getInstance(document.getElementById('actionModal'));
+               modal.hide();
             })
             .catch((error) => {
               console.error("Error:", error);
@@ -78,4 +159,4 @@ function getFormValidation() {
 }
 
 // Assign the function to the window object to ensure it can be called asynchronously
-window.getFormValidation = getFormValidation;
+window.getIncomeFormValidation = getIncomeFormValidation;

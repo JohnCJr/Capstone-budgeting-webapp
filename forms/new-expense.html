@@ -16,7 +16,7 @@ and serves as the template to generate a new expense. -->
       </div>
     </div>
   </div>
-  <fieldset class="row mb-3 ms-3 d-sm-flex d-none">
+  <fieldset class="expensseFieldset row mb-3 ms-3 d-sm-flex d-none">
     <legend class="col-form-label col-sm-3 pt-0">Type:</legend>
     <div class="col-sm-8">
       <div class="form-check">
@@ -65,14 +65,16 @@ and serves as the template to generate a new expense. -->
     </div>
   </fieldset>
   <div class="row mb-3 d-sm-none d-flex" id="selectContainer">
-    <label for="incomeSelect" class="col-form-label col-sm-3 pt-0">Type:</label>
+    <label for="expenseSelect" class="col-form-label col-sm-3 pt-0"
+      >Type:</label
+    >
     <div class="col-sm-8">
       <select
         class="form-select form-select-sm"
-        id="incomeSelect"
+        id="expenseSelect"
         aria-label="Small type select"
       >
-        <option value="food">Food</option>
+        <option value="food" selected>Food</option>
         <option value="utility">Utility</option>
         <option value="entertainment">Entertainment</option>
         <option value="other">Other</option>

@@ -3,7 +3,7 @@
 
 // for testing purposes, the navbar will cotian th user icon to acess the dashboard even when not logged in,'
 // navbar will display sign out when user is signed in and vice versa.
-import { auth, signOut } from "./initialize-firebase.js";
+import { auth, onAuthStateChanged, getDatabase, ref, update, get, signOut } from "./initialize-firebase.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   let navbarHTML = '';
@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <nav class="navbar navbar-expand-md bg-body-tertiary">
         <div class="container-fluid px-lg-5 px-md-2 px-0 d-flex py-1 justify-content-between align-items-center">
           <a class="navbar-brand fs-1 d-flex align-items-center ms-2" href="home.html">
-            <img src="images/logo.jpg" alt="SavvyStudent brand logo" />
+            <img id='navabar-logo' src="images/Cajoe-bits-logo.png" alt="SavvyStudent brand logo" />
             SavvyStudents
           </a>
           <div class="d-flex align-items-center ms-auto order-md-2">
@@ -44,12 +44,12 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const loadLoggedInNavbar = () => {
-    navbarHTML = `
+    const navbarHTML = `
       <nav class="navbar navbar-expand-md bg-body-tertiary">
         <div class="container-fluid px-lg-5 px-md-2 px-0 d-flex py-1 justify-content-between align-items-center">
-          <a class="navbar-brand fs-1 d-flex align-items-center ms-2" href="home.html">
-            <img src="images/logo.jpg" alt="SavvyStudent brand logo" />
-            SavvyStudents
+          <a class="navbar-brand fs-2 d-flex align-items-center ms-2" href="home.html">
+            <img id='navabar-logo' src="images/Cajoe-bits-logo.png" alt="SavvyStudent brand logo" />
+            <div id="navbar-header">SavvyStudents</div>
           </a>
           <div class="d-flex align-items-center ms-auto order-md-2">
             <button class="navbar-toggler d-md-none me-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,6 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
               <li class="nav-item"><a class="nav-link" aria-current="page" href="home.html">Home</a></li>
               <li class="nav-item"><a class="nav-link" aria-current="page" href="about-us.html">About Us</a></li>
               <li class="nav-item"><a class="nav-link" aria-current="page" href="budgeting-tips.html">Budgeting Tips</a></li>
+              <li class="nav-item"><a class="nav-link" aria-current="page" href="dashboard.html">Dashboard</a></li>
               <li class="nav-item"><a class="nav-link sign-out" aria-current="page">Sign Out</a></li>
             </ul>
           </div>
@@ -72,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
     document.querySelector(".header").innerHTML = navbarHTML;
     document.querySelector(".footer").innerHTML = footerHTML;
-
+  
     // adds an event listener for sign out link that will clear user information and redirect them to the sign-on.html page
     document.querySelector('.sign-out').addEventListener('click', () => {
       signOut(auth).then(() => {
@@ -86,6 +87,21 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error('Sign out error:', error);
       });
     });
+  
+    // Add the custom styles for the specific screen size range
+    const style = document.createElement('style');
+    style.innerHTML = `
+      @media only screen and (min-width: 768px) and (max-width: 912px) {
+        .navbar-nav .nav-item{
+          font-size: 1rem !important;
+        }
+  
+        #navbar-header {
+          font-size: calc(1rem + 1vw) !important;
+        }
+      }
+    `;
+    document.head.appendChild(style);
   };
 
   // Check if user is logged in and displays the correct navbar
