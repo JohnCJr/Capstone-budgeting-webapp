@@ -13,18 +13,25 @@
     <style>
       .controls {
         display: flex;
+        flex-wrap: wrap;
         gap: 15px;
         margin-bottom: 20px;
+        justify-content: center;
+      }
+      .controls div {
+        flex: 1 1 150px;
+        min-width: 150px;
+        max-width: 200px;
       }
       .controls label {
         display: inline-block;
         margin-right: 5px;
       }
       .controls input {
+        width: 100%;
         padding: 8px;
         border: 1px solid #ccc;
         border-radius: 4px;
-        width: 100px;
       }
       .controls button {
         padding: 8px 15px;
@@ -33,6 +40,8 @@
         color: white;
         border-radius: 4px;
         cursor: pointer;
+        flex: 1 1 100%;
+        max-width: 200px;
       }
       .controls button:hover {
         background-color: #0056b3;
@@ -43,6 +52,54 @@
         border-radius: 20px;
         overflow: hidden;
         box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        margin-bottom: 20px;
+        position: relative;
+      }
+      #compound-interest-chart {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+      .left {
+        background: linear-gradient(to bottom, #c9f7ff, #e0e0ff);
+        padding: 20px;
+      }
+      .tips-section article {
+        margin-bottom: 20px;
+      }
+      .home-button-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+      }
+      .home-button-container button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      .home-button-container button:hover {
+        background-color: #0056b3;
+      }
+      @media (max-width: 768px) {
+        .controls {
+          flex-direction: column;
+          align-items: center;
+        }
+        .controls div {
+          max-width: 100%;
+          flex: 1 1 0;
+        }
+        .chart-container {
+          height: 400px;
+        }
+        #compound-interest-chart {
+          height: 100%;
+        }
       }
     </style>
   </head>
@@ -54,22 +111,64 @@
           <header class="header">
             <h1>Budgeting Tips for College Students</h1>
           </header>
-          <div class="chart-container">
-            <div
-              id="compound-interest-chart"
-              style="width: 100%; height: 100%"
-            ></div>
+          <div class="main-content">
+            <section class="tips-section">
+              <article class="tip">
+                <h2>1. Track Your Spending</h2>
+                <p>
+                  Keeping track of your daily expenses helps you understand
+                  where your money goes. Use a budgeting app or keep a journal.
+                </p>
+              </article>
+              <article class="tip">
+                <h2>2. Create a Budget</h2>
+                <p>
+                  Establish a monthly budget based on your income and expenses.
+                  Make sure to categorize your spending.
+                </p>
+              </article>
+              <article class="tip">
+                <h2>3. Prioritize Needs Over Wants</h2>
+                <p>
+                  Ensure that essential expenses like rent, groceries, and
+                  utilities are covered before spending on non-essentials.
+                </p>
+              </article>
+              <article class="tip">
+                <h2>4. Save for Emergencies</h2>
+                <p>
+                  Set aside a small amount each month for unexpected expenses.
+                  An emergency fund can prevent financial stress.
+                </p>
+              </article>
+              <article class="tip">
+                <h2>5. Avoid Unnecessary Debt</h2>
+                <p>
+                  Use credit cards wisely and avoid taking on debt for
+                  non-essential purchases. Pay off your balance each month if
+                  possible.
+                </p>
+              </article>
+            </section>
+            <div class="home-button-container">
+              <button onclick="goHome()">Return to Home</button>
+            </div>
           </div>
-          <br />
+        </div>
+      </main>
+      <section class="left">
+        <div class="container">
+          <h1 class="text-center">fill this in with a title</h1>
+          <div class="chart-container">
+            <div id="compound-interest-chart"></div>
+          </div>
           <div class="controls">
             <div>
               <label for="interestRate">Annual Interest Rate (%): </label>
               <input type="number" id="interestRate" value="10" step="0.1" />
             </div>
             <div>
-              <label for="monthlyContribution"
-                >Monthly Contribution ($):
-              </label>
+              <label for="monthlyContribution">Monthly Contribution ($):</label>
               <input
                 type="number"
                 id="monthlyContribution"
@@ -161,6 +260,7 @@
                 yaxis: {
                   title: "Amount ($)",
                 },
+                autosize: true,
               };
 
               Plotly.newPlot("compound-interest-chart", data, layout);
@@ -169,54 +269,7 @@
             // Initial chart render
             updateChart();
           </script>
-          <br />
-          <div class="main-content">
-            <section class="tips-section">
-              <article class="tip">
-                <h2>1. Track Your Spending</h2>
-                <p>
-                  Keeping track of your daily expenses helps you understand
-                  where your money goes. Use a budgeting app or keep a journal.
-                </p>
-              </article>
-              <article class="tip">
-                <h2>2. Create a Budget</h2>
-                <p>
-                  Establish a monthly budget based on your income and expenses.
-                  Make sure to categorize your spending.
-                </p>
-              </article>
-              <article class="tip">
-                <h2>3. Prioritize Needs Over Wants</h2>
-                <p>
-                  Ensure that essential expenses like rent, groceries, and
-                  utilities are covered before spending on non-essentials.
-                </p>
-              </article>
-              <article class="tip">
-                <h2>4. Save for Emergencies</h2>
-                <p>
-                  Set aside a small amount each month for unexpected expenses.
-                  An emergency fund can prevent financial stress.
-                </p>
-              </article>
-              <article class="tip">
-                <h2>5. Avoid Unnecessary Debt</h2>
-                <p>
-                  Use credit cards wisely and avoid taking on debt for
-                  non-essential purchases. Pay off your balance each month if
-                  possible.
-                </p>
-              </article>
-            </section>
-            <div class="home-button-container">
-              <button onclick="goHome()">Return to Home</button>
-            </div>
-          </div>
         </div>
-      </main>
-      <section class="left">
-        <h3>Place content Here</h3>
       </section>
       <aside class="right">
         <img
@@ -294,7 +347,8 @@
             <div class="mb-3">
               <label for="editUserAbout" class="form-label">About Me</label>
               <textarea class="form-control" id="editUserAbout" rows="3">
-Testing testing edinson</textarea
+                            Testing testing edinson
+                        </textarea
               >
             </div>
             <button
