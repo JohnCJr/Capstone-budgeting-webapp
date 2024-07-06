@@ -1,6 +1,7 @@
-// This set of code is intended to validate a user's attempt to submit a new source of income
-import { auth, onAuthStateChanged, getDatabase, ref, push, update } from '/initialize-firebase.js'; // Adjust the path if necessary
-import { sanitize } from '/sanitizeStrings.js'; // Import the sanitize function
+// validates a user's attempt to submit a new source of income, called by form-modal-load.js
+
+import { auth, onAuthStateChanged, getDatabase, ref, push, update } from '/initialize-firebase.js';
+import { sanitize } from '/sanitizeStrings.js'; // imports the sanitize function
 
 
 function getIncomeFormValidation() {
@@ -8,6 +9,7 @@ function getIncomeFormValidation() {
   const errorMessage = document.getElementById("new-income-error-msg");
   const incomeSelect = document.getElementById("incomeSelect");
 
+  // gets the current date and formats it o MM/DD/YYYY
   function getCurrentFormattedDate() {
     const date = new Date();
     const mm = String(date.getMonth() + 1).padStart(2, '0');
@@ -16,19 +18,22 @@ function getIncomeFormValidation() {
     return mm + '/' + dd + '/' + yyyy;
   }
 
+  // checks user input for valid data
   function validateFields() {
     const description = document.getElementById("incomeDescription").value.trim();
     const amount = document.getElementById("incomeAmount").value.trim();
     let selectedType;
 
+    // switches between radio or select options based on screen size
     if (window.innerWidth < 576) { // Small screen
       selectedType = incomeSelect.value;
     } else { // Larger screen
       selectedType = document.querySelector('input[name="incomeTypes"]:checked')?.value;
     }
 
-    let isValid = true;
+    let isValid = true; // defaults to true
 
+    // checks if description is not empty
     if (!description) {
       document.getElementById("incomeDescription").classList.add("is-invalid");
       isValid = false;
@@ -36,6 +41,7 @@ function getIncomeFormValidation() {
       document.getElementById("incomeDescription").classList.remove("is-invalid");
     }
 
+    // checks if amount entered is not empty
     if (!amount) {
       document.getElementById("incomeAmount").classList.add("is-invalid");
       isValid = false;
@@ -43,6 +49,7 @@ function getIncomeFormValidation() {
       document.getElementById("incomeAmount").classList.remove("is-invalid");
     }
 
+    // checks if selection is made, check is based on screen size
     if (!selectedType) {
       if (window.innerWidth < 576) {
         incomeSelect.classList.add("is-invalid");
@@ -58,7 +65,7 @@ function getIncomeFormValidation() {
     return isValid;
   }
 
-  // Add event listeners to remove "is-invalid" class when the user starts typing
+  // adds event listeners to remove "is-invalid" class when the user starts typing, assuming that they will correct invalid input
   document.getElementById("incomeDescription").addEventListener("input", function () {
     this.classList.remove("is-invalid");
     errorMessage.textContent = "";
@@ -94,7 +101,7 @@ function getIncomeFormValidation() {
       return;
     }
 
-    // Gather income data entered by the user
+    // gathers income data entered by the user
     const description = sanitize(document.getElementById("incomeDescription").value);
     const amount = sanitize(document.getElementById("incomeAmount").value);
     const currentDate = getCurrentFormattedDate(); // Get the current date
@@ -112,10 +119,10 @@ function getIncomeFormValidation() {
       amount: amount,
       type: selectedType,
       description: description,
-      date: currentDate // Add the date to the data object
+      date: currentDate // adds the current date to the data object
     };
 
-    // Try to connect to Firebase and handle form submission
+    // tries to connect to Firebase and handle form submission
     try {
       const database = getDatabase();
       onAuthStateChanged(auth, (user) => {
@@ -125,9 +132,9 @@ function getIncomeFormValidation() {
           const updates = {};
           updates['/income/' + userId + '/' + newIncomeKey] = data;
 
+          // closes modal upon successful update
           update(ref(database), updates)
             .then(() => {
-               // Show success notification
                const modal = bootstrap.Modal.getInstance(document.getElementById('actionModal'));
                modal.hide();
             })
@@ -146,17 +153,17 @@ function getIncomeFormValidation() {
     }
   });
 
-  // Function to display error messages
+  // displays error messages
   function displayError(message) {
     errorMessage.textContent = message;
     errorMessage.style.display = "flex";
 
-    // Clears the input fields and resets radio to default selection
+    // clears the input fields and resets radio to default selection
     document.getElementById("incomeAmount").value = "";
     document.getElementById("incomeType1").checked = true;
     document.getElementById("incomeDescription").value = "";
   }
 }
 
-// Assign the function to the window object to ensure it can be called asynchronously
+// assigns the function to the window object to ensure it can be called asynchronously
 window.getIncomeFormValidation = getIncomeFormValidation;

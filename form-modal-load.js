@@ -1,21 +1,12 @@
 // gathers the necessary JS based on the button clicked and connects the new-expense, new-income, 
-// update-budget, and savy_script js to the dashboard modal
+// update-budget, and savy_script js to the dashboard modal. Also handles budget suggestion card.
 
-// must update include toast for successful submission
 
 import { ref,get,database, onChildAdded, onChildChanged, onChildRemoved } from "./initialize-firebase.js";
 
-function logWindowWidth() {
-  console.log(`Window width: ${window.innerWidth}px`);
-}
-
-// Log the window width when the page loads
-window.addEventListener('load', logWindowWidth);
-
-
 document.addEventListener("DOMContentLoaded", () => {
   const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-  const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+  const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl)); // needed to trigger tooltips in the currentTotalIncome section
   const formModal = document.getElementById("actionModal");
   const modalHeader = document.getElementById("modal-header-container");
   const modalBody = document.getElementById("modal-body");
@@ -32,11 +23,23 @@ document.addEventListener("DOMContentLoaded", () => {
   let msg;
   let initialLoadComplete = false;
 
+  // bootstrap spinners used as placeholders until data is pulled into the website
+  const spinnerHTML = '<div class="spinner-border text-success" role="status"><span class="sr-only"></span></div>';
+  currentBudgetAmount.innerHTML = spinnerHTML;
+  suggestedBudgetAmount.innerHTML = spinnerHTML;
+
   setBudgetAmount.value = '';
 
-  // Log the window width whenever the window is resized
-window.addEventListener('resize', toggleFieldsetSelectVisibility);
+  // listens to window resize, triggers radip/select display and number of toasts displayed when screen size is small
+  window.addEventListener('resize', handleResize);
 
+  // used to call functions
+  function handleResize() {
+    toggleFieldsetSelectVisibility();
+    manageToastsOnResize();
+  }
+
+  // hides/displays radios/select dropdown based on screen width
   function toggleFieldsetSelectVisibility() {
     if (window.innerWidth < 576) {
       budgetTypeFieldset.style.display = 'none';
@@ -47,6 +50,17 @@ window.addEventListener('resize', toggleFieldsetSelectVisibility);
     }
   }
 
+  // changes max number of toasts displays from 4 to 1 when screen is small, keeping only the most recent one.
+  function manageToastsOnResize() {
+    if (window.innerWidth < 576) {
+      while (toasterContainer.children.length > 1) {
+        toasterContainer.removeChild(toasterContainer.firstChild);
+      }
+    }
+  }
+
+  // matches selection for both radio and select options so they match if the user changes the screen width on their device
+  // also chnages the header and suggested budget amount for the budgets suggestion section based the the user's selection 
   function updateAndSynchronizeSelections() {
     const selectedRadio = document.querySelector('input[name="budgetTypes"]:checked');
     if (window.innerWidth < 576) {
@@ -63,13 +77,14 @@ window.addEventListener('resize', toggleFieldsetSelectVisibility);
     suggestedBudgetTitle.textContent = `Suggested ${selectedValue} budget`;
 
     recalculateTotalBudget(selectedValue);
+    console.log("curretn income vlaue right now: " + currentBudgetAmount.textContent);
     console.log('recalculateTotalBudget is being called from updateAndSynchronizeSelections');
   }
 
+  // adds listener for any changes in selection/radio buttons and calls function to make sure both match
   if (budgetTypeSelect) {
     budgetTypeSelect.addEventListener("change", updateAndSynchronizeSelections);
   }
-
   if (budgetTypeFieldset) {
     const radios = budgetTypeFieldset.querySelectorAll('input[name="budgetTypes"]');
     radios.forEach(radio => {
@@ -77,6 +92,7 @@ window.addEventListener('resize', toggleFieldsetSelectVisibility);
     });
   }
 
+  // converts income amount to appropriate amount based on budget type na payment interval
   function calculateBudgetAmount(amount, interval, budgetType) {
     const conversionFactors = {
       yearly: {
@@ -103,6 +119,7 @@ window.addEventListener('resize', toggleFieldsetSelectVisibility);
     return parseFloat(result.toFixed(2));
   }
 
+  // resets total amount and recalculates tototal income, omiting one-time sources
   function recalculateTotalBudget(selectedBudgetType) {
     console.log('recalculateTotalBudget is being called');
     totalAmount = 0;
@@ -118,9 +135,11 @@ window.addEventListener('resize', toggleFieldsetSelectVisibility);
       if (snapshot.exists()) {
         const userIncomes = snapshot.val();
 
+        // loops through array of values for userIncomes
         Object.values(userIncomes).forEach(income => {
           if (income.type !== 'once') {
-            totalAmount += calculateBudgetAmount(parseFloat(income.amount), income.type, selectedBudgetType);
+            // passes values to function to see how income will be calculated
+            totalAmount += calculateBudgetAmount(parseFloat(income.amount), income.type, selectedBudgetType); 
           }
         });
 
@@ -136,6 +155,8 @@ window.addEventListener('resize', toggleFieldsetSelectVisibility);
     });
   }
 
+  // calculates and displays suggested budget amount and disables/enables button based on whether the value 
+  // is more than zero and within the user's total income. Used to prevent submitting invalid data.
   function updateSuggestedBudgetAmount() {
     const budgetAmount = parseFloat(setBudgetAmount.value) || 0;
     suggestedAmount = (totalAmount - budgetAmount).toFixed(2);
@@ -150,12 +171,14 @@ window.addEventListener('resize', toggleFieldsetSelectVisibility);
 
   setBudgetAmount.addEventListener("input", updateSuggestedBudgetAmount);
 
+  // used to get the right script for the html that's dynamically loaded into the modal
   const scriptMap = {
     "forms/update-budget.html": "scripts/update-budget.js",
     "forms/new-income.html": "scripts/new-income.js",
     "forms/new-expense.html": "scripts/new-expense.js",
   };
 
+  // formats input to have only one "."
   setBudgetAmount.addEventListener("input", (e) => {
     let value = e.target.value.replace(/[^\d.]/g, '');
 
@@ -168,6 +191,7 @@ window.addEventListener('resize', toggleFieldsetSelectVisibility);
     updateSuggestedBudgetAmount();
   });
 
+  // formats input amount when user clicks away from input field
   setBudgetAmount.addEventListener('blur', function () {
     let value = this.value;
     value = value.replace(/^0+(?=\d)/, '');
@@ -186,10 +210,12 @@ window.addEventListener('resize', toggleFieldsetSelectVisibility);
     this.value = value;
   });
 
+  // loads the appropriate html and js file based on which button was clicked to show the modal.
+  // will always load savy_script.js.
   formModal.addEventListener("show.bs.modal", function (event) {
     const button = event.relatedTarget;
-    const form = button.getAttribute("data-source");
-    const header = button.getAttribute("data-title");
+    const form = button.getAttribute("data-source");  // data-source contains the html file path
+    const header = button.getAttribute("data-title"); // contains data for header to display in the modal
     const buttonId = button.id;
 
     modalHeader.innerHTML = header;
@@ -206,10 +232,10 @@ window.addEventListener('resize', toggleFieldsetSelectVisibility);
       })
       .then(() => {
         if (typeof window.getFormValidationShared === "function") {
-          window.getFormValidationShared();
+          window.getFormValidationShared(); // function in savy_scripts.js
         }
 
-        const formScript = scriptMap[form];
+        const formScript = scriptMap[form]; // sets variable based on html file 
         return loadScript(formScript);
       })
       .then(() => {
@@ -232,6 +258,7 @@ window.addEventListener('resize', toggleFieldsetSelectVisibility);
           throw new Error("Form element not found.");
         }
 
+        // used to edit toast message based on button clicked
         if (form === "forms/new-income.html") {
           msg = "income form";
         } else if (form === "forms/new-expense.html") {
@@ -240,6 +267,7 @@ window.addEventListener('resize', toggleFieldsetSelectVisibility);
           msg = "budget form";
         }
 
+        // adds listener to cancel button and dismiss button at the top right of the modal
         const cancelButtons = modalBody.querySelectorAll('.btn-cancel, [data-bs-dismiss="modal"]');
         cancelButtons.forEach(button => {
           button.addEventListener('click', () => {
@@ -248,16 +276,19 @@ window.addEventListener('resize', toggleFieldsetSelectVisibility);
           });
         });
 
+        // adds listener to add class to model, which will be used to identify which form was submitted
         formElement.addEventListener('submit', () => {
           formModal.classList.add('was-submitted');
         });
       })
       .catch((error) => {
         console.error("Failed to load form:", error);
+        // must be used to display error message since html is dynamically loaded into modal
         modalBody.innerHTML = '<p class="text-danger">Failed to load form. Please try again later.</p>';
       });
   });
 
+  // removes dynamically loaded scripts and classes added once the type of action was taken, submission or cancelation.
   formModal.addEventListener("hidden.bs.modal", function () {
     modalBody.innerHTML = '';
     removeScripts(["scripts/savy_script.js", ...Object.values(scriptMap)]);
@@ -271,6 +302,7 @@ window.addEventListener('resize', toggleFieldsetSelectVisibility);
     formModal.classList.remove('was-cancelled', 'was-submitted');
   });
 
+  // displays notification if form was closed or cancelled, limits the number that can be displayed to 4
   function showCancelNotification(msg, action) {
     const toasterContainer = document.getElementById('toasterContainer');
     if (toasterContainer.children.length >= 4) {
@@ -298,14 +330,15 @@ window.addEventListener('resize', toggleFieldsetSelectVisibility);
       </div>
     `;
 
-    toasterContainer.appendChild(toast);
-    const bsToast = new bootstrap.Toast(toast, { autohide: false });
+    manageToasts(toast);
+    const bsToast = new bootstrap.Toast(toast, { autohide: false });  // sets the toast to remain on screen until the user closes the toast
     bsToast.show();
 
     updateTimestamps();
   }
 
-  function showSubmitNotification(msg, action) {
+  // displays notification if form was submitted, limits the number that can be displayed to 4
+  function showSubmitNotification(msg) {
     const toasterContainer = document.getElementById('toasterContainer');
     if (toasterContainer.children.length >= 4) {
       toasterContainer.removeChild(toasterContainer.firstChild);
@@ -332,13 +365,33 @@ window.addEventListener('resize', toggleFieldsetSelectVisibility);
       </div>
     `;
 
-    toasterContainer.appendChild(toast);
+    manageToasts(toast);
     const bsToast = new bootstrap.Toast(toast, { autohide: false });
     bsToast.show();
 
     updateTimestamps();
   }
 
+   // Manage toasts based on screen size
+   function manageToasts(newToast) {
+    if (window.innerWidth < 576) {
+      // Remove all existing toasts
+      while (toasterContainer.firstChild) {
+        toasterContainer.removeChild(toasterContainer.firstChild);
+      }
+    } else {
+      // Limit the number of toasts to 4
+      if (toasterContainer.children.length >= 4) {
+        toasterContainer.removeChild(toasterContainer.firstChild);
+      }
+    }
+
+    // Append the new toast
+    toasterContainer.appendChild(newToast);
+  }
+
+
+  // updates toast timestamp based on how long it's been displayed, displays chnage very 1 minute
   function updateTimestamps() {
     const toasts = document.querySelectorAll('.toast small[data-timestamp]');
     toasts.forEach((small) => {
@@ -359,6 +412,7 @@ window.addEventListener('resize', toggleFieldsetSelectVisibility);
     setTimeout(updateTimestamps, 60000);
   }
 
+  // used to handle loading the script to the html as a module
   function loadScript(src) {
     return new Promise((resolve, reject) => {
       const script = document.createElement("script");
@@ -376,6 +430,7 @@ window.addEventListener('resize', toggleFieldsetSelectVisibility);
     });
   }
 
+  // removes the all scripts that were loaded
   function removeScripts(scripts) {
     scripts.forEach(src => {
       const scriptElements = document.querySelectorAll(`script[src="${src}"]`);
@@ -386,7 +441,8 @@ window.addEventListener('resize', toggleFieldsetSelectVisibility);
     });
   }
 
-  // Adding Firebase listeners for income changes
+  // Adding Firebase real-time listeners for income "table" changes to update the total user income in 
+  // the budget suggestion section to keep data displayed accurate and up to date
   const userId = localStorage.getItem('userId');
   if (userId && userId !== '0') {
     const incomesRef = ref(database, `income/${userId}`);

@@ -1,4 +1,4 @@
-// function that will be used to santiize data from the front-end
+// functions that will be used to santiize data from the front-end
 
 export function sanitize(input, isEmail = false) {
     if (typeof input !== 'string') {

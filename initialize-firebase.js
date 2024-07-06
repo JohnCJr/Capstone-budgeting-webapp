@@ -1,3 +1,5 @@
+// gathers all the functions that will be used for the other scripts, which will then import this script
+
 import {initializeApp} from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
 import {getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, sendPasswordResetEmail} from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 import {getDatabase, ref, get, orderByChild, equalTo, query, update, set, remove, onValue, push, onChildAdded, onChildChanged, onChildRemoved} from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";

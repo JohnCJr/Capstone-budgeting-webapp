@@ -1,7 +1,7 @@
-// This code validates and sends user input to update their budget
+// validates and sends user input to update their budget, called by form-modal-load.js
 
 import { auth, onAuthStateChanged, getDatabase, ref, update, get } from '/initialize-firebase.js';
-import { sanitize } from '/sanitizeStrings.js'; // Import the sanitize function
+import { sanitize } from '/sanitizeStrings.js'; // imports the sanitize function
 
 function getBudgetFormValidation(suggestedAmount = null, selectedValue = null) {
   const budgetForm = document.getElementById("updateBudget");
@@ -29,6 +29,7 @@ function getBudgetFormValidation(suggestedAmount = null, selectedValue = null) {
 
     let allFieldsFilled = true;
 
+    // checks all fields to make sure no field is empty
     fields.forEach(field => {
       if (!field.value) {
         displayError("All fields must be filled out.");
@@ -100,6 +101,7 @@ function getBudgetFormValidation(suggestedAmount = null, selectedValue = null) {
     }
   }
 
+  // fetches budget Firebase value for user and populates input with values, otherwise defaults to 0.00
   function fetchAndSetDefaultValues() {
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -163,11 +165,11 @@ function getBudgetFormValidation(suggestedAmount = null, selectedValue = null) {
       utility: utilityBudget,
       entertainment: entertainmentBudget,
       other: otherBudget,
-      budgetType: budgetType, // Add the budget type to the data object
-      date: currentDate // Add the formatted date to the data object
+      budgetType: budgetType, 
+      date: currentDate // Add the formatted currentdate to the data object
     };
 
-    // Try to connect to Firebase Realtime Database and handle form submission
+    // tries to connect to Firebase Realtime Database and handle form submission
     try {
       const database = getDatabase();
       onAuthStateChanged(auth, (user) => {
@@ -178,7 +180,6 @@ function getBudgetFormValidation(suggestedAmount = null, selectedValue = null) {
 
           update(ref(database), updates)
             .then(() => {
-              // Show success notification
               const modal = bootstrap.Modal.getInstance(document.getElementById('actionModal'));
               modal.hide();
             })
@@ -197,13 +198,13 @@ function getBudgetFormValidation(suggestedAmount = null, selectedValue = null) {
     }
   });
 
-  // Function to display error messages without clearing input fields
+  // displays error messages without clearing input fields
   function displayError(message) {
     errorMessage.textContent = message;
     errorMessage.style.display = "flex";
   }
 
-  // Updates the new budget header to be the total entered by the user on the input field totalBudget
+  // updates the new budget header to be the total entered by the user on the input field totalBudget
   moneyBoxes.forEach((input) => {
     input.addEventListener("blur", function () {
       const newTotalBudget = sanitize(document.getElementById("totalBudget").value);
@@ -211,7 +212,7 @@ function getBudgetFormValidation(suggestedAmount = null, selectedValue = null) {
       checkCategorySum();
     });
 
-    // Remove error state when the user starts typing
+    // removes error state when the user starts typing
     input.addEventListener("input", function () {
       if (input.value) {
         input.classList.remove("is-invalid");
@@ -223,5 +224,5 @@ function getBudgetFormValidation(suggestedAmount = null, selectedValue = null) {
   fetchAndSetDefaultValues();
 }
 
-// Assign the function to the window object to ensure it can be called asynchronously
+// assign the function to the window object to ensure it can be called asynchronously
 window.getBudgetFormValidation = getBudgetFormValidation;

@@ -1,4 +1,5 @@
-// resets user password if the correct username, email, and phoneNumber provided.
+// resets user password if the correct username, email, and phoneNumber provided. 
+// Firebase sneds email with link to change password
 
 import { auth, database, ref, get, orderByChild, equalTo, query, sendPasswordResetEmail } from "./initialize-firebase.js"; // Adjust the path if necessary
 import { sanitize, validateEmail } from './sanitizeStrings.js';  // Import the sanitize function
@@ -8,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const errorMessage = document.getElementById("error-msg");
   const cancelButton = document.querySelector(".logon-links");
 
-  // Real-time validation and formatting for phone number input
+  // validation and formatting for phone number input
   const phoneNumberInput = document.getElementById('phoneNumber');
   phoneNumberInput.addEventListener('input', (e) => {
     const x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
@@ -19,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Add event listeners for real-time validation of all fields
+  // add event listeners for real-time validation of all fields
   document.querySelectorAll('#resetForm input').forEach(input => {
     input.addEventListener('input', () => {
       if (input.classList.contains('is-invalid')) {
@@ -32,13 +33,12 @@ document.addEventListener("DOMContentLoaded", () => {
   resetForm.addEventListener("submit", async (e) => {
     e.preventDefault(); // Prevent the default form submission
 
-    // Get and sanitize user input values
+    // get and sanitize user input values
     const userEmail = sanitize(document.getElementById("userEmail").value, true);
     const username = sanitize(document.getElementById("username").value);
     const phoneNumber = sanitize(document.getElementById("phoneNumber").value.replace(/\D/g, '')); // Remove formatting
 
-    // Validate fields are not empty
-    let formValid = true;
+    let formValid = true; // validate fields are not empty
     document.querySelectorAll('#resetForm input').forEach(input => {
       if (!input.value.trim()) {
         input.classList.add('is-invalid');
@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Validate email format
+    // validate email format
     if (!validateEmail(userEmail)) {
       const emailField = document.getElementById("userEmail");
       emailField.classList.add('is-invalid');
@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
       snapshot.forEach(childSnapshot => {
         const userData = childSnapshot.val();
 
-        // Check if all user information matches
+        // check if all user information matches
         if (userData.email === userEmail && userData.phoneNumber === phoneNumber) {
           userFound = true;
           userKey = childSnapshot.key;
@@ -78,14 +78,14 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       if (!userFound || !userKey) {
-        displayError("Incorrect information");
+        displayError("Invalid information");
         return;
       }
 
-      // Send password reset email
+      // sends password reset email
       await sendPasswordResetEmail(auth, userEmail);
 
-      // Display success message
+      // display success message
       displaySuccess("Password reset email sent. If you haven't received an email, click the button again.");
       cancelButton.textContent = "Return";
     } catch (error) {
@@ -94,21 +94,21 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Function to display error messages
+  // function to display error messages
   function displayError(message) {
     errorMessage.style.color = "red";
     errorMessage.textContent = message;
-    errorMessage.style.display = "flex";
+    errorMessage.style.display = "block";
   }
 
-  // Function to display success messages
+  // function to display success messages
   function displaySuccess(message) {
     errorMessage.style.color = "green";
     errorMessage.textContent = message;
-    errorMessage.style.display = "flex";
+    errorMessage.style.display = "block";
   }
 
-  // Function to hide error messages
+  // function to hide error messages
   function hideErrorMessage() {
     errorMessage.style.display = "none";
   }

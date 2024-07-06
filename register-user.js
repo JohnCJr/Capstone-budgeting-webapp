@@ -1,7 +1,8 @@
-// handles registering the user
+// handles registering a new user and redirects them to the sign-on page upon completion
 
 import { auth, database, ref, get, orderByChild, equalTo, query, set, createUserWithEmailAndPassword, signOut } from "./initialize-firebase.js"; // Adjust the path if necessary
 import { sanitize, validateEmail } from './sanitizeStrings.js';  // Import the sanitize and validateEmail functions
+
 
 document.addEventListener("DOMContentLoaded", () => {
   const registerForm = document.getElementById('registerForm');
@@ -20,101 +21,80 @@ document.addEventListener("DOMContentLoaded", () => {
     passwordBox.setAttribute('type', type);
   });
 
+  // clean name and prevent certain characters
   const cleanName = (name) => {
-    let cleanedName = name.replace(/[^A-Za-z'-]/g, '');
-    const hyphenCount = (cleanedName.match(/-/g) || []).length;
-    const apostropheCount = (cleanedName.match(/'/g) || []).length;
+    // regex replaces all characters that aren't a letter, the character '-', or "'" with blank space
+    let cleanedName = name.replace(/[^A-Za-z'-]/g, ''); 
+    const hyphenCount = (cleanedName.match(/-/g) || []).length; // counts the number of hyphens in cleanedName, returns empty array if count is null
+    const apostropheCount = (cleanedName.match(/'/g) || []).length; // counts the number of apostrophes in cleanedName, returns empty array if count is null
 
     if (hyphenCount > 1) {
       let parts = cleanedName.split('-');
-      cleanedName = parts[0] + '-' + parts.slice(1).join('').replace(/-/g, '');
+      cleanedName = parts[0] + '-' + parts.slice(1).join('').replace(/-/g, ''); // removes all "-" other than the first one
     }
     if (apostropheCount > 1) {
       let parts = cleanedName.split("'");
-      cleanedName = parts[0] + "'" + parts.slice(1).join('').replace(/'/g, '');
+      cleanedName = parts[0] + "'" + parts.slice(1).join('').replace(/'/g, ''); // removes all "-" other than the first one
     }
 
-    return cleanedName.trim();
+    return cleanedName.trim();  // retuns name with removed whitespace
   };
 
+  // formats user input to always have the first letter of the name capitalize while the rest is lower case
   const capitalizeFirstLetter = (name) => {
     return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
   };
 
+  // adds class to username input to mark invalid input field
   const validateNameInput = (input) => {
     input.addEventListener('input', (e) => {
       const cleanedValue = cleanName(e.target.value);
       e.target.value = cleanedValue;
-      if (cleanedValue.trim() === '') {
-        e.target.classList.add('is-invalid');
-      } else {
+      // removes class once user begins typing, assumes that the user will correct the invalid input 
+      if (e.target.classList.contains('is-invalid')) {
         e.target.classList.remove('is-invalid');
+        hideErrorMessage();
       }
-      checkAllFieldsValid();
     });
 
+    // capitalizes the field once the user clicks away from the field
     input.addEventListener('blur', (e) => {
       const capitalizedValue = capitalizeFirstLetter(e.target.value);
       e.target.value = capitalizedValue;
     });
   };
 
+  // adds class to phone number input to mark invalid input field and styles in (xxx) xxx-xxxx format
   const validatePhoneNumberInput = (input) => {
     input.addEventListener('input', (e) => {
+      // removes input that aren't numbers, then groups the input into 3 array items stored in x.
+      // after 4 characters are entered, the first 3 are place inside (), after the next 4 
+      // characters are entered, a - is placed before the 7th number
       const x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
       e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
-      if (e.target.value.replace(/\D/g, '').length !== 10) {
-        e.target.classList.add('is-invalid');
-      } else {
+      if (e.target.classList.contains('is-invalid')) {
         e.target.classList.remove('is-invalid');
+        hideErrorMessage();
       }
-      checkAllFieldsValid();
     });
   };
 
-  const validateEmailInput = (input) => {
-    input.addEventListener('input', (e) => {
-      if (!validateEmail(e.target.value)) {
-        e.target.classList.add('is-invalid');
-      } else {
-        e.target.classList.remove('is-invalid');
-      }
-      checkAllFieldsValid();
-    });
-  };
-
+  // adds class to email input to mark invalid input field
   const validateRequiredInput = (input) => {
     input.addEventListener('input', (e) => {
-      if (e.target.value.trim() === '') {
-        e.target.classList.add('is-invalid');
-      } else {
+      if (e.target.classList.contains('is-invalid')) {
         e.target.classList.remove('is-invalid');
+        hideErrorMessage();
       }
-      checkAllFieldsValid();
     });
   };
 
   validateNameInput(firstNameInput);
   validateNameInput(lastNameInput);
   validatePhoneNumberInput(phoneNumberInput);
-  validateEmailInput(userEmailInput);
+  validateRequiredInput(userEmailInput);
   validateRequiredInput(passwordBox);
   validateRequiredInput(userNameInput);
-
-  function checkAllFieldsValid() {
-    const allValid = [
-      firstNameInput,
-      lastNameInput,
-      phoneNumberInput,
-      userEmailInput,
-      passwordBox,
-      userNameInput
-    ].every(input => input.value.trim() !== '' && !input.classList.contains('is-invalid'));
-
-    if (allValid) {
-      errorMessage.style.display = 'none';
-    }
-  }
 
   registerForm.addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -122,12 +102,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const firstName = sanitize(firstNameInput.value);
     const lastName = sanitize(lastNameInput.value);
     const userEmail = sanitize(userEmailInput.value, true);
-    const userName = sanitize(userNameInput.value).toLowerCase();  // Normalize to lower case
+    const userName = sanitize(userNameInput.value).toLowerCase();
     const password = sanitize(passwordBox.value);
     const phoneNumber = sanitize(phoneNumberInput.value.replace(/\D/g, ''));
 
     let valid = true;
+    let specificError = ""; // Tracks specific field errors
 
+    // check if any field is empty and mark as invalid
     if (firstName.trim() === '') {
       firstNameInput.classList.add('is-invalid');
       valid = false;
@@ -138,29 +120,8 @@ document.addEventListener("DOMContentLoaded", () => {
       valid = false;
     }
 
-    if (phoneNumber.length !== 10) {
-      phoneNumberInput.classList.add('is-invalid');
-      valid = false;
-    }
-
-    const cleanedFirstName = cleanName(firstName);
-    const cleanedLastName = cleanName(lastName);
-
-    if (!cleanedFirstName || !cleanedLastName) {
-      displayError("First name and last name can only contain letters, one optional hyphen, and one optional apostrophe.");
-      firstNameInput.classList.add('is-invalid');
-      lastNameInput.classList.add('is-invalid');
-      valid = false;
-    }
-
-    if (!validateEmail(userEmail)) {
+    if (userEmail.trim() === '') {
       userEmailInput.classList.add('is-invalid');
-      displayError("Please enter a valid email address.");
-      valid = false;
-    }
-
-    if (password.trim() === '') {
-      passwordBox.classList.add('is-invalid');
       valid = false;
     }
 
@@ -169,33 +130,78 @@ document.addEventListener("DOMContentLoaded", () => {
       valid = false;
     }
 
+    if (password.trim() === '') {
+      passwordBox.classList.add('is-invalid');
+      valid = false;
+    }
+
+    if (phoneNumber.trim() === '') {
+      phoneNumberInput.classList.add('is-invalid');
+      valid = false;
+    }
+
+    // if any field is empty, display the "All fields are required." message
     if (!valid) {
       displayError("All fields are required.");
       return;
     }
 
-    try {
-      // Check if the username already exists (case-insensitive)
-      const usersRef = query(ref(database, 'users'), orderByChild('username'), equalTo(userName));
-      const usernameSnapshot = await get(usersRef);
-      const emailRef = query(ref(database, 'users'), orderByChild('email'), equalTo(userEmail));
-      const emailSnapshot = await get(emailRef);
+    // specific field validations after ensuring all fields are not empty
+    const cleanedFirstName = cleanName(firstName);
+    const cleanedLastName = cleanName(lastName);
 
+    if (!cleanedFirstName) {
+      specificError = "First name can only contain letters, one optional hyphen, and one optional apostrophe.";
+      firstNameInput.classList.add('is-invalid');
+      valid = false;
+    }
+
+    if (!cleanedLastName) {
+      specificError = "Last name can only contain letters, one optional hyphen, and one optional apostrophe.";
+      lastNameInput.classList.add('is-invalid');
+      valid = false;
+    }
+
+    if (phoneNumber.length !== 10) {
+      specificError = "Please enter a valid phone number.";
+      phoneNumberInput.classList.add('is-invalid');
+      valid = false;
+    }
+
+    if (!validateEmail(userEmail)) {
+      specificError = "Please enter a valid email address.";
+      userEmailInput.classList.add('is-invalid');
+      valid = false;
+    }
+
+    if (!valid) {
+      displayError(specificError);
+      return;
+    }
+
+    try {
+      const usersRef = query(ref(database, 'users'), orderByChild('username'), equalTo(userName)); // Check if the username already exists (case-insensitive)
+      const usernameSnapshot = await get(usersRef); // returns the result of the usersRef query on the users "table" 
+      const emailRef = query(ref(database, 'users'), orderByChild('email'), equalTo(userEmail)); // Check if the email already exists
+      const emailSnapshot = await get(emailRef); // returns query result
+
+      // displays error if the username already exists
       if (usernameSnapshot.exists()) {
         userNameInput.classList.add('is-invalid');
-        displayError('Username already exists. Choose another.');
+        displayError('Username already exists. Choose another username.');
         return;
       }
 
+      // displays error if the email already exists
       if (emailSnapshot.exists()) {
         userEmailInput.classList.add('is-invalid');
-        displayError('Email already exists.');
+        displayError('Email already tied to an existing account.');
         return;
       }
 
       const userCredential = await createUserWithEmailAndPassword(auth, userEmail, password);
 
-      // User created, wait for the authentication state to confirm
+      // user created, wait for the authentication state to confirm
       auth.onAuthStateChanged(async (user) => {
         if (user) {
           const userId = user.uid;
@@ -209,7 +215,7 @@ document.addEventListener("DOMContentLoaded", () => {
             phoneNumber: phoneNumber
           });
 
-          // Sign out the user after registration
+          // Sign out the user after registration so that it won't redirect them from the home page
           await signOut(auth);
 
           alert('Registration successful! Redirecting to sign-on page.');
@@ -230,6 +236,10 @@ document.addEventListener("DOMContentLoaded", () => {
   function displayError(message) {
     errorMessage.style.color = "red";
     errorMessage.textContent = message;
-    errorMessage.style.display = 'flex';
+    errorMessage.style.display = 'block';
+  }
+
+  function hideErrorMessage() {
+    errorMessage.style.display = 'none';
   }
 });
