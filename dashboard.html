@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SavyStudents</title>
+    <title>Dashboard</title>
     <link rel="stylesheet" href="reset.css" />
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="bootstrap.min.css" />
@@ -66,8 +66,165 @@
         <div
           class="row d-flex justify-content-center mx-auto my-5 col-12 gap-lg-5 gap-md-0 gap-5"
         >
-          <div class="card col-lg-3 col-md-4 col-sm-12">
-            <!-- <img src="..." class="card-img-top" alt="..." /> -->
+          <div class="card card-shadow col-10 col-lg-8">
+            <div
+              class="card-body d-flex flex-column justify-content-between my-xxl-5 py-xxl-5"
+            >
+              <h3 class="card-title text-center mb-3 py-xl-4">
+                <strong>Having trouble deciding on your budget?</strong>
+              </h3>
+              <div class="container mt-3 position-relative">
+                <div class="row d-flex justify-content-between gap-5">
+                  <div
+                    class="budgetContainer d-flex flex-column align-items-center col border border-success-subtle border-3 p-4 rounded-2 position-relative"
+                  >
+                    <img
+                      id="currentIncomeInfo"
+                      src="images/info-circle-fill.svg"
+                      alt="information icon"
+                      class="position-absolute top-0 end-0 m-2"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      data-bs-custom-class="custom-tooltip"
+                      data-bs-title="This calculation excludes one-time sources of income."
+                    />
+                    <h4 id="currentTitle" class="d-flex text-center">
+                      Current weekly income
+                    </h4>
+                    <h4 id="currentTotalIncome"></h4>
+                  </div>
+                  <div
+                    class="budgetContainer d-flex flex-column align-items-center col border border-success-subtle border-3 p-4 rounded-2"
+                  >
+                    <h4 id="suggestedTitle" class="d-flex text-center">
+                      Suggested weekly budget
+                    </h4>
+                    <h4 id="suggestedBudget"></h4>
+                  </div>
+                </div>
+              </div>
+              <form id="setBudget">
+                <div class="row mb-3 mt-3 align-items-center">
+                  <label
+                    for="setBudgetAmount"
+                    class="col-sm-4 col-md-3 col-form-label text-sm-end text-md-end text-lg-end"
+                    >How much would you like to save?:</label
+                  >
+                  <div class="col-sm-8 col-md-9">
+                    <div class="input-group">
+                      <span class="input-group-text">$</span>
+                      <input
+                        type="text"
+                        class="money-field form-control"
+                        id="setBudgetAmount"
+                        placeholder="30.00"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <fieldset
+                  class="budgetTypeFieldset row mb-3 ms-3 align-items-center"
+                >
+                  <legend
+                    class="col-form-label col-sm-4 col-md-3 pt-0 text-sm-end mb-sm-5"
+                  >
+                    Type:
+                  </legend>
+                  <div class="col-sm-8 col-md-9">
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="budgetTypes"
+                        id="expenseType1"
+                        value="yearly"
+                      />
+                      <label class="form-check-label" for="expenseType1">
+                        Yearly
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="budgetTypes"
+                        id="expenseType2"
+                        value="monthly"
+                      />
+                      <label class="form-check-label" for="expenseType2">
+                        Monthly
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="radio"
+                        name="budgetTypes"
+                        id="expenseType3"
+                        value="weekly"
+                        checked
+                      />
+                      <label class="form-check-label ms-1" for="expenseType3">
+                        Weekly
+                      </label>
+                    </div>
+                  </div>
+                </fieldset>
+                <div class="row mb-3 d-sm-none d-flex" id="selectContainer">
+                  <label
+                    for="budgetTypeSelect"
+                    class="col-form-label col-sm-3 pt-0"
+                    >Type:</label
+                  >
+                  <div class="col-sm-8">
+                    <select
+                      class="form-select form-select-sm"
+                      id="budgetTypeSelect"
+                      aria-label="Small type select"
+                    >
+                      <option value="yearly">Yearly</option>
+                      <option value="monthly">Monthly</option>
+                      <option value="weekly" selected>Weekly</option>
+                    </select>
+                  </div>
+                </div>
+                <div
+                  id="set-budget-error-msg"
+                  class="text-danger mt-2 justify-content-center"
+                  style="display: none"
+                ></div>
+                <button
+                  id="setBudgetButton"
+                  type="button"
+                  class="btn btn-primary btn-md d-flex mx-auto my-4 px-5 py-2"
+                  data-bs-toggle="modal"
+                  data-bs-target="#actionModal"
+                  data-source="forms/update-budget.html"
+                  data-title="
+                    <h2>Update Budget</h2>
+                    <div class='container mt-3'>
+                      <div class='row d-flex justify-content-between gap-5'>
+                        <div class='budgetContainer d-flex flex-column align-items-center col border border-success-subtle border-3 p-4 rounded-2'>
+                          <h4 class='d-flex text-center'>Current Budget:</h4>
+                          <h4 id='currentBudget'></h4>
+                        </div>
+                        <div class='budgetContainer d-flex flex-column align-items-center col border border-success-subtle border-3 p-4 rounded-2'>
+                          <h4 class='d-flex text-center'>New<br>Budget:</h4>
+                          <h4 id='newBudget'></h4>
+                        </div>
+                      </div>
+                    </div>"
+                >
+                  Set Budget
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div
+          class="row d-flex justify-content-center mx-auto my-5 col-12 gap-5"
+        >
+          <div class="card card-shadow col-lg-3 col-md-10 col-sm-12 py-xxl-4">
             <div class="card-body d-flex flex-column justify-content-between">
               <h5 class="card-title text-center mb-3">
                 <strong>Want to update your budget?</strong>
@@ -103,8 +260,7 @@
             </div>
           </div>
 
-          <div class="card col-lg-3 col-md-4 col-sm-12">
-            <!-- <img src="..." class="card-img-top" alt="..." /> -->
+          <div class="card card-shadow col-lg-3 col-md-10 col-sm-12">
             <div class="card-body d-flex flex-column justify-content-between">
               <h5 class="card-title text-center mb-3">
                 <strong>Made new expense?</strong>
@@ -126,8 +282,7 @@
             </div>
           </div>
 
-          <div class="card col-lg-3 col-md-4 col-sm-12">
-            <!-- <img src="..." class="card-img-top" alt="..." /> -->
+          <div class="card card-shadow col-lg-3 col-md-10 col-sm-12">
             <div class="card-body d-flex flex-column justify-content-between">
               <h5 class="card-title text-center mb-3">
                 <strong>Need to add a new source of income?</strong>
@@ -153,8 +308,7 @@
         </div>
       </section>
       <aside class="right">
-        <!-- eperimental html code to populate the tables based on database information -->
-        <div class="accordion" id="accordionTransactions">
+        <div class="accordion my-5" id="accordionTransactions">
           <div class="accordion-item">
             <h2 class="accordion-header d-flex mx-auto" id="headingOne">
               <button
@@ -322,7 +476,7 @@
     >
       <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">
-          User Name
+          User Profile
         </h5>
         <button
           type="button"
@@ -336,35 +490,77 @@
           class="canvas-profile-pic d-flex mx-auto mb-3"
           src="images/logo.jpg"
           width="260px"
-          alt=""
+          alt="Profile picture"
         />
         <div class="row gap-1 justify-content-center mb-3">
-          <a class="btn btn-primary col-8 col-md-5" href="#">Edit Profile</a>
+          <button class="btn btn-primary col-8 col-md-5" id="editProfileButton">
+            Edit Profile
+          </button>
           <a class="btn btn-primary col-8 col-md-5" href="dashboard.html"
             >My Dashboard</a
           >
         </div>
-        <p>Brief description about the user.</p>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Unde
-          nesciunt necessitatibus, fuga deleniti mollitia atque molestias aut,
-          nemo nihil quis labore iste natus. Debitis voluptatem velit possimus,
-          dolores quasi est, et labore aperiam doloribus reprehenderit ut
-          sapiente similique earum. Perferendis obcaecati magnam omnis!
-          Accusamus velit ipsum enim fuga ea quidem facere delectus pariatur
-          placeat dicta suscipit mollitia facilis cum, voluptatum distinctio
-          reiciendis voluptates aspernatur soluta officia vel exercitationem hic
-          ipsam laboriosam possimus! Laborum amet expedita tempore quis corrupti
-          rem! Molestias, nemo qui exercitationem assumenda recusandae dolorem
-          iste nulla nisi maxime nam ad non dolore doloremque, porro maiores
-          dolorum error beatae?
-        </p>
+        <div id="profileInfo">
+          <p><strong>Name:</strong> <span id="userName">Edinson Marte</span></p>
+          <p>
+            <strong>Email:</strong>
+            <span id="userEmail">Edinson@example.com</span>
+          </p>
+          <p>
+            <strong>About Me:</strong>
+            <span id="userAbout">Testing testing testing 123 123...</span>
+          </p>
+        </div>
+        <div id="editProfileForm" style="display: none">
+          <form>
+            <div class="mb-3">
+              <label for="editUserName" class="form-label">Name</label>
+              <input
+                type="text"
+                class="form-control"
+                id="editUserName"
+                value="Edinson Marte"
+              />
+            </div>
+            <div class="mb-3">
+              <label for="editUserEmail" class="form-label">Email</label>
+              <input
+                type="email"
+                class="form-control"
+                id="editUserEmail"
+                value="Edinson@example.com"
+              />
+            </div>
+            <div class="mb-3">
+              <label for="editUserAbout" class="form-label">About Me</label>
+              <textarea class="form-control" id="editUserAbout" rows="3">
+Testing Testing Edinson</textarea
+              >
+            </div>
+            <button
+              type="button"
+              class="btn btn-primary"
+              id="saveProfileButton"
+            >
+              Save
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              id="cancelEditButton"
+            >
+              Cancel
+            </button>
+          </form>
+        </div>
       </div>
     </div>
+
     <script type="module" src="form-modal-load.js"></script>
-    <script src="bootstrap.min.js"></script>
+    <script src="bootstrap.bundle.min.js"></script>
     <script type="module" src="load-template.js"></script>
     <script type="module" src="populateTables.js"></script>
     <script src="scripts/savy_script.js"></script>
+    <script src="profile-script.js"></script>
   </body>
 </html>

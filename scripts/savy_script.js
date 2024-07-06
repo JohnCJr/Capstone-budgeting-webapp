@@ -1,8 +1,8 @@
-// money input field validation
+// money input field validation that is called by form-modal-load.js
+
 function getFormValidationShared() {
     console.log("getFormValidationShared called");
   
-    setTimeout(() => {
       const moneyBoxes = document.querySelectorAll(".money-field");
   
       if (moneyBoxes.length === 0) {
@@ -13,7 +13,9 @@ function getFormValidationShared() {
   
       moneyBoxes.forEach(input => {
         console.log("Adding event listeners to moneyBoxes");
-  
+
+        // replaces non numberical values with "" and assures that there are always two digits to the right of the decimal point 
+        // while also remvoing extra zeros from the left of the decimal point 
         input.addEventListener("input", (e) => {
           console.log("Input event detected");
           let value = e.target.value.replace(/[^\d.]/g, '');
@@ -25,7 +27,9 @@ function getFormValidationShared() {
           }
           e.target.value = value;
         });
-  
+
+
+        // adjusts format after user clicks away
         input.addEventListener('blur', function () {
           console.log("Blur event detected");
           let value = this.value;
@@ -47,7 +51,6 @@ function getFormValidationShared() {
           this.value = value;
         });
       });
-    }, 100);
   }
   
   window.getFormValidationShared = getFormValidationShared;

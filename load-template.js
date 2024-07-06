@@ -1,9 +1,6 @@
-// this script loads the header and footer into each page. may inlcude more at a later date, such as an
-// different header data based on whether the user is loged in or not 
+// this script loads the appropriate header and footer into each page based on whether a user is logged in
 
-// for testing purposes, the navbar will cotian th user icon to acess the dashboard even when not logged in,'
-// navbar will display sign out when user is signed in and vice versa.
-import { auth, onAuthStateChanged, getDatabase, ref, update, get, signOut } from "./initialize-firebase.js";
+import { auth, signOut } from "./initialize-firebase.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   let navbarHTML = '';

@@ -1,47 +1,61 @@
-// Will populate the tables based on firebase data, must test first, 
-// commented out portion in the dashboard.html for now
+// populates the tables based on firebase data. updates firebase database based on user input. 
 
 import { database, ref, update, remove, onValue, get } from "./initialize-firebase.js"; // Adjust the path if necessary
 import { sanitize } from './sanitizeStrings.js'; // Import the sanitize function
 
 document.addEventListener('DOMContentLoaded', function() {
-    let expensesData = [];
+    let expensesData = []; // will store expense data keys
 
-    // Function to set date range for date input fields
-    // needed to properly get the current date, don't touch
+    // formats the date to YYYY-MM-DD to be used to set date range
     function formatDateToYYYYMMDD(date) {
         const year = date.getFullYear();
         const month = (date.getMonth() + 1).toString().padStart(2, '0');
         const day = date.getDate().toString().padStart(2, '0');
         return `${year}-${month}-${day}`;
     }
-    
-    // sets range for date input fields
+
+    // Set range for users to select a date in a one month range
     function setDateRange() {
         const dateBoxes = document.querySelectorAll(".date-field");
     
-        // Get today's date
         const today = new Date();
-    
-        // Calculate the start of the current month
-        const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-        const startOfMonthFormatted = formatDateToYYYYMMDD(startOfMonth);
-    
-        // Calculate the end of the current month
-        const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-        const endOfMonthFormatted = formatDateToYYYYMMDD(endOfMonth);
-    
-        // Format today's date as yyyy-mm-dd for the input field
         const todayFormatted = formatDateToYYYYMMDD(today);
     
         dateBoxes.forEach(field => {
-            field.setAttribute('max', endOfMonthFormatted);
-            field.setAttribute('min', startOfMonthFormatted);
-            field.value = todayFormatted; // Set the default date to today in yyyy-mm-dd format
+            let dateValue = new Date(field.value);  // creates new date out of the value in the input field
+
+            // if the field value is not a valid date it defaults to today's date
+            if (isNaN(dateValue.getTime())) {
+                dateValue = today;
+            }
+    
+            const startOfMonth = new Date(dateValue.getFullYear(), dateValue.getMonth(), 1);
+            const endOfMonth = new Date(dateValue.getFullYear(), dateValue.getMonth() + 1, 0);
+    
+            const startOfMonthFormatted = formatDateToYYYYMMDD(startOfMonth);
+            const endOfMonthFormatted = formatDateToYYYYMMDD(endOfMonth);
+
+            // checks if the date value fot eh input field is with the current month of the current year,
+            // if so then the max range is set to the current date so the user can select past the current date.
+            // Otherwise the range is within the month that the income/expnese was created
+            if (dateValue.getFullYear() === today.getFullYear() && dateValue.getMonth() === today.getMonth()) {
+                // If the date is in the current month, set the max to today's date
+                field.setAttribute('max', todayFormatted);
+                field.setAttribute('min', startOfMonthFormatted);
+            } else {
+                // Otherwise, set the range within the month of the date
+                field.setAttribute('max', endOfMonthFormatted);
+                field.setAttribute('min', startOfMonthFormatted);
+            }
+    
+            // defaults date field to today in case that there is no value in that field 
+            if (!field.value) {
+                field.value = todayFormatted;
+            }
         });
     }
 
-    // Function to get the formatted date in mm/dd/yyyy
+    // formats date to MM/DD/YYYY to be displayed to the user and sent to Firebase
     function getFormattedDate(date) {
         const [year, month, day] = date.split('-');
         const d = new Date(year, month - 1, day);
@@ -51,7 +65,55 @@ document.addEventListener('DOMContentLoaded', function() {
         return mm + '/' + dd + '/' + yyyy;
     }
 
-    // Function to update the budgets table
+    // gets the start and end dates, start day is considered a Monday and end day is Sunday
+    function getStartAndEndOfWeek(date) {
+        const dayOfWeek = date.getDay();
+        const startOfWeek = new Date(date);
+
+        // adjusts start of the week to the nearest Monday
+        startOfWeek.setDate(date.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1));   // accounts for the current day being a sunday, makes sure that the correct Monday is assigned, from six days ago
+        startOfWeek.setHours(0, 0, 0, 0); // ensures the time is set to the beginning of the day at the very first second
+
+        const endOfWeek = new Date(startOfWeek);
+        endOfWeek.setDate(startOfWeek.getDate() + 6);   // sets to Sudnat
+        endOfWeek.setHours(23, 59, 59, 999); // ensures the time is set to the end of the day up to the last second
+
+        return [startOfWeek, endOfWeek];
+    }
+
+    function getStartAndEndOfMonth(date) {
+        const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+        const endOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+        return [startOfMonth, endOfMonth];
+    }
+
+    function getStartAndEndOfYear(date) {
+        const startOfYear = new Date(date.getFullYear(), 0, 1);
+        const endOfYear = new Date(date.getFullYear(), 11, 31);
+        return [startOfYear, endOfYear];
+    }
+
+    // Reformats date to a JS Date variable and checks if it contains a month, day, and year
+    function parseDate(dateStr) {
+        if (!dateStr) {
+            console.error('Date string is undefined or null');
+            return null;
+        }
+        const [month, day, year] = dateStr.split('/');
+        if (!month || !day || !year) {
+            console.error('Date string is invalid:', dateStr);
+            return null;
+        }
+        return new Date(year, month - 1, day);
+    }
+
+    // Checks if a date falls within a range
+    function isWithinDateRange(date, startDate, endDate) {
+        const d = new Date(date);
+        return d >= startDate && d <= endDate;
+    }
+
+    // Updates budget table, needs expense table to calculate if under or over budget for each category and total
     function updateBudgetsTable(budgetsSnapshot, expensesSnapshot) {
         let budgetsTableBody = document.getElementById('budgetsTableBody');
         let budgetsTableFoot = document.getElementById('budgetsTableFoot');
@@ -65,13 +127,32 @@ document.addEventListener('DOMContentLoaded', function() {
         let totalSpent = 0;
         let statusColor = 'black';
 
+        const selectedValue = budgetData.budgetType || "weekly"; // Get the budget type from the snapshot, defaults to weekly
+        const today = new Date();
+        let startDate, endDate;
+
+        console.log("selected value: " + selectedValue);
+
+        if (selectedValue === "weekly") {
+            [startDate, endDate] = getStartAndEndOfWeek(today);
+        } else if (selectedValue === "monthly") {
+            [startDate, endDate] = getStartAndEndOfMonth(today);
+        } else if (selectedValue === "yearly") {
+            [startDate, endDate] = getStartAndEndOfYear(today);
+        }
+
         categories.forEach(category => {
             let budgetAmount = parseFloat(budgetData[category]) || 0;
             let spentAmount = 0;
 
             if (expenseData) {
                 Object.values(expenseData).forEach(expense => {
-                    if (expense.category.toLowerCase() === category) {
+                    const expenseDate = parseDate(expense.date);
+                    if (!expenseDate) {
+                        console.error('Skipping invalid date for expense:', expense);
+                        return;
+                    }
+                    if (expense.category.toLowerCase() === category && isWithinDateRange(expenseDate, startDate, endDate)) {
                         spentAmount += parseFloat(expense.amount);
                     }
                 });
@@ -97,8 +178,9 @@ document.addEventListener('DOMContentLoaded', function() {
             budgetsTableBody.appendChild(row);
         });
 
-        totalSpent = parseFloat(totalSpent.toFixed(2)); // Round totalSpent to 2 decimal places
+        totalSpent = parseFloat(totalSpent.toFixed(2)); // sets totalSpent to 2 decimal places to avoid trailing floating point numbers
 
+        // adds color style based on whether user is over or under budget 
         let totalBudget = parseFloat(budgetData.total) || 0;
         if (totalBudget > totalSpent) {
             statusColor = `style="color:green;"`;
@@ -117,19 +199,19 @@ document.addEventListener('DOMContentLoaded', function() {
         budgetsTableFoot.appendChild(footRow);
     }
 
-    // Function to update the expenses table
+    // 
     function updateExpensesTable(snapshot) {
-        expensesData = [];
+        expensesData = []; // clears expense data keys
         snapshot.forEach(function(childSnapshot) {
             let data = childSnapshot.val();
-            data.key = childSnapshot.key;
-            expensesData.push(data);
+            data.key = childSnapshot.key;   // adds key variable and value to data object
+            expensesData.push(data);    // adds the data object with the key variable to the expensesData array
         });
-        console.log('Expenses data:', expensesData); // Debugging log
         renderExpensesTable();
-        setDateRange();
+        setDateRange(); // adds listener to date fields once the table is rendered
     }
 
+    // renders table based on filter, sort, and oder selection made by user  
     function renderExpensesTable() {
         let expensesTableBody = document.getElementById('expensesTableBody');
         expensesTableBody.innerHTML = '';
@@ -141,11 +223,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const sortOrder = document.getElementById('sortOrder').value;
         const filterField = document.getElementById('filterField').value;
 
-        console.log('Sort Field:', sortField, 'Sort Order:', sortOrder, 'Filter Field:', filterField);
-
         let filteredData = expensesData.filter(expense => filterField === 'none' || expense.category.toLowerCase() === filterField);
-        console.log('Filtered data:', filteredData); // Debugging log
 
+        // so long as the sort by selection isn't all, the table will toggle between ascedning and descending order based on user selection
         if (sortField !== 'all') {
             filteredData.sort((a, b) => {
                 if (sortOrder === 'asc') {
@@ -158,13 +238,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         filteredData.forEach(data => {
             let sanitizedDate = sanitize(data.date || new Date().toISOString().split("T")[0]);
-            console.log("Sanitized date: " + sanitizedDate);
-            console.log("New date: " + new Date().toISOString().split("T")[0]);
             let sanitizedDescription = sanitize(data.description || 'undefined');
             let sanitizedAmount = sanitize(data.amount || 'undefined');
             let sanitizedCategory = capitalize(sanitize(data.category || 'undefined'));
 
-            currentTotalExpense += parseFloat(data.amount);
+            currentTotalExpense += parseFloat(data.amount); // calculates total amount spent for all data currently displayed
 
             let row = document.createElement('tr');
             row.innerHTML = `
@@ -210,7 +288,7 @@ document.addEventListener('DOMContentLoaded', function() {
             expensesTableBody.appendChild(editRow);
         });
 
-        currentTotalExpense = parseFloat(currentTotalExpense.toFixed(2)); // Round total expense to 2 decimal places
+        currentTotalExpense = parseFloat(currentTotalExpense.toFixed(2)); // Rounds total expense to 2 decimal places
 
         let editRowFoot = document.createElement('tr');
         editRowFoot.classList.add("table-primary");
@@ -221,12 +299,11 @@ document.addEventListener('DOMContentLoaded', function() {
         expensesTableFoot.appendChild(editRowFoot);
     }
 
-    // Function to update the income table
     function updateIncomeTable(snapshot) {
         let incomeTableBody = document.getElementById('incomeTableBody');
-        incomeTableBody.innerHTML = ''; // Clear previous data
+        incomeTableBody.innerHTML = ''; // clear previous table body data
         let incomeTableFoot = document.getElementById('incomeTableFoot');
-        incomeTableFoot.innerHTML = ''; // Clear previous data
+        incomeTableFoot.innerHTML = ''; // clears previous table foot data
         let currentTotalIncome = 0;
 
         snapshot.forEach(function(childSnapshot) {
@@ -238,6 +315,7 @@ document.addEventListener('DOMContentLoaded', function() {
             let sanitizedAmount = parseFloat(sanitize(data.amount || 'undefined')).toFixed(2);
             currentTotalIncome += parseFloat(sanitizedAmount);
 
+            // adjusts value to dipslay to the user 
             if (sanitizedType === "Biweekly") {sanitizedType = "Bi-weekly";}
             if (sanitizedType === "Once") {sanitizedType = "One-time";}
 
@@ -254,8 +332,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                 </td>`;
             incomeTableBody.appendChild(row);
-            console.log("normal:" + sanitizedType);
-            console.log("lower:" + sanitizedType.toLowerCase());
 
             let editRow = document.createElement('tr');
             editRow.classList.add('edit-row', 'd-none');
@@ -287,7 +363,7 @@ document.addEventListener('DOMContentLoaded', function() {
             incomeTableBody.appendChild(editRow);
         });
 
-        currentTotalIncome = parseFloat(currentTotalIncome.toFixed(2)); // Round total income to 2 decimal places
+        currentTotalIncome = parseFloat(currentTotalIncome.toFixed(2)); // rounds total income to 2 decimal places
 
         let editRowFoot = document.createElement('tr');
         editRowFoot.classList.add("table-primary");
@@ -297,42 +373,43 @@ document.addEventListener('DOMContentLoaded', function() {
                                  <td data-label='Income:'>$${currentTotalIncome.toFixed(2)}</td>`;
         incomeTableFoot.appendChild(editRowFoot);
 
-        // Apply date range to all date fields
+        // applies date range to all date fields
         setDateRange();
     }
 
-    // Function to decode HTML entities
+    // used to prevent issue with characters like ' being taken as direct HTML code and interfering 
+    // with the edit buttons in the expense and income tables when the description contains these characters
     function decodeHTMLEntities(text) {
         const textArea = document.createElement('textarea');
         textArea.innerHTML = text;
         return textArea.value;
     }
 
-    // Function to capitalize the first letter of a string
+    // capitalizes words
     function capitalize(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
-    // Function to show the edit row based on the key associated with it
+    // used to populate input fields when edit button is clicked for expense and income table,
+    // disables other buttons in that table until change confirmed or cancelled
     window.showEditRow = function(type, key, ...data) {
-        console.log(`showEditRow called with type: ${type}, key: ${key}, data: ${data}`);
         const editRow = document.getElementById(`edit-row-${key}`);
         editRow.classList.remove('d-none');
         const buttons = document.querySelectorAll(`.${type}-edit-btn, .${type}-delete-btn`);
         buttons.forEach(button => {
             button.disabled = true;
         });
-        // Only enable the confirm and cancel buttons in the edit row
         editRow.querySelectorAll('button').forEach(button => {
             button.disabled = false;
         });
-        // Populate the form fields with the current data
         if (type === 'expense') {
-            const dateValue = new Date(data[0]);
-            const offset = dateValue.getTimezoneOffset();
-            dateValue.setMinutes(dateValue.getMinutes() - offset);
+            const dateValue = new Date(data[0]);    // local timezone Date
+            const offset = dateValue.getTimezoneOffset();  
+            dateValue.setMinutes(dateValue.getMinutes() - offset);  // subtracts offset to give UTC time
+            // converts Date to string 
+            console.log('date of: ' + dateValue.toISOString().split("T")[0]);
             document.getElementById(`edit-date-${key}`).value = dateValue.toISOString().split("T")[0] || new Date().toISOString().split("T")[0];
-            document.getElementById(`edit-description-${key}`).value = decodeHTMLEntities(data[1]);
+            document.getElementById(`edit-description-${key}`).value = decodeHTMLEntities(data[1]); // prevent issues with cetain characters being read as HTML code
             document.getElementById(`edit-amount-${key}`).value = data[2];
             document.getElementById(`edit-category-${key}`).value = data[3].toLowerCase();
         } else if (type === 'income') {
@@ -344,30 +421,26 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById(`edit-type-${key}`).value = data[2].toLowerCase();
             document.getElementById(`edit-amount-${key}`).value = data[3];
         }
-        // Call the script to format monetary fields
         if (window.getFormValidationShared) {
             window.getFormValidationShared();
         }
-        // Apply date range to new date fields
         setDateRange();
     };
 
-    // Function to cancel the edit
+    // hides edit fields and enables the other edit buttons in the table
     window.cancelEdit = function(key, type) {
         const editRow = document.getElementById(`edit-row-${key}`);
         editRow.classList.add('d-none');
-        // Clear the inputs in the edit row
         editRow.querySelectorAll('input').forEach(input => {
             input.value = '';
         });
-        // Re-enable the edit and delete buttons in the same table
         const buttons = document.querySelectorAll(`.${type}-edit-btn, .${type}-delete-btn`);
         buttons.forEach(button => {
             button.disabled = false;
         });
     };
 
-    // Function to confirm the edit for expense
+    // sends expense changes to Firebase
     window.confirmEditExpense = function(key) {
         let userId = localStorage.getItem('userId');
         if (userId !== '0') {
@@ -380,23 +453,17 @@ document.addEventListener('DOMContentLoaded', function() {
             update(ref(database, 'expenses/' + userId + '/' + key), updatedData)
                 .then(() => {
                     console.log('Expense updated successfully');
-                    // Call updateBudgetsTable here to refresh the budgets table
-                    get(ref(database, 'budgets/' + userId)).then(function(budgetsSnapshot) {
-                        get(ref(database, 'expenses/' + userId)).then(function(expensesSnapshot) {
-                            updateBudgetsTable(budgetsSnapshot, expensesSnapshot);
-                        });
-                    });
                 })
                 .catch((error) => {
                     console.error('Error updating expense:', error);
                 });
-            cancelEdit(key, 'expense'); // Hide the edit row and enable buttons
+            cancelEdit(key, 'expense');
         } else {
             console.log('Cannot edit expense: invalid userId');
         }
     };
 
-    // Function to confirm the edit for income
+    // sends income changes to Firebase
     window.confirmEditIncome = function(key) {
         let userId = localStorage.getItem('userId');
         if (userId !== '0') {
@@ -413,13 +480,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 .catch((error) => {
                     console.error('Error updating income:', error);
                 });
-            cancelEdit(key, 'income'); // Hide the edit row and enable buttons
+            cancelEdit(key, 'income');
         } else {
             console.log('Cannot edit income: invalid userId');
         }
     };
 
-    // Function to confirm delete action
+    // popup appears asking to confirm deletion for income or expense
     window.confirmDelete = function(type, key) {
         if (confirm("Are you sure you want to delete this item?")) {
             if (type === 'expense') {
@@ -430,7 +497,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
-    // Function to delete an expense entry
+    // deletes the expense data from Firebase
     function deleteExpense(key) {
         let userId = localStorage.getItem('userId');
         if (userId !== '0') {
@@ -446,7 +513,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Function to delete an income entry
+    // deletes the income data from Firebase
     function deleteIncome(key) {
         let userId = localStorage.getItem('userId');
         if (userId !== '0') {
@@ -462,31 +529,32 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Get the user ID from localStorage
-    let userId = localStorage.getItem('userId');
+    let userId = localStorage.getItem('userId');    // Verifies that user is logged in before populating tables with data
 
-    // the initial tables are populated once, then on is used to listen for any changes made to tables
-    // containing user data.
     if (userId !== '0') {
-        // Listener for Budgets table change
+        // shows spinners initially while budgte table data is being gathered
+        document.getElementById('budgetsTableBody').innerHTML = `<tr><td colspan="4" class="text-center"><div class="spinner-border text-success" role="status"></div></td></tr>`;
+        
+        
+        // listeners upon change to Firebase to update tables
         onValue(ref(database, 'budgets/' + userId), function(budgetsSnapshot) {
             get(ref(database, 'expenses/' + userId)).then(function(expensesSnapshot) {
                 updateBudgetsTable(budgetsSnapshot, expensesSnapshot);
             });
         });
 
-        // Listener for Expenses table change
         onValue(ref(database, 'expenses/' + userId), function(snapshot) {
-            console.log('Expenses snapshot:', snapshot.val()); // Debugging log
             updateExpensesTable(snapshot);
+            get(ref(database, 'budgets/' + userId)).then(function(budgetsSnapshot) {
+                updateBudgetsTable(budgetsSnapshot, snapshot); // Update budgets table as well whenever expenses change
+            });
         });
 
-        // Listener for Income table change
         onValue(ref(database, 'income/' + userId), function(snapshot) {
             updateIncomeTable(snapshot);
         });
 
-        // Explicitly call functions to populate tables on initial load
+        // initial calls to populate tables
         get(ref(database, 'budgets/' + userId)).then(function(budgetsSnapshot) {
             get(ref(database, 'expenses/' + userId)).then(function(expensesSnapshot) {
                 updateBudgetsTable(budgetsSnapshot, expensesSnapshot);
@@ -494,20 +562,20 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         get(ref(database, 'expenses/' + userId)).then(function(snapshot) {
-            console.log('Initial expenses snapshot:', snapshot.val()); // Debugging log
             updateExpensesTable(snapshot);
-            setDateRange(); // Apply date constraints once after the initial load
+            setDateRange();
         });
 
         get(ref(database, 'income/' + userId)).then(function(snapshot) {
             updateIncomeTable(snapshot);
-            setDateRange(); // Apply date constraints once after the initial load
+            setDateRange();
         });
 
     } else {
         console.log('User ID not found or invalid in localStorage');
     }
 
+    // listeners for filter, order, and sort buttons in expense table
     document.getElementById('sortField').addEventListener('change', renderExpensesTable);
     document.getElementById('sortOrder').addEventListener('change', renderExpensesTable);
     document.getElementById('filterField').addEventListener('change', renderExpensesTable);

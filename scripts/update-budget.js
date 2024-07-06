@@ -1,9 +1,9 @@
-// This code validates and sends user input to update their budget
+// validates and sends user input to update their budget, called by form-modal-load.js
 
 import { auth, onAuthStateChanged, getDatabase, ref, update, get } from '/initialize-firebase.js';
-import { sanitize } from '/sanitizeStrings.js'; // Import the sanitize function
+import { sanitize } from '/sanitizeStrings.js'; // imports the sanitize function
 
-function getBudgetFormValidation() {
+function getBudgetFormValidation(suggestedAmount = null, selectedValue = null) {
   const budgetForm = document.getElementById("updateBudget");
   const errorMessage = document.getElementById("update-budget-error-msg");
   const moneyBoxes = document.querySelectorAll(".money-field");
@@ -23,11 +23,13 @@ function getBudgetFormValidation() {
       document.getElementById("foodBudget"),
       document.getElementById("utilityBudget"),
       document.getElementById("entertainmentBudget"),
-      document.getElementById("otherBudget")
+      document.getElementById("otherBudget"),
+      document.getElementById("budgetType") // Include the new budgetType field
     ];
 
     let allFieldsFilled = true;
 
+    // checks all fields to make sure no field is empty
     fields.forEach(field => {
       if (!field.value) {
         displayError("All fields must be filled out.");
@@ -65,15 +67,26 @@ function getBudgetFormValidation() {
   function setDefaultValues(budgetData) {
     if (budgetData) {
       console.log('Setting default values:', budgetData);
-      document.getElementById("totalBudget").value = sanitize(budgetData.total) || "";
       document.getElementById("foodBudget").value = sanitize(budgetData.food) || "";
       document.getElementById("utilityBudget").value = sanitize(budgetData.utility) || "";
       document.getElementById("entertainmentBudget").value = sanitize(budgetData.entertainment) || "";
       document.getElementById("otherBudget").value = sanitize(budgetData.other) || "";
+      console.log("current suggested amount: " + sanitize(suggestedAmount));
+      console.log("current type amount: " + sanitize(selectedValue));
+      // If suggestedAmount and selectedValue are provided, override the fetched values
+      if (suggestedAmount !== null & selectedValue !== null) {
+        document.getElementById("totalBudget").value = sanitize(suggestedAmount) || "";
+        document.getElementById("budgetType").value = sanitize(selectedValue) || "";
+      }
+      else {
+        document.getElementById("totalBudget").value = sanitize(budgetData.total) || "";
+        document.getElementById("budgetType").value = sanitize(budgetData.budgetType) || "yearly";
+      }
+
 
       // Sets the value of current budget displayed in the modal header defaults to zero if data doesn't exist
       currentBudget.textContent = sanitize(budgetData.total) === "" ? '$0.00' : `$${sanitize(budgetData.total)}`;
-      newBudget.textContent = sanitize(budgetData.total) === "" ? '$0.00' : `$${sanitize(budgetData.total)}`; 
+      newBudget.textContent =   sanitize(suggestedAmount) === null ? sanitize(budgetData.total) : `$${sanitize(suggestedAmount)}`; 
     } else {
       // Set default values to $0.00 if no budget data exists
       document.getElementById("totalBudget").value = "0.00";
@@ -81,12 +94,14 @@ function getBudgetFormValidation() {
       document.getElementById("utilityBudget").value = "0.00";
       document.getElementById("entertainmentBudget").value = "0.00";
       document.getElementById("otherBudget").value = "0.00";
+      document.getElementById("budgetType").value = "yearly";
 
       currentBudget.textContent = '$0.00';
       newBudget.textContent = '$0.00';
     }
   }
 
+  // fetches budget Firebase value for user and populates input with values, otherwise defaults to 0.00
   function fetchAndSetDefaultValues() {
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -111,12 +126,14 @@ function getBudgetFormValidation() {
     });
   }
 
-  function getCurrentFormattedDate() {
-    const date = new Date();
-    const mm = String(date.getMonth() + 1).padStart(2, '0');
-    const dd = String(date.getDate()).padStart(2, '0');
-    const yyyy = date.getFullYear();
-    return mm + '-' + dd + '-' + yyyy;
+  // Function to format date to MM/DD/YYYY
+  function getFormattedDate(date) {
+    const [year, month, day] = date.split('-');
+    const d = new Date(year, month - 1, day);
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    const yyyy = d.getFullYear();
+    return mm + '/' + dd + '/' + yyyy;
   }
 
   budgetForm.addEventListener("submit", (event) => {
@@ -138,7 +155,8 @@ function getBudgetFormValidation() {
     const utilityBudget = sanitize(document.getElementById("utilityBudget").value);
     const entertainmentBudget = sanitize(document.getElementById("entertainmentBudget").value);
     const otherBudget = sanitize(document.getElementById("otherBudget").value);
-    const currentDate = getCurrentFormattedDate(); // Get the current date
+    const budgetType = sanitize(document.getElementById("budgetType").value); // Get the budget type
+    const currentDate = getFormattedDate(new Date().toISOString().split('T')[0]); // Get the current formatted date
 
     // Create the data object of user input values to be sent to Firebase Realtime Database
     const data = {
@@ -147,10 +165,11 @@ function getBudgetFormValidation() {
       utility: utilityBudget,
       entertainment: entertainmentBudget,
       other: otherBudget,
-      date: currentDate // Add the date to the data object
+      budgetType: budgetType, 
+      date: currentDate // Add the formatted currentdate to the data object
     };
 
-    // Try to connect to Firebase Realtime Database and handle form submission
+    // tries to connect to Firebase Realtime Database and handle form submission
     try {
       const database = getDatabase();
       onAuthStateChanged(auth, (user) => {
@@ -161,7 +180,6 @@ function getBudgetFormValidation() {
 
           update(ref(database), updates)
             .then(() => {
-              // Show success notification
               const modal = bootstrap.Modal.getInstance(document.getElementById('actionModal'));
               modal.hide();
             })
@@ -180,13 +198,13 @@ function getBudgetFormValidation() {
     }
   });
 
-  // Function to display error messages without clearing input fields
+  // displays error messages without clearing input fields
   function displayError(message) {
     errorMessage.textContent = message;
     errorMessage.style.display = "flex";
   }
 
-  // Updates the new budget header to be the total entered by the user on the input field totalBudget
+  // updates the new budget header to be the total entered by the user on the input field totalBudget
   moneyBoxes.forEach((input) => {
     input.addEventListener("blur", function () {
       const newTotalBudget = sanitize(document.getElementById("totalBudget").value);
@@ -194,7 +212,7 @@ function getBudgetFormValidation() {
       checkCategorySum();
     });
 
-    // Remove error state when the user starts typing
+    // removes error state when the user starts typing
     input.addEventListener("input", function () {
       if (input.value) {
         input.classList.remove("is-invalid");
@@ -206,5 +224,5 @@ function getBudgetFormValidation() {
   fetchAndSetDefaultValues();
 }
 
-// Assign the function to the window object to ensure it can be called asynchronously
+// assign the function to the window object to ensure it can be called asynchronously
 window.getBudgetFormValidation = getBudgetFormValidation;

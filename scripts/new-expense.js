@@ -1,13 +1,15 @@
-// This set of code will send user's expense input to a database
-import { auth, onAuthStateChanged, getDatabase, ref, push, update } from '/initialize-firebase.js'; // Adjust the path if necessary
-import { sanitize } from '/sanitizeStrings.js'; // Import the sanitize function
+// validates input and will send user's expense input to a database
+
+import { auth, onAuthStateChanged, getDatabase, ref, push, update } from '/initialize-firebase.js';
+import { sanitize } from '/sanitizeStrings.js'; // imports the sanitize function
 
 function getExpenseFormValidation() {
-  // Will store the form and error message div into variables
+  // will store the form and error message div into variables
   const expenseForm = document.getElementById("newExpense");
   const errorMessage = document.getElementById("new-expense-error-msg");
   const expenseSelect = document.getElementById("expenseSelect");
 
+  // gets the current date and formats it o MM/DD/YYYY
   function getCurrentFormattedDate() {
     const date = new Date();
     const mm = String(date.getMonth() + 1).padStart(2, '0');
@@ -16,14 +18,15 @@ function getExpenseFormValidation() {
     return mm + '/' + dd + '/' + yyyy;
   }
 
+  // checks user input for valid data
   function validateFields() {
     const description = document.getElementById("exdescription").value.trim();
     const amount = document.getElementById("examount").value.trim();
     let selectedCategory;
 
-    if (window.innerWidth < 576) { // Small screen
+    if (window.innerWidth < 576) { // small screen
       selectedCategory = expenseSelect.value;
-    } else { // Larger screen
+    } else { // larger screen
       selectedCategory = document.querySelector('input[name="expenseTypes"]:checked')?.value;
     }
 
@@ -46,7 +49,7 @@ function getExpenseFormValidation() {
     return isValid;
   }
 
-  // Add event listeners to remove "is-invalid" class when the user starts typing
+  // adds event listeners to remove "is-invalid" class when the user starts typing
   document.getElementById("exdescription").addEventListener("input", function () {
     this.classList.remove("is-invalid");
     errorMessage.textContent = "";
@@ -69,28 +72,28 @@ function getExpenseFormValidation() {
       return;
     }
 
-    // Gather expense data entered by the user
+    // gathers expense data entered by the user
     const description = sanitize(document.getElementById("exdescription").value);
     const amount = sanitize(document.getElementById("examount").value);
-    const currentDate = getCurrentFormattedDate(); // Get the current date and assigns it to the expense submitted
+    const currentDate = getCurrentFormattedDate(); // gets the current date and assigns it to the expense submitted
     let selectedCategory;
 
     // used to decide which input for expense type to accept based on the screen size
-    if (window.innerWidth < 576) { // Small screen
+    if (window.innerWidth < 576) { // small screen
       selectedCategory = sanitize(expenseSelect.value);
-    } else { // Larger screen
+    } else { // larger screen
       selectedCategory = sanitize(document.querySelector('input[name="expenseTypes"]:checked').value);
     }
 
-    // Create the data object to be sent user input to the back-end
+    // creates the data object to be sent user input to the back-end
     const data = {
       description: description,
       amount: amount,
       category: selectedCategory,
-      date: currentDate // Add the date to the data object
+      date: currentDate // adds the current date to the data object
     };
 
-    // Attempt to connect to Firebase and handle form submission
+    // attempts to connect to Firebase and handle form submission
     try {
       const database = getDatabase();
       onAuthStateChanged(auth, (user) => {
@@ -102,7 +105,6 @@ function getExpenseFormValidation() {
 
           update(ref(database), updates)
             .then(() => {
-               // Show success notification
                const modal = bootstrap.Modal.getInstance(document.getElementById('actionModal'));
                modal.hide();
             })
@@ -121,12 +123,12 @@ function getExpenseFormValidation() {
     }
   });
 
-  // Function to display error messages
+  // displays error messages
   function displayError(message) {
     errorMessage.textContent = message;
     errorMessage.style.display = "flex";
 
-    // Clears the input fields
+    // clears the input fields
     document.getElementById("exdescription").value = "";
     document.getElementById("examount").value = "";
     document.getElementById("expenseType1").checked = true;

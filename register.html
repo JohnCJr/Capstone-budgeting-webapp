@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SavyStudents</title>
+    <title>Register</title>
     <link rel="stylesheet" href="reset.css" />
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="bootstrap.min.css" />
@@ -26,7 +26,7 @@
       <main class="main logon">
         <div class="registerForm form-container bg-light">
           <h2>Register</h2>
-          <form id="registerForm" autocomplete="off">
+          <form id="registerForm" autocomplete="off" novalidate>
             <div class="row">
               <div class="col-12 col-sm-6">
                 <label for="firstName" class="form-label">First Name</label>
@@ -90,13 +90,13 @@
                   type="tel"
                   class="form-control"
                   id="phoneNumber"
-                  placeholder="123-456-7890"
+                  placeholder="(123) 456-7890"
                 />
               </div>
             </div>
             <div
               id="register-user-error-msg"
-              class="text-danger mt-2 justify-content-center"
+              class="text-danger mt-2 text-center mx-auto"
               style="display: none"
             ></div>
             <div
@@ -116,7 +116,7 @@
       </main>
       <footer class="footer"></footer>
     </div>
-    <script src="bootstrap.min.js"></script>
+    <script src="bootstrap.bundle.min.js"></script>
     <script type="module" src="load-template.js"></script>
     <script type="module" src="register-user.js"></script>
   </body>
