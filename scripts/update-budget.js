@@ -10,13 +10,13 @@ function getBudgetFormValidation(suggestedAmount = null, selectedValue = null) {
   const currentBudget = document.getElementById("currentBudget");
   const newBudget = document.getElementById("newBudget");
 
-  // Used to clear error text when user makes correction
+  // used to clear error text when user makes correction
   function clearErrorMessage() {
     errorMessage.style.display = "none";
     errorMessage.textContent = "";
   }
 
-  // Checks if any input field is empty
+  // checks if any input field is empty
   function checkEmptyFields() {
     const fields = [
       document.getElementById("totalBudget"),
@@ -45,7 +45,18 @@ function getBudgetFormValidation(suggestedAmount = null, selectedValue = null) {
     return allFieldsFilled;
   }
 
-  // Checks to see if the budget set for categories exceeds the total budget
+  // checks if total budget is greater than 0
+  function checkTotalBudget() {
+    const totalBudget = parseFloat(document.getElementById("totalBudget").value) || 0;
+    if (totalBudget <= 0) {
+      displayError("Total budget must be greater than $0.00");
+      return false;
+    }
+    clearErrorMessage();
+    return true;
+  }
+
+  // checks to see if the budget set for categories exceeds the total budget
   function checkCategorySum() {
     const totalBudget = parseFloat(document.getElementById("totalBudget").value) || 0;
     const foodBudget = parseFloat(document.getElementById("foodBudget").value) || 0;
@@ -63,7 +74,7 @@ function getBudgetFormValidation(suggestedAmount = null, selectedValue = null) {
     return true;
   }
 
-  // Will set the default value of each field in the form if a budget for the user already exists
+  // will set the default value of each field in the form if a budget for the user already exists
   function setDefaultValues(budgetData) {
     if (budgetData) {
       console.log('Setting default values:', budgetData);
@@ -73,28 +84,31 @@ function getBudgetFormValidation(suggestedAmount = null, selectedValue = null) {
       document.getElementById("otherBudget").value = sanitize(budgetData.other) || "";
       console.log("current suggested amount: " + sanitize(suggestedAmount));
       console.log("current type amount: " + sanitize(selectedValue));
-      // If suggestedAmount and selectedValue are provided, override the fetched values
-      if (suggestedAmount !== null & selectedValue !== null) {
+      // if suggestedAmount and selectedValue are provided, override the fetched values
+      if (suggestedAmount !== null && selectedValue !== null) {
         document.getElementById("totalBudget").value = sanitize(suggestedAmount) || "";
         document.getElementById("budgetType").value = sanitize(selectedValue) || "";
-      }
-      else {
+      } else {
         document.getElementById("totalBudget").value = sanitize(budgetData.total) || "";
         document.getElementById("budgetType").value = sanitize(budgetData.budgetType) || "yearly";
       }
 
-
-      // Sets the value of current budget displayed in the modal header defaults to zero if data doesn't exist
+      // sets the value of current budget displayed in the modal header defaults to zero if data doesn't exist
       currentBudget.textContent = sanitize(budgetData.total) === "" ? '$0.00' : `$${sanitize(budgetData.total)}`;
-      newBudget.textContent =   sanitize(suggestedAmount) === null ? sanitize(budgetData.total) : `$${sanitize(suggestedAmount)}`; 
+      newBudget.textContent = sanitize(suggestedAmount) === null ? sanitize(budgetData.total) : `$${sanitize(suggestedAmount)}`;
     } else {
       // Set default values to $0.00 if no budget data exists
-      document.getElementById("totalBudget").value = "0.00";
-      document.getElementById("foodBudget").value = "0.00";
-      document.getElementById("utilityBudget").value = "0.00";
-      document.getElementById("entertainmentBudget").value = "0.00";
-      document.getElementById("otherBudget").value = "0.00";
+      document.getElementById("totalBudget").value = "";
+      document.getElementById("foodBudget").value = "";
+      document.getElementById("utilityBudget").value = "";
+      document.getElementById("entertainmentBudget").value = "";
+      document.getElementById("otherBudget").value = "";
       document.getElementById("budgetType").value = "yearly";
+
+      if (suggestedAmount !== null && selectedValue !== null) {
+        document.getElementById("totalBudget").value = sanitize(suggestedAmount) || "";
+        document.getElementById("budgetType").value = sanitize(selectedValue) || "";
+      }
 
       currentBudget.textContent = '$0.00';
       newBudget.textContent = '$0.00';
@@ -126,10 +140,9 @@ function getBudgetFormValidation(suggestedAmount = null, selectedValue = null) {
     });
   }
 
-  // Function to format date to MM/DD/YYYY
+  // formats date to MM/DD/YYYY
   function getFormattedDate(date) {
-    const [year, month, day] = date.split('-');
-    const d = new Date(year, month - 1, day);
+    const d = new Date(date);
     const mm = String(d.getMonth() + 1).padStart(2, '0');
     const dd = String(d.getDate()).padStart(2, '0');
     const yyyy = d.getFullYear();
@@ -139,13 +152,18 @@ function getBudgetFormValidation(suggestedAmount = null, selectedValue = null) {
   budgetForm.addEventListener("submit", (event) => {
     event.preventDefault();
 
-    // Check if any field is empty
+    // check if any field is empty
     if (!checkEmptyFields()) {
       return;
     }
 
-    // Display error message if sum of categories exceed the amount entered in totalBudget
+    // displays error message if sum of categories exceed the amount entered in totalBudget
     if (!checkCategorySum()) {
+      return;
+    }
+
+    // displays error message if totalBudget amount is greater than or equal to 0
+    if (!checkTotalBudget()) {
       return;
     }
 
@@ -156,9 +174,9 @@ function getBudgetFormValidation(suggestedAmount = null, selectedValue = null) {
     const entertainmentBudget = sanitize(document.getElementById("entertainmentBudget").value);
     const otherBudget = sanitize(document.getElementById("otherBudget").value);
     const budgetType = sanitize(document.getElementById("budgetType").value); // Get the budget type
-    const currentDate = getFormattedDate(new Date().toISOString().split('T')[0]); // Get the current formatted date
+    const currentDate = getFormattedDate(new Date()); // Get the current formatted date
 
-    // Create the data object of user input values to be sent to Firebase Realtime Database
+    // creates the data object of user input values to be sent to Firebase Realtime Database
     const data = {
       total: totalBudget,
       food: foodBudget,

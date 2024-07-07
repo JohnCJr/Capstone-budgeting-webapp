@@ -53,6 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // changes max number of toasts displays from 4 to 1 when screen is small, keeping only the most recent one.
   function manageToastsOnResize() {
     if (window.innerWidth < 576) {
+      const toasterContainer = document.getElementById('toasterContainer');
       while (toasterContainer.children.length > 1) {
         toasterContainer.removeChild(toasterContainer.firstChild);
       }
@@ -60,7 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // matches selection for both radio and select options so they match if the user changes the screen width on their device
-  // also chnages the header and suggested budget amount for the budgets suggestion section based the the user's selection 
+  // also changes the header and suggested budget amount for the budgets suggestion section based the the user's selection 
   function updateAndSynchronizeSelections() {
     const selectedRadio = document.querySelector('input[name="budgetTypes"]:checked');
     if (window.innerWidth < 576) {
@@ -77,8 +78,6 @@ document.addEventListener("DOMContentLoaded", () => {
     suggestedBudgetTitle.textContent = `Suggested ${selectedValue} budget`;
 
     recalculateTotalBudget(selectedValue);
-    console.log("curretn income vlaue right now: " + currentBudgetAmount.textContent);
-    console.log('recalculateTotalBudget is being called from updateAndSynchronizeSelections');
   }
 
   // adds listener for any changes in selection/radio buttons and calls function to make sure both match
@@ -92,41 +91,26 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // converts income amount to appropriate amount based on budget type na payment interval
+  // converts income amount to appropriate amount based on budget type and payment interval
   function calculateBudgetAmount(amount, interval, budgetType) {
     const conversionFactors = {
-      yearly: {
-        yearly: 1,
-        monthly: 12,
-        biweekly: 26,
-        weekly: 52.17
-      },
-      monthly: {
-        yearly: 1 / 12,
-        monthly: 1,
-        biweekly: 2.15,
-        weekly: 4.3
-      },
-      weekly: {
-        yearly: 1 / 52.17,
-        monthly: 1 / 4.3,
-        biweekly: 0.5,
-        weekly: 1
-      }
+      yearly: { yearly: 1, monthly: 12, biweekly: 26, weekly: 52.17 },
+      monthly: { yearly: 1 / 12, monthly: 1, biweekly: 2.15, weekly: 4.3 },
+      weekly: { yearly: 1 / 52.17, monthly: 1 / 4.3, biweekly: 0.5, weekly: 1 }
     };
 
     const result = amount * conversionFactors[budgetType][interval];
     return parseFloat(result.toFixed(2));
   }
 
-  // resets total amount and recalculates tototal income, omiting one-time sources
+  // resets total amount and recalculates total income, omitting one-time sources
   function recalculateTotalBudget(selectedBudgetType) {
-    console.log('recalculateTotalBudget is being called');
     totalAmount = 0;
 
     const userId = localStorage.getItem('userId');
     if (userId === '0') {
-      console.log('User is not logged in');
+      currentBudgetAmount.textContent = '$0.00';
+      suggestedBudgetAmount.textContent = '$0.00';
       return;
     }
 
@@ -146,12 +130,13 @@ document.addEventListener("DOMContentLoaded", () => {
         currentBudgetAmount.textContent = `$${totalAmount.toFixed(2)}`;
         updateSuggestedBudgetAmount();
       } else {
-        console.log('No incomes found for user');
         currentBudgetAmount.textContent = '$0.00';
+        suggestedBudgetAmount.textContent = '$0.00';
       }
     }).catch((error) => {
       console.error('Error fetching user incomes:', error);
       currentBudgetAmount.textContent = '$0.00';
+      suggestedBudgetAmount.textContent = '$0.00';
     });
   }
 
@@ -248,6 +233,8 @@ document.addEventListener("DOMContentLoaded", () => {
           } else if (form === "forms/update-budget.html" && typeof window.getBudgetFormValidation === "function") {
             if (buttonId === 'setBudgetButton') {
               window.getBudgetFormValidation(suggestedAmount, selectedValue);
+              setBudgetAmount.value = '';
+              suggestedBudgetAmount.textContent = currentBudgetAmount.textContent;
             } else {
               window.getBudgetFormValidation();
             }
@@ -374,6 +361,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
    // Manage toasts based on screen size
    function manageToasts(newToast) {
+    const toasterContainer = document.getElementById('toasterContainer');
     if (window.innerWidth < 576) {
       // Remove all existing toasts
       while (toasterContainer.firstChild) {
@@ -390,8 +378,7 @@ document.addEventListener("DOMContentLoaded", () => {
     toasterContainer.appendChild(newToast);
   }
 
-
-  // updates toast timestamp based on how long it's been displayed, displays chnage very 1 minute
+  // updates toast timestamp based on how long it's been displayed, displays change every 1 minute
   function updateTimestamps() {
     const toasts = document.querySelectorAll('.toast small[data-timestamp]');
     toasts.forEach((small) => {
@@ -419,11 +406,9 @@ document.addEventListener("DOMContentLoaded", () => {
       script.src = src;
       script.type = "module";
       script.onload = () => {
-        console.log(`${src} loaded successfully`);
         resolve();
       };
       script.onerror = () => {
-        console.error(`Failed to load ${src}`);
         reject();
       };
       document.body.appendChild(script);
@@ -435,7 +420,6 @@ document.addEventListener("DOMContentLoaded", () => {
     scripts.forEach(src => {
       const scriptElements = document.querySelectorAll(`script[src="${src}"]`);
       scriptElements.forEach(script => {
-        console.log(`Removing script: ${src}`);
         script.remove();
       });
     });
@@ -450,18 +434,15 @@ document.addEventListener("DOMContentLoaded", () => {
     onChildAdded(incomesRef, (snapshot) => {
       if (initialLoadComplete) {
         updateAndSynchronizeSelections();
-        console.log('updateAndSynchronizeSelections is being called from onChildAdded');
       }
     });
 
     onChildChanged(incomesRef, (snapshot) => {
       updateAndSynchronizeSelections();
-      console.log('updateAndSynchronizeSelections is being called from onChildChanged');
     });
 
     onChildRemoved(incomesRef, (snapshot) => {
       updateAndSynchronizeSelections();
-      console.log('updateAndSynchronizeSelections is being called from onChildRemoved');
     });
 
     // used to prevent updateAndSynchronizeSelections from being called twice upon initial page load.

@@ -47,11 +47,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 field.setAttribute('max', endOfMonthFormatted);
                 field.setAttribute('min', startOfMonthFormatted);
             }
-    
-            // defaults date field to today in case that there is no value in that field 
-            if (!field.value) {
-                field.value = todayFormatted;
-            }
         });
     }
 
