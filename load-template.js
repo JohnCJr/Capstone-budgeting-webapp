@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
             SavvyStudents
           </a>
           <div class="d-flex align-items-center ms-auto order-md-2">
-            <button class="navbar-toggler d-md-none me-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler d-md-none me-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>
           </div>
@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <div id="navbar-header">SavvyStudents</div>
           </a>
           <div class="d-flex align-items-center ms-auto order-md-2">
-            <button class="navbar-toggler d-md-none me-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler d-md-none me-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>
             <button class="btn nav-link btn-outline-info navbar-btn p-0 ms-2 me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">

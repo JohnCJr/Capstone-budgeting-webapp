@@ -7,7 +7,8 @@
     "left"
     "right"
     "footer";
-  height: 100%;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
   overflow: hidden;
 }
 
@@ -15,6 +16,8 @@
 /* Body Styles */
 body {
   background: linear-gradient(115deg, #7cfac1, #ffffff) !important;
+  margin: 0;
+  padding: 0;
 }
 
 /* Contains the navigation bar content style */
@@ -66,7 +69,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 90.8vh;
+  /* height: 90.8vh; */
 }
 
 /* Styles for sign-in links */
@@ -263,13 +266,15 @@ nav.navbar {
   text-align: center;
 }
 
-.navbar-toggler:hover {
-  background-color: lightblue;
+.navbar-toggler:focus {
+  background-color: lightblue !important;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.25) !important;
 }
 
 a.nav-link:hover {
   color: white;
 }
+
 
 /********************************************************************************************************/
 
@@ -279,6 +284,9 @@ a.nav-link:hover {
 @media (max-width: 374px) {
   #navabar-logo {
     display: none;
+  }
+  .navbar-brand {
+    padding-left: 1rem !important;
   }
 }
 @media (min-width: 375px) {
@@ -297,8 +305,8 @@ a.nav-link:hover {
 /* handles display of forms and their pages when the screen is small */
 @media only screen and (max-width: 375px) {
   .main.logon {
-    margin-bottom: 2rem !important;
-    margin-top: 2rem !important;
+    padding-bottom: 2rem !important;
+    padding-top: 2rem !important;
   }
 
   .form-container {

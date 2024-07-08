@@ -272,7 +272,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <input type="text" class="form-control" id="edit-description-${data.key}" value="${decodeHTMLEntities(sanitizedDescription)}">
                 </td>
                 <td>
-                    <input type="text" class="money-field form-control" id="edit-amount-${data.key}" value="${parseFloat(sanitizedAmount).toFixed(2)}" required>
+                    <input type="text" inputmode="decimal" class="money-field form-control" id="edit-amount-${data.key}" value="${parseFloat(sanitizedAmount).toFixed(2)}" required>
                 </td>
                 <td>
                     <select class="form-select form-select-md" id="edit-category-${data.key}" aria-label="Small type select" required>
@@ -355,7 +355,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     </select>
                 </td>
                 <td>
-                    <input type="text" class="money-field form-control" id="edit-amount-${key}" value="${sanitizedAmount}" required>
+                    <input type="text" inputmode="decimal" class="money-field form-control" id="edit-amount-${key}" value="${sanitizedAmount}" required>
                 </td>
                 <td class="table-btns col-md-1 col-sm-8 mx-sm-auto mx-0 col-12">
                     <div class="btn-group" role="group">
