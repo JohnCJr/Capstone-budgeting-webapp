@@ -1,7 +1,6 @@
 // gathers the necessary JS based on the button clicked and connects the new-expense, new-income, 
 // update-budget, and savy_script js to the dashboard modal. Also handles budget suggestion card.
 
-
 import { ref,get,database, onChildAdded, onChildChanged, onChildRemoved } from "./initialize-firebase.js";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -99,6 +98,11 @@ document.addEventListener("DOMContentLoaded", () => {
       weekly: { yearly: 1 / 52.17, monthly: 1 / 4.3, biweekly: 0.5, weekly: 1 }
     };
 
+    // failsafe to handle any unexpected inputs that returns 0 so that NaN won't be returned
+    if (!conversionFactors[budgetType] || !conversionFactors[budgetType][interval]) {
+      // console.error(`Invalid conversion factors for budgetType: ${budgetType} and interval: ${interval}`);
+      return 0;
+    }
     const result = amount * conversionFactors[budgetType][interval];
     return parseFloat(result.toFixed(2));
   }
@@ -118,10 +122,11 @@ document.addEventListener("DOMContentLoaded", () => {
     get(incomesRef).then((snapshot) => {
       if (snapshot.exists()) {
         const userIncomes = snapshot.val();
-
+        
         // loops through array of values for userIncomes
         Object.values(userIncomes).forEach(income => {
-          if (income.type !== 'once') {
+          console.log("incoeme typoe is : " + income.type);
+          if (income.type !== 'once' && income.type !== 'one-time') {
             // passes values to function to see how income will be calculated
             totalAmount += calculateBudgetAmount(parseFloat(income.amount), income.type, selectedBudgetType); 
           }

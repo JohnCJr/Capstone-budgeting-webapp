@@ -102,13 +102,21 @@ document.addEventListener('DOMContentLoaded', function() {
         return new Date(year, month - 1, day);
     }
 
-    // Checks if a date falls within a range
+    // checks if a date falls within a range
     function isWithinDateRange(date, startDate, endDate) {
         const d = new Date(date);
         return d >= startDate && d <= endDate;
     }
 
-    // Updates budget table, needs expense table to calculate if under or over budget for each category and total
+    // checks if date is within a given range in YYYY-MM-DD format for expense edit date input field
+    function isDateInRange(dateStr, minDate, maxDate) {
+        const date = new Date(dateStr);
+        const min = new Date(minDate);
+        const max = new Date(maxDate);
+        return date >= min && date <= max;
+    }
+
+    // updates budget table, needs expense table to calculate if under or over budget for each category and total
     function updateBudgetsTable(budgetsSnapshot, expensesSnapshot) {
         let budgetsTableBody = document.getElementById('budgetsTableBody');
         let budgetsTableFoot = document.getElementById('budgetsTableFoot');
@@ -439,8 +447,19 @@ document.addEventListener('DOMContentLoaded', function() {
     window.confirmEditExpense = function(key) {
         let userId = localStorage.getItem('userId');
         if (userId !== '0') {
+            let dateInput = document.getElementById(`edit-date-${key}`);
+            let dateValue = dateInput.value;
+            let minDate = dateInput.getAttribute('min');
+            let maxDate = dateInput.getAttribute('max');
+
+            // validate date range and prevents submitting a date oustide the range
+            if (!isDateInRange(dateValue, minDate, maxDate)) {
+                alert(`The date must be within the range ${getFormattedDate(minDate)} to ${getFormattedDate(maxDate)}.`);
+                return;
+            }
+
             let updatedData = {
-                date: getFormattedDate(document.getElementById(`edit-date-${key}`).value),
+                date: getFormattedDate(dateValue),
                 description: sanitize(document.getElementById(`edit-description-${key}`).value),
                 amount: sanitize(document.getElementById(`edit-amount-${key}`).value),
                 category: sanitize(document.getElementById(`edit-category-${key}`).value)
@@ -462,6 +481,17 @@ document.addEventListener('DOMContentLoaded', function() {
     window.confirmEditIncome = function(key) {
         let userId = localStorage.getItem('userId');
         if (userId !== '0') {
+            let dateInput = document.getElementById(`edit-date-${key}`);
+            let dateValue = dateInput.value;
+            let minDate = dateInput.getAttribute('min');
+            let maxDate = dateInput.getAttribute('max');
+
+            // validate date range and prevents submitting a date oustide the range
+            if (!isDateInRange(dateValue, minDate, maxDate)) {
+                alert(`The date must be within the range ${getFormattedDate(minDate)} to ${getFormattedDate(maxDate)}.`);
+                return;
+            }
+            
             let updatedData = {
                 date: getFormattedDate(document.getElementById(`edit-date-${key}`).value),
                 description: sanitize(document.getElementById(`edit-description-${key}`).value),

@@ -100,6 +100,9 @@
         #compound-interest-chart {
           height: 100%;
         }
+        .plotly-title {
+          max-width: 80%;
+        }
       }
     </style>
   </head>
@@ -253,7 +256,11 @@
               ];
 
               const layout = {
-                title: "Compound Interest with Monthly Contributions Over Time",
+                title: {
+                  text: "Compound Interest with Monthly Contributions Over Time",
+                  x: 0.5,
+                  xanchor: "center",
+                },
                 xaxis: {
                   title: "Time (years)",
                 },
@@ -261,9 +268,23 @@
                   title: "Amount ($)",
                 },
                 autosize: true,
+                responsive: true,
+                margin: {
+                  l: window.innerWidth < 768 ? 0 : 50,
+                  r: window.innerWidth < 768 ? 20 : 50,
+                  pad: window.innerWidth < 768 ? 20 : 4,
+                },
+                legend: {
+                  orientation: window.innerWidth < 768 ? "h" : "v",
+                  x: window.innerWidth < 768 ? 0.06 : 1,
+                  xanchor: window.innerWidth < 768 ? "center" : "right",
+                  y: window.innerWidth < 768 ? 1.22 : 1,
+                },
               };
 
-              Plotly.newPlot("compound-interest-chart", data, layout);
+              Plotly.newPlot("compound-interest-chart", data, layout, {
+                responsive: true,
+              });
             }
 
             // Initial chart render
