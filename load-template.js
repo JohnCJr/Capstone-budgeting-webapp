@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
     navbarHTML = `
       <nav class="navbar navbar-expand-md bg-body-tertiary">
         <div class="container-fluid px-lg-5 px-md-2 px-0 d-flex py-1 justify-content-between align-items-center">
-          <a class="navbar-brand fs-1 d-flex align-items-center ms-2" href="home.html">
+          <a class="navbar-brand fs-1 d-flex align-items-center ms-2" href="index.html">
             <img id='navabar-logo' src="images/Cajoe-bits-logo.png" alt="SavvyStudent brand logo" />
             SavvyStudents
           </a>
@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
           <div class="collapse navbar-collapse mx-md-0 order-md-1" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0 ps-sm-2 fs-5">
-              <li class="nav-item"><a class="nav-link" aria-current="page" href="home.html">Home</a></li>
+              <li class="nav-item"><a class="nav-link" aria-current="page" href="index.html">Home</a></li>
               <li class="nav-item"><a class="nav-link" aria-current="page" href="about-us.html">About Us</a></li>
               <li class="nav-item"><a class="nav-link" aria-current="page" href="budgeting-tips.html">Budgeting Tips</a></li>
               <li class="nav-item"><a class="nav-link" href="sign-on.html">Sign In</a></li>
@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const navbarHTML = `
       <nav class="navbar navbar-expand-md bg-body-tertiary">
         <div class="container-fluid px-lg-5 px-md-2 px-0 d-flex py-1 justify-content-between align-items-center">
-          <a class="navbar-brand fs-2 d-flex align-items-center ms-2" href="home.html">
+          <a class="navbar-brand fs-2 d-flex align-items-center ms-2" href="index.html">
             <img id='navabar-logo' src="images/Cajoe-bits-logo.png" alt="SavvyStudent brand logo" />
             <div id="navbar-header">SavvyStudents</div>
           </a>
@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
           <div class="collapse navbar-collapse mx-md-0 order-md-1" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0 ps-sm-2 fs-5">
-              <li class="nav-item"><a class="nav-link" aria-current="page" href="home.html">Home</a></li>
+              <li class="nav-item"><a class="nav-link" aria-current="page" href="index.html">Home</a></li>
               <li class="nav-item"><a class="nav-link" aria-current="page" href="about-us.html">About Us</a></li>
               <li class="nav-item"><a class="nav-link" aria-current="page" href="budgeting-tips.html">Budgeting Tips</a></li>
               <li class="nav-item"><a class="nav-link" aria-current="page" href="dashboard.html">Dashboard</a></li>
