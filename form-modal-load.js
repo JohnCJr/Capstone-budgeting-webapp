@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const suggestedBudgetAmount = document.getElementById("suggestedBudget");
   const setBudgetAmount = document.getElementById("setBudgetAmount");
   const budgetTypeSelect = document.getElementById("budgetTypeSelect");
+  const selectContainer = document.querySelector(".selectContainer");
   const budgetTypeFieldset = document.querySelector(".budgetTypeFieldset");
   let suggestedAmount;
   let totalAmount;
@@ -32,6 +33,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // listens to window resize, triggers radip/select display and number of toasts displayed when screen size is small
   window.addEventListener('resize', handleResize);
 
+  handleResize(); // initial call to display and hide the correct input field 
+
   // used to call functions
   function handleResize() {
     toggleFieldsetSelectVisibility();
@@ -41,11 +44,15 @@ document.addEventListener("DOMContentLoaded", () => {
   // hides/displays radios/select dropdown based on screen width
   function toggleFieldsetSelectVisibility() {
     if (window.innerWidth < 576) {
-      budgetTypeFieldset.style.display = 'none';
-      budgetTypeSelect.style.display = 'flex';
+      budgetTypeFieldset.classList.add('d-none');
+      budgetTypeFieldset.classList.remove('d-flex');
+      selectContainer.classList.remove('d-none');
+      selectContainer.classList.add('d-flex');
     } else {
-      budgetTypeFieldset.style.display = 'flex';
-      budgetTypeSelect.style.display = 'none';
+      budgetTypeFieldset.classList.remove('d-none');
+      budgetTypeFieldset.classList.add('d-flex');
+      selectContainer.classList.add('d-none');
+      selectContainer.classList.remove('d-flex');
     }
   }
 

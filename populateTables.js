@@ -3,6 +3,7 @@
 import { database, ref, update, remove, onValue, get } from "./initialize-firebase.js"; // Adjust the path if necessary
 import { sanitize } from './sanitizeStrings.js'; // Import the sanitize function
 
+
 document.addEventListener('DOMContentLoaded', function() {
     let expensesData = []; // will store expense data keys
 
@@ -35,9 +36,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const startOfMonthFormatted = formatDateToYYYYMMDD(startOfMonth);
             const endOfMonthFormatted = formatDateToYYYYMMDD(endOfMonth);
 
-            // checks if the date value fot eh input field is with the current month of the current year,
+            // checks if the date value for the input field is with the current month of the current year,
             // if so then the max range is set to the current date so the user can select past the current date.
-            // Otherwise the range is within the month that the income/expnese was created
+            // Otherwise the range is within the month that the income/expense was created
             if (dateValue.getFullYear() === today.getFullYear() && dateValue.getMonth() === today.getMonth()) {
                 // If the date is in the current month, set the max to today's date
                 field.setAttribute('max', todayFormatted);
@@ -70,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
         startOfWeek.setHours(0, 0, 0, 0); // ensures the time is set to the beginning of the day at the very first second
 
         const endOfWeek = new Date(startOfWeek);
-        endOfWeek.setDate(startOfWeek.getDate() + 6);   // sets to Sudnat
+        endOfWeek.setDate(startOfWeek.getDate() + 6);   // sets to Sunday
         endOfWeek.setHours(23, 59, 59, 999); // ensures the time is set to the end of the day up to the last second
 
         return [startOfWeek, endOfWeek];
@@ -202,7 +203,6 @@ document.addEventListener('DOMContentLoaded', function() {
         budgetsTableFoot.appendChild(footRow);
     }
 
-    // 
     function updateExpensesTable(snapshot) {
         expensesData = []; // clears expense data keys
         snapshot.forEach(function(childSnapshot) {
@@ -314,23 +314,20 @@ document.addEventListener('DOMContentLoaded', function() {
             let data = childSnapshot.val();
             let sanitizedDate = sanitize(data.date || new Date().toISOString().split("T")[0]);
             let sanitizedDescription = sanitize(data.description || 'undefined');
-            let sanitizedType = capitalize(sanitize(data.type || 'undefined').toLowerCase());
+            let sanitizedType = sanitize(data.type || 'undefined').toLowerCase();
+            if (sanitizedType === "biweekly") sanitizedType = "bi-weekly"; // For display purposes
             let sanitizedAmount = parseFloat(sanitize(data.amount || 'undefined')).toFixed(2);
             currentTotalIncome += parseFloat(sanitizedAmount);
-
-            // adjusts value to dipslay to the user 
-            if (sanitizedType === "Biweekly") {sanitizedType = "Bi-weekly";}
-            if (sanitizedType === "Once") {sanitizedType = "One-time";}
 
             let row = document.createElement('tr');
             row.innerHTML = `
                 <td data-label="Date">${sanitizedDate}</td>
                 <td data-label="Description">${sanitizedDescription}</td>
-                <td data-label="Type">${sanitizedType}</td>
+                <td data-label="Type">${capitalize(sanitizedType)}</td>
                 <td data-label="Amount">$${sanitizedAmount}</td>
                 <td class="table-btns col-md-1 col-sm-8 mx-sm-auto mx-0 col-12">
                     <div class="btn-group" role="group">
-                        <button class="btn btn-secondary income-edit-btn" onclick='showEditRow("income", "${key}", ${JSON.stringify(sanitizedDate)}, ${JSON.stringify(decodeHTMLEntities(sanitizedDescription))}, ${JSON.stringify(sanitizedType)}, ${JSON.stringify(sanitizedAmount)})'>Edit</button>
+                        <button class="btn btn-secondary income-edit-btn" onclick='showEditRow("income", "${key}", ${JSON.stringify(sanitizedDate)}, ${JSON.stringify(decodeHTMLEntities(sanitizedDescription))}, ${JSON.stringify(capitalize(sanitizedType))}, ${JSON.stringify(sanitizedAmount)})'>Edit</button>
                         <button class="btn btn-danger income-delete-btn" onclick="confirmDelete('income', '${key}')">Delete</button>
                     </div>
                 </td>`;
@@ -412,7 +409,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // converts Date to string 
             console.log('date of: ' + dateValue.toISOString().split("T")[0]);
             document.getElementById(`edit-date-${key}`).value = dateValue.toISOString().split("T")[0] || new Date().toISOString().split("T")[0];
-            document.getElementById(`edit-description-${key}`).value = decodeHTMLEntities(data[1]); // prevent issues with cetain characters being read as HTML code
+            document.getElementById(`edit-description-${key}`).value = decodeHTMLEntities(data[1]); // prevent issues with certain characters being read as HTML code
             document.getElementById(`edit-amount-${key}`).value = data[2];
             document.getElementById(`edit-category-${key}`).value = data[3].toLowerCase();
         } else if (type === 'income') {
@@ -421,7 +418,9 @@ document.addEventListener('DOMContentLoaded', function() {
             dateValue.setMinutes(dateValue.getMinutes() - offset);
             document.getElementById(`edit-date-${key}`).value = dateValue.toISOString().split("T")[0] || new Date().toISOString().split("T")[0];
             document.getElementById(`edit-description-${key}`).value = decodeHTMLEntities(data[1]);
-            document.getElementById(`edit-type-${key}`).value = data[2].toLowerCase();
+            let typeValue = data[2].toLowerCase();
+            if (typeValue === "bi-weekly" || typeValue === "biweekly") typeValue = "bi-weekly";
+            document.getElementById(`edit-type-${key}`).value = typeValue;
             document.getElementById(`edit-amount-${key}`).value = data[3];
         }
         if (window.getFormValidationShared) {
@@ -452,7 +451,7 @@ document.addEventListener('DOMContentLoaded', function() {
             let minDate = dateInput.getAttribute('min');
             let maxDate = dateInput.getAttribute('max');
 
-            // validate date range and prevents submitting a date oustide the range
+            // validate date range and prevents submitting a date outside the range
             if (!isDateInRange(dateValue, minDate, maxDate)) {
                 alert(`The date must be within the range ${getFormattedDate(minDate)} to ${getFormattedDate(maxDate)}.`);
                 return;
@@ -486,7 +485,7 @@ document.addEventListener('DOMContentLoaded', function() {
             let minDate = dateInput.getAttribute('min');
             let maxDate = dateInput.getAttribute('max');
 
-            // validate date range and prevents submitting a date oustide the range
+            // validate date range and prevents submitting a date outside the range
             if (!isDateInRange(dateValue, minDate, maxDate)) {
                 alert(`The date must be within the range ${getFormattedDate(minDate)} to ${getFormattedDate(maxDate)}.`);
                 return;
@@ -495,7 +494,7 @@ document.addEventListener('DOMContentLoaded', function() {
             let updatedData = {
                 date: getFormattedDate(document.getElementById(`edit-date-${key}`).value),
                 description: sanitize(document.getElementById(`edit-description-${key}`).value),
-                type: sanitize(document.getElementById(`edit-type-${key}`).value),
+                type: sanitize(document.getElementById(`edit-type-${key}`).value === "bi-weekly" ? "biweekly" : document.getElementById(`edit-type-${key}`).value),
                 amount: sanitize(document.getElementById(`edit-amount-${key}`).value)
             };
             update(ref(database, 'income/' + userId + '/' + key), updatedData)
@@ -554,10 +553,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    let userId = localStorage.getItem('userId');    // Verifies that user is logged in before populating tables with data
+    let userId = localStorage.getItem('userId');    // verifies that user is logged in before populating tables with data
 
     if (userId !== '0') {
-        // shows spinners initially while budgte table data is being gathered
+        // shows spinners initially while budget table data is being gathered
         document.getElementById('budgetsTableBody').innerHTML = `<tr><td colspan="4" class="text-center"><div class="spinner-border text-success" role="status"></div></td></tr>`;
         
         

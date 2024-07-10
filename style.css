@@ -12,7 +12,6 @@
   overflow: hidden;
 }
 
-
 /* Body Styles */
 body {
   background: linear-gradient(115deg, #7cfac1, #ffffff) !important;
@@ -69,7 +68,6 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  /* height: 90.8vh; */
 }
 
 /* Styles for sign-in links */
@@ -266,7 +264,7 @@ nav.navbar {
   text-align: center;
 }
 
-.navbar-toggler:focus {
+.navbar-toggler:focus, .navbar-toggler:active {
   background-color: lightblue !important;
   box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.25) !important;
 }
@@ -476,5 +474,4 @@ for small tablets and mobile devices to prevent horizontal overflow */
     padding: 0 !important;
   }
 }
-
 /********************************************************************************************************/
