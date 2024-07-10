@@ -3,13 +3,13 @@
 import { auth, onAuthStateChanged, getDatabase, ref, push, update } from '/initialize-firebase.js';
 import { sanitize } from '/sanitizeStrings.js'; // imports the sanitize function
 
-
 function getIncomeFormValidation() {
   const incomeForm = document.getElementById("newIncome");
   const errorMessage = document.getElementById("new-income-error-msg");
   const incomeSelect = document.getElementById("incomeSelect");
+  const intervalFieldset = document.querySelector(".intervalFieldset");
 
-  // gets the current date and formats it o MM/DD/YYYY
+  // gets the current date and formats it to MM/DD/YYYY
   function getCurrentFormattedDate() {
     const date = new Date();
     const mm = String(date.getMonth() + 1).padStart(2, '0');
@@ -25,7 +25,7 @@ function getIncomeFormValidation() {
     let selectedType;
 
     // switches between radio or select options based on screen size
-    if (window.innerWidth < 576) { // Small screen
+    if (window.innerWidth < 768) { // Small screen
       selectedType = incomeSelect.value;
     } else { // Larger screen
       selectedType = document.querySelector('input[name="incomeTypes"]:checked')?.value;
@@ -51,7 +51,7 @@ function getIncomeFormValidation() {
 
     // checks if selection is made, check is based on screen size
     if (!selectedType) {
-      if (window.innerWidth < 576) {
+      if (window.innerWidth < 768) {
         incomeSelect.classList.add("is-invalid");
       } else {
         document.querySelectorAll('input[name="incomeTypes"]').forEach(input => input.classList.add("is-invalid"));
@@ -108,7 +108,7 @@ function getIncomeFormValidation() {
     let selectedType;
 
     // used to decide which input for income type to accept based on the screen size
-    if (window.innerWidth < 576) { // Small screen
+    if (window.innerWidth < 768) { // Small screen
       selectedType = sanitize(incomeSelect.value);
     } else { // Larger screen
       selectedType = sanitize(document.querySelector('input[name="incomeTypes"]:checked').value);
@@ -163,6 +163,35 @@ function getIncomeFormValidation() {
     document.getElementById("incomeType1").checked = true;
     document.getElementById("incomeDescription").value = "";
   }
+
+  function updateAndSynchronizeSelections() {
+    const selectedRadio = document.querySelector('input[name="incomeTypes"]:checked');
+    if (window.innerWidth < 768) {
+      const selectedValue = incomeSelect.value;
+      const radio = document.querySelector(`input[name="incomeTypes"][value="${selectedValue}"]`);
+      if (radio) radio.checked = true;
+    } else {
+      const selectedValue = selectedRadio.value;
+      incomeSelect.value = selectedValue;
+    }
+  }
+
+  // adds listener for any changes in selection/radio buttons and calls function to make sure both match
+  if (incomeSelect) {
+    incomeSelect.addEventListener("change", updateAndSynchronizeSelections);
+  }
+  if (intervalFieldset) {
+    const radios = intervalFieldset.querySelectorAll('input[name="budgetTypes"]');
+    radios.forEach(radio => {
+      radio.addEventListener("change", updateAndSynchronizeSelections);
+    });
+  }
+
+  // synchronize selections on window resize
+  window.addEventListener('resize', updateAndSynchronizeSelections);
+
+  // initial synchronization
+  updateAndSynchronizeSelections();
 }
 
 // assigns the function to the window object to ensure it can be called asynchronously

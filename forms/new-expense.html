@@ -17,55 +17,65 @@ and serves as the template to generate a new expense. -->
       </div>
     </div>
   </div>
-  <fieldset class="expensseFieldset row mb-3 ms-3 d-sm-flex d-none">
-    <legend class="col-form-label col-sm-3 pt-0">Type:</legend>
-    <div class="col-sm-8">
-      <div class="form-check">
-        <input
-          class="form-check-input"
-          type="radio"
-          name="expenseTypes"
-          id="expenseType1"
-          value="food"
-          checked
-        />
-        <label class="form-check-label" for="expenseType1"> Food </label>
-      </div>
-      <div class="form-check">
-        <input
-          class="form-check-input"
-          type="radio"
-          name="expenseTypes"
-          id="expenseType2"
-          value="utility"
-        />
-        <label class="form-check-label" for="expenseType2"> Utility </label>
-      </div>
-      <div class="form-check-label">
-        <input
-          class="form-check-input"
-          type="radio"
-          name="expenseTypes"
-          id="expenseType3"
-          value="entertainment"
-        />
-        <label class="form-check-label ms-1" for="expenseType3">
-          Entertainment
-        </label>
-      </div>
-      <div class="form-check-label">
-        <input
-          class="form-check-input"
-          type="radio"
-          name="expenseTypes"
-          id="expenseType4"
-          value="other"
-        />
-        <label class="form-check-label ms-1" for="expenseType4"> Other </label>
+  <fieldset
+    class="budgetTypeFieldset row mb-3 ms-0 align-items-center justify-content-center d-md-flex d-none"
+  >
+    <div class="row mb-3 mt-3 align-items-center">
+      <legend class="col-form-label col-sm-3 col-md-2 text-end mb-5 pe-5">
+        Type:
+      </legend>
+      <div class="col-sm-9 col-md-6 ms-4">
+        <div class="d-flex flex-column">
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="expenseTypes"
+              id="expenseType1"
+              value="food"
+              checked
+            />
+            <label class="form-check-label" for="expenseType1"> Food </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="expenseTypes"
+              id="expenseType2"
+              value="utility"
+            />
+            <label class="form-check-label" for="expenseType2"> Utility </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="expenseTypes"
+              id="expenseType3"
+              value="entertainment"
+            />
+            <label class="form-check-label ms-1" for="expenseType3">
+              Entertainment
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="expenseTypes"
+              id="expenseType4"
+              value="other"
+            />
+            <label class="form-check-label ms-1" for="expenseType4">
+              Other
+            </label>
+          </div>
+        </div>
       </div>
     </div>
   </fieldset>
-  <div class="row mb-3 d-sm-none d-flex" id="selectContainer">
+  <div class="row mb-3 d-md-none d-flex" id="selectContainer">
     <label for="expenseSelect" class="col-form-label col-sm-3 pt-0"
       >Type:</label
     >
@@ -84,7 +94,7 @@ and serves as the template to generate a new expense. -->
   </div>
   <div class="row mb-3">
     <label for="exdescription" class="col-sm-3 col-form-label"
-      >Description</label
+      >Description:</label
     >
     <div class="col-sm-8">
       <input

@@ -4,12 +4,13 @@ import { auth, onAuthStateChanged, getDatabase, ref, push, update } from '/initi
 import { sanitize } from '/sanitizeStrings.js'; // imports the sanitize function
 
 function getExpenseFormValidation() {
-  // will store the form and error message div into variables
+  // Store the form and error message div into variables
   const expenseForm = document.getElementById("newExpense");
   const errorMessage = document.getElementById("new-expense-error-msg");
   const expenseSelect = document.getElementById("expenseSelect");
+  const budgetTypeFieldset = document.querySelector(".budgetTypeFieldset");
 
-  // gets the current date and formats it o MM/DD/YYYY
+  // Gets the current date and formats it to MM/DD/YYYY
   function getCurrentFormattedDate() {
     const date = new Date();
     const mm = String(date.getMonth() + 1).padStart(2, '0');
@@ -18,13 +19,13 @@ function getExpenseFormValidation() {
     return mm + '/' + dd + '/' + yyyy;
   }
 
-  // checks user input for valid data
+  // Checks user input for valid data
   function validateFields() {
     const description = document.getElementById("exdescription").value.trim();
     const amount = document.getElementById("examount").value.trim();
     let selectedCategory;
 
-    if (window.innerWidth < 576) { // small screen
+    if (window.innerWidth < 768) { // small screen
       selectedCategory = expenseSelect.value;
     } else { // larger screen
       selectedCategory = document.querySelector('input[name="expenseTypes"]:checked')?.value;
@@ -46,10 +47,22 @@ function getExpenseFormValidation() {
       document.getElementById("examount").classList.remove("is-invalid");
     }
 
+    if (!selectedCategory) {
+      if (window.innerWidth < 768) {
+        expenseSelect.classList.add("is-invalid");
+      } else {
+        document.querySelectorAll('input[name="expenseTypes"]').forEach(input => input.classList.add("is-invalid"));
+      }
+      isValid = false;
+    } else {
+      expenseSelect.classList.remove("is-invalid");
+      document.querySelectorAll('input[name="expenseTypes"]').forEach(input => input.classList.remove("is-invalid"));
+    }
+
     return isValid;
   }
 
-  // adds event listeners to remove "is-invalid" class when the user starts typing
+  // Adds event listeners to remove "is-invalid" class when the user starts typing
   document.getElementById("exdescription").addEventListener("input", function () {
     this.classList.remove("is-invalid");
     errorMessage.textContent = "";
@@ -62,6 +75,19 @@ function getExpenseFormValidation() {
     errorMessage.style.display = "none";
   });
 
+  expenseSelect.addEventListener("change", function () {
+    this.classList.remove("is-invalid");
+    errorMessage.textContent = "";
+    errorMessage.style.display = "none";
+  });
+
+  document.querySelectorAll('input[name="expenseTypes"]').forEach(input => {
+    input.addEventListener("change", function () {
+      document.querySelectorAll('input[name="expenseTypes"]').forEach(input => input.classList.remove("is-invalid"));
+      errorMessage.textContent = "";
+      errorMessage.style.display = "none";
+    });
+  });
 
   expenseForm.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -72,20 +98,20 @@ function getExpenseFormValidation() {
       return;
     }
 
-    // gathers expense data entered by the user
+    // Gathers expense data entered by the user
     const description = sanitize(document.getElementById("exdescription").value);
     const amount = sanitize(document.getElementById("examount").value);
     const currentDate = getCurrentFormattedDate(); // gets the current date and assigns it to the expense submitted
     let selectedCategory;
 
-    // used to decide which input for expense type to accept based on the screen size
-    if (window.innerWidth < 576) { // small screen
+    // Used to decide which input for expense type to accept based on the screen size
+    if (window.innerWidth < 768) { // small screen
       selectedCategory = sanitize(expenseSelect.value);
     } else { // larger screen
       selectedCategory = sanitize(document.querySelector('input[name="expenseTypes"]:checked').value);
     }
 
-    // creates the data object to be sent user input to the back-end
+    // Creates the data object to be sent user input to the back-end
     const data = {
       description: description,
       amount: amount,
@@ -93,7 +119,7 @@ function getExpenseFormValidation() {
       date: currentDate // adds the current date to the data object
     };
 
-    // attempts to connect to Firebase and handle form submission
+    // Attempts to connect to Firebase and handle form submission
     try {
       const database = getDatabase();
       onAuthStateChanged(auth, (user) => {
@@ -123,16 +149,47 @@ function getExpenseFormValidation() {
     }
   });
 
-  // displays error messages
+  // Displays error messages
   function displayError(message) {
     errorMessage.textContent = message;
     errorMessage.style.display = "flex";
 
-    // clears the input fields
+    // Clears the input fields
     document.getElementById("exdescription").value = "";
     document.getElementById("examount").value = "";
     document.getElementById("expenseType1").checked = true;
   }
+
+  function updateAndSynchronizeSelections() {
+    const selectedRadio = document.querySelector('input[name="expenseTypes"]:checked');
+    if (window.innerWidth < 768) {
+      const selectedValue = expenseSelect.value;
+      const radio = document.querySelector(`input[name="expenseTypes"][value="${selectedValue}"]`);
+      if (radio) radio.checked = true;
+    } else {
+      const selectedValue = selectedRadio?.value;
+      if (selectedValue) {
+        expenseSelect.value = selectedValue;
+      }
+    }
+  }
+
+   // Adds listener for any changes in selection/radio buttons and calls function to make sure both match
+   if (expenseSelect) {
+    expenseSelect.addEventListener("change", updateAndSynchronizeSelections);
+  }
+  if (budgetTypeFieldset) {
+    const radios = budgetTypeFieldset.querySelectorAll('input[name="expenseTypes"]');
+    radios.forEach(radio => {
+      radio.addEventListener("change", updateAndSynchronizeSelections);
+    });
+  }
+
+  // Synchronize selections on window resize
+  window.addEventListener('resize', updateAndSynchronizeSelections);
+
+  // Initial synchronization
+  updateAndSynchronizeSelections();
 }
 
 // Assign the function to the window object to ensure it can be called asynchronously
