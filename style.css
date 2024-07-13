@@ -71,10 +71,7 @@ body {
 .main.logon {
   display: grid;
   grid-template-areas: 
-    "header"
-    "main"
-    "left"
-    "right";
+    "main";
   justify-content: center;
   align-items: center;
 }
