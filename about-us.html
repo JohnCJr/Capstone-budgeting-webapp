@@ -94,6 +94,95 @@
         </div>
       </aside>
       <footer class="footer"></footer>
+      <div
+      class="offcanvas offcanvas-start"
+      data-bs-scroll="true"
+      tabindex="-1"
+      id="offcanvasWithBothOptions"
+      aria-labelledby="offcanvasWithBothOptionsLabel"
+    >
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">
+          User Profile
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="offcanvas"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="offcanvas-body d-flex flex-column">
+        <img
+          class="canvas-profile-pic d-flex mx-auto mb-3"
+          src="images/logo.jpg"
+          width="260px"
+          alt="Profile picture"
+        />
+        <div class="row gap-1 justify-content-center mb-3">
+          <button class="btn btn-primary col-8 col-md-5" id="editProfileButton">
+            Edit Profile
+          </button>
+          <a class="btn btn-primary col-8 col-md-5" href="dashboard.html"
+            >My Dashboard</a
+          >
+        </div>
+        <div id="profileInfo">
+          <p><strong>Name:</strong> <span id="userName">Edinson Marte</span></p>
+          <p>
+            <strong>Email:</strong>
+            <span id="userEmail">Edinson@example.com</span>
+          </p>
+          <p>
+            <strong>About Me:</strong>
+            <span id="userAbout">Testing testing testing 123 123...</span>
+          </p>
+        </div>
+        <div id="editProfileForm" style="display: none">
+          <form>
+            <div class="mb-3">
+              <label for="editUserName" class="form-label">Name</label>
+              <input
+                type="text"
+                class="form-control"
+                id="editUserName"
+                value="Edinson Marte"
+              />
+            </div>
+            <div class="mb-3">
+              <label for="editUserEmail" class="form-label">Email</label>
+              <input
+                type="email"
+                class="form-control"
+                id="editUserEmail"
+                value="Edinson@example.com"
+              />
+            </div>
+            <div class="mb-3">
+              <label for="editUserAbout" class="form-label">About Me</label>
+              <textarea class="form-control" id="editUserAbout" rows="3">
+                            Testing testing edinson
+                        </textarea
+              >
+            </div>
+            <button
+              type="button"
+              class="btn btn-primary"
+              id="saveProfileButton"
+            >
+              Save
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              id="cancelEditButton"
+            >
+              Cancel
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
     </div>
     <script src="bootstrap.bundle.min.js"></script>
     <script type="module" src="load-template.js"></script>

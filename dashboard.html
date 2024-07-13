@@ -53,16 +53,8 @@
       </div>
       <header class="header"></header>
       <main class="main">
-        <div class="db-graph-1 card col-12">
-          <img src="..." class="card-img-top" alt="..." />
-          <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">
-              Some quick example text to build on the card title and make up the
-              bulk of the card's content.
-            </p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-          </div>
+        <div class="container p-5">
+          <h1>Place your graph in here, please!</h1>
         </div>
       </main>
       <section class="left">
@@ -71,15 +63,15 @@
         >
           <div class="card card-shadow col-10 col-lg-8">
             <div
-              class="card-body d-flex flex-column justify-content-between my-xxl-5 py-xxl-5"
+              class="card-body d-flex flex-column justify-content-between my-xxl-4 py-xxl-4"
             >
               <h3 class="card-title text-center mb-3 py-xl-4">
                 <strong>Having trouble deciding on your budget?</strong>
               </h3>
               <div class="container mt-3 position-relative">
-                <div class="row d-flex justify-content-between gap-5">
+                <div class="row d-flex justify-content-between gap-sm-5 gap-2">
                   <div
-                    class="budgetContainer d-flex flex-column align-items-center col border border-success-subtle border-3 p-4 rounded-2 position-relative"
+                    class="budgetContainer d-flex flex-column align-items-center col border border-success-subtle border-3 p-4 rounded-4 position-relative"
                   >
                     <img
                       id="currentIncomeInfo"
@@ -92,17 +84,17 @@
                       data-bs-title="This calculation excludes one-time sources of income."
                     />
                     <h4 id="currentTitle" class="d-flex text-center">
-                      Current weekly income
+                      Current weekly income:
                     </h4>
-                    <h4 id="currentTotalIncome"></h4>
+                    <h4 id="currentTotalIncome" class="mt-auto mb-0"></h4>
                   </div>
                   <div
-                    class="budgetContainer d-flex flex-column align-items-center col border border-success-subtle border-3 p-4 rounded-2"
+                    class="budgetContainer d-flex flex-column align-items-center col border border-success-subtle border-3 p-4 rounded-4"
                   >
                     <h4 id="suggestedTitle" class="d-flex text-center">
-                      Suggested weekly budget
+                      Suggested weekly budget:
                     </h4>
-                    <h4 id="suggestedBudget"></h4>
+                    <h4 id="suggestedBudget" class="mt-auto mb-0"></h4>
                   </div>
                 </div>
               </div>
@@ -215,19 +207,19 @@
                   data-bs-target="#actionModal"
                   data-source="forms/update-budget.html"
                   data-title="
-                    <h2>Update Budget</h2>
-                    <div class='container mt-3'>
-                      <div class='row d-flex justify-content-between gap-5'>
-                        <div class='budgetContainer d-flex flex-column align-items-center col border border-success-subtle border-3 p-4 rounded-2'>
-                          <h4 class='d-flex text-center'>Current Budget:</h4>
-                          <h4 id='currentBudget'></h4>
-                        </div>
-                        <div class='budgetContainer d-flex flex-column align-items-center col border border-success-subtle border-3 p-4 rounded-2'>
-                          <h4 class='d-flex text-center'>New<br>Budget:</h4>
-                          <h4 id='newBudget'></h4>
-                        </div>
+                  <h2>Update Budget</h2>
+                  <div class='container mt-3'>
+                    <div class='row d-flex justify-content-center justify-content-md-between align-items-center'>
+                      <div class='budgetContainer d-flex flex-column align-items-center col-12 col-md-5 border border-success-subtle border-3 p-sm-4 p-1 rounded-2'>
+                        <h4 class='d-flex text-center mb-0'>Current Budget:</h4>
+                        <h4 id='currentBudget'>$290.00</h4>
+                      </div>
+                      <div class='budgetContainer d-flex flex-column align-items-center col-12 col-md-5 border border-success-subtle border-3 p-sm-4 p-1 rounded-2 mt-3 mt-md-0'>
+                        <h4 class='d-flex text-center mb-0'>New Budget:</h4>
+                        <h4 id='newBudget'>290.00</h4>
                       </div>
                     </div>
+                  </div>
                   "
                 >
                   Set Budget
@@ -239,54 +231,59 @@
         <div
           class="row d-flex justify-content-center mx-auto my-5 col-12 gap-5"
         >
-          <div class="card card-shadow col-lg-3 col-md-10 col-sm-12 py-xxl-4">
-            <div class="card-body d-flex flex-column justify-content-between">
+          <div class="card card-shadow col-lg-3 col-10 d-flex flex-column">
+            <div class="card-body d-flex flex-column flex-grow-1">
               <h5 class="card-title text-center mb-3">
                 <strong>Want to update your budget?</strong>
               </h5>
-              <p class="card-text text">
+              <p
+                class="card-text flex-grow-1 d-flex align-items-center justify-content-center"
+              >
                 It's always nice to change your budget based on your life
                 situation. Maybe you want to save up just a bit more than your
                 current budget provides.
               </p>
               <button
                 type="button"
-                class="btn btn-primary d-flex mx-auto"
+                class="btn btn-primary mt-auto d-flex mx-auto"
                 data-bs-toggle="modal"
                 data-bs-target="#actionModal"
                 data-source="forms/update-budget.html"
                 data-title="
                 <h2>Update Budget</h2>
                 <div class='container mt-3'>
-                  <div class='row d-flex justify-content-between gap-5'>
-                    <div class='budgetContainer d-flex flex-column align-items-center col border border-success-subtle border-3 p-4 rounded-2'>
-                      <h4 class='d-flex text-center'>Current Budget:</h4>
-                      <h4 id='currentBudget'></h4>
+                  <div class='row d-flex justify-content-center justify-content-md-between align-items-center'>
+                    <div class='budgetContainer d-flex flex-column align-items-center col-12 col-md-5 border border-success-subtle border-3 p-sm-4 p-1 rounded-2'>
+                      <h4 class='d-flex text-center mb-0'>Current Budget:</h4>
+                      <h4 id='currentBudget'>$290.00</h4>
                     </div>
-                    <div class='budgetContainer d-flex flex-column align-items-center col border border-success-subtle border-3 p-4 rounded-2'>
-                      <h4 class='d-flex text-center'>New<br>Budget:</h4>
-                      <h4 id='newBudget'></h4>
+                    <div class='budgetContainer d-flex flex-column align-items-center col-12 col-md-5 border border-success-subtle border-3 p-sm-4 p-1 rounded-2 mt-3 mt-md-0'>
+                      <h4 class='d-flex text-center mb-0'>New Budget:</h4>
+                      <h4 id='newBudget'>290.00</h4>
                     </div>
                   </div>
-                </div>"
+                </div>
+                "
               >
                 Update Budget
               </button>
             </div>
           </div>
 
-          <div class="card card-shadow col-lg-3 col-md-10 col-sm-12">
-            <div class="card-body d-flex flex-column justify-content-between">
+          <div class="card card-shadow col-lg-3 col-10 d-flex flex-column">
+            <div class="card-body d-flex flex-column flex-grow-1">
               <h5 class="card-title text-center mb-3">
                 <strong>Made new expense?</strong>
               </h5>
-              <p class="card-text text">
+              <p
+                class="card-text flex-grow-1 d-flex align-items-center justify-content-center"
+              >
                 Click below to enter a new expense so we can help you track your
                 budget categories. Make sure to log your expenses frequently!
               </p>
               <button
                 type="button"
-                class="btn btn-primary d-flex mx-auto"
+                class="btn btn-primary mt-auto d-flex mx-auto"
                 data-bs-toggle="modal"
                 data-bs-target="#actionModal"
                 data-source="forms/new-expense.html"
@@ -297,18 +294,20 @@
             </div>
           </div>
 
-          <div class="card card-shadow col-lg-3 col-md-10 col-sm-12">
-            <div class="card-body d-flex flex-column justify-content-between">
+          <div class="card card-shadow col-lg-3 col-10 d-flex flex-column">
+            <div class="card-body d-flex flex-column flex-grow-1">
               <h5 class="card-title text-center mb-3">
                 <strong>Need to add a new source of income?</strong>
               </h5>
-              <p class="card-text text">
+              <p
+                class="card-text flex-grow-1 d-flex align-items-center justify-content-center"
+              >
                 Click below to enter a new expense so we can help you track your
                 budget categories. Make sure to log your expenses frequently!
               </p>
               <button
                 type="button"
-                class="btn btn-primary d-flex mx-auto"
+                class="btn btn-primary mt-auto d-flex mx-auto"
                 data-bs-toggle="modal"
                 data-bs-target="#actionModal"
                 data-source="forms/new-income.html"
@@ -385,9 +384,15 @@
                 <div
                   class="table-responsive d-flex flex-column align-items-center"
                 >
-                  <div class="d-flex justify-content-center mb-3 gap-5">
-                    <div>
-                      <label for="sortField">Sort by:</label>
+                  <div
+                    class="d-flex justify-content-center mb-3 me-md-5 pe-md-5 row gy-sm-2 g-lg-5 gy-3"
+                  >
+                    <div
+                      class="col-md-4 col-10 d-xl-flex align-items-xl-center"
+                    >
+                      <label for="sortField" class="me-2 mb-0 col-xl-4"
+                        >Sort by:</label
+                      >
                       <select id="sortField" class="form-select form-select-md">
                         <option value="all" selected>All</option>
                         <option value="date">Date</option>
@@ -396,15 +401,19 @@
                         <option value="category">Category</option>
                       </select>
                     </div>
-                    <div>
-                      <label for="sortOrder">Order:</label>
+                    <div
+                      class="col-md-4 col-10 d-xl-flex flex-md-row align-items-md-center"
+                    >
+                      <label for="sortOrder" class="me-2 mb-0">Order:</label>
                       <select id="sortOrder" class="form-select form-select-md">
                         <option value="asc" selected>Ascending</option>
                         <option value="desc">Descending</option>
                       </select>
                     </div>
-                    <div>
-                      <label for="filterField">Filter:</label>
+                    <div
+                      class="col-md-4 col-10 d-xl-flex flex-md-row align-items-md-center"
+                    >
+                      <label for="filterField" class="me-2 mb-0">Filter:</label>
                       <select
                         id="filterField"
                         class="form-select form-select-md"

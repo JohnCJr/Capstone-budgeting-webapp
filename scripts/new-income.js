@@ -113,6 +113,8 @@ function getIncomeFormValidation() {
     } else { // Larger screen
       selectedType = sanitize(document.querySelector('input[name="incomeTypes"]:checked').value);
     }
+    console.log("selected type is: " + selectedType);
+    if (selectedType === 'once') {selectedType = 'one-time';}
 
     // Create the data object to be sent to Firebase
     const data = {

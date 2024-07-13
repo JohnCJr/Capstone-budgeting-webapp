@@ -14,18 +14,6 @@
     <script type="module" src="initialize-firebase.js"></script>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <style>
-      .controls {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 15px;
-        margin-bottom: 20px;
-        justify-content: center;
-      }
-      .controls div {
-        flex: 1 1 150px;
-        min-width: 150px;
-        max-width: 200px;
-      }
       .controls label {
         display: inline-block;
         margin-right: 5px;
@@ -65,38 +53,11 @@
         top: 0;
         left: 0;
       }
-      .left {
-        background: linear-gradient(to bottom, #c9f7ff, #e0e0ff);
-        padding: 20px;
-      }
       .tips-section article {
         margin-bottom: 20px;
       }
-      .home-button-container {
-        display: flex;
-        justify-content: center;
-        margin-top: 20px;
-      }
-      .home-button-container button {
-        padding: 10px 20px;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-      }
-      .home-button-container button:hover {
-        background-color: #0056b3;
-      }
+
       @media (max-width: 768px) {
-        .controls {
-          flex-direction: column;
-          align-items: center;
-        }
-        .controls div {
-          max-width: 100%;
-          flex: 1 1 0;
-        }
         .chart-container {
           height: 400px;
         }
@@ -164,30 +125,57 @@
       </main>
       <section class="left">
         <div class="container">
-          <h1 class="text-center">fill this in with a title</h1>
+          <h2 class="text-center mb-5">
+            Try our compound interest calculator and see how much you can save
+            over time
+          </h2>
           <div class="chart-container">
             <div id="compound-interest-chart"></div>
           </div>
-          <div class="controls">
-            <div>
-              <label for="interestRate">Annual Interest Rate (%): </label>
-              <input type="number" id="interestRate" value="10" step="0.1" />
-            </div>
-            <div>
-              <label for="monthlyContribution">Monthly Contribution ($):</label>
-              <input
-                type="number"
-                id="monthlyContribution"
-                value="1000"
-                step="10"
-              />
-            </div>
-            <div>
-              <label for="timePeriod">Time Period (years): </label>
-              <input type="number" id="timePeriod" value="30" step="1" />
-            </div>
-            <div>
-              <button onclick="updateChart()">Update Chart</button>
+          <div class="controls container">
+            <div
+              class="row d-flex justify-content-center align-items-center text-center"
+            >
+              <div class="col-12 col-lg-3 my-2">
+                <label for="interestRate">Annual Interest Rate (%): </label>
+                <input
+                  type="number"
+                  inputmode="decimal"
+                  id="interestRate"
+                  class="form-control text-center"
+                  value="10"
+                  step="0.1"
+                />
+              </div>
+              <div class="col-12 col-lg-3 my-2">
+                <label for="monthlyContribution"
+                  >Monthly Contribution ($):</label
+                >
+                <input
+                  type="number"
+                  inputmode="decimal"
+                  id="monthlyContribution"
+                  class="form-control text-center"
+                  value="1000"
+                  step="10"
+                />
+              </div>
+              <div class="col-12 col-lg-2 my-2">
+                <label for="timePeriod">Time Period (yrs): </label>
+                <input
+                  type="number"
+                  inputmode="decimal"
+                  id="timePeriod"
+                  class="form-control text-center"
+                  value="30"
+                  step="1"
+                />
+              </div>
+              <div class="col-md-12 col-lg-3 mt-4">
+                <button class="btn btn-primary" onclick="updateChart()">
+                  Update Chart
+                </button>
+              </div>
             </div>
           </div>
           <script>
@@ -258,32 +246,121 @@
                 },
               ];
 
-              const layout = {
-                title: {
-                  text: "Compound Interest with Monthly Contributions Over Time",
-                  x: 0.5,
-                  xanchor: "center",
-                },
-                xaxis: {
-                  title: "Time (years)",
-                },
-                yaxis: {
-                  title: "Amount ($)",
-                },
-                autosize: true,
-                responsive: true,
-                margin: {
-                  l: window.innerWidth < 768 ? 0 : 50,
-                  r: window.innerWidth < 768 ? 20 : 50,
-                  pad: window.innerWidth < 768 ? 20 : 4,
-                },
-                legend: {
-                  orientation: window.innerWidth < 768 ? "h" : "v",
-                  x: window.innerWidth < 768 ? 0.06 : 1,
-                  xanchor: window.innerWidth < 768 ? "center" : "right",
-                  y: window.innerWidth < 768 ? 1.22 : 1,
-                },
-              };
+              let layout;
+              const width = window.innerWidth;
+
+              if (width < 760) {
+                // small screens
+                layout = {
+                  title: {
+                    text: "Compound Interest with Monthly<br>Contributions Over Time",
+                    x: 0.5,
+                    xanchor: "center",
+                    y: 1.2,
+                    font: {
+                      size: 14,
+                    },
+                  },
+                  xaxis: {
+                    title: "Time (years)",
+                  },
+                  yaxis: {
+                    title: "Amount ($)",
+                  },
+                  autosize: true,
+                  responsive: true,
+                  margin: {
+                    l: 50,
+                    r: 20,
+                    t: 120,
+                    b: 60,
+                    pad: 0,
+                  },
+                  legend: {
+                    orientation: "h",
+                    x: 0.5,
+                    xanchor: "center",
+                    y: 1.12,
+                    font: {
+                      size: 11,
+                    },
+                  },
+                };
+              } else if (width >= 760 && width < 992) {
+                // medium screens
+                layout = {
+                  title: {
+                    text: "Compound Interest with Monthly Contributions Over Time",
+                    x: 0.5,
+                    xanchor: "center",
+                    y: 1.1,
+                    font: {
+                      size: 18,
+                    },
+                  },
+                  xaxis: {
+                    title: "Time (years)",
+                  },
+                  yaxis: {
+                    title: "Amount ($)",
+                  },
+                  autosize: true,
+                  responsive: true,
+                  margin: {
+                    l: 70,
+                    r: 30,
+                    t: 100,
+                    b: 70,
+                    pad: 0,
+                  },
+                  legend: {
+                    orientation: "h",
+                    x: 0.5,
+                    xanchor: "center",
+                    y: 1.05,
+                    font: {
+                      size: 14,
+                    },
+                  },
+                };
+              } else {
+                // large screens
+                layout = {
+                  title: {
+                    text: "Compound Interest with Monthly Contributions Over Time",
+                    x: 0.5,
+                    xanchor: "center",
+                    y: 0.95,
+                    font: {
+                      size: 24,
+                    },
+                  },
+                  xaxis: {
+                    title: "Time (years)",
+                  },
+                  yaxis: {
+                    title: "Amount ($)",
+                  },
+                  autosize: true,
+                  responsive: true,
+                  margin: {
+                    l: 65,
+                    r: 50,
+                    t: 80,
+                    b: 65,
+                    pad: 4,
+                  },
+                  legend: {
+                    orientation: "v",
+                    x: 1,
+                    xanchor: "right",
+                    y: 1,
+                    font: {
+                      size: 14,
+                    },
+                  },
+                };
+              }
 
               Plotly.newPlot("compound-interest-chart", data, layout, {
                 responsive: true,
@@ -292,6 +369,9 @@
 
             // Initial chart render
             updateChart();
+
+            // Add event listener to resize the chart when window is resized
+            window.addEventListener("resize", updateChart);
           </script>
         </div>
       </section>

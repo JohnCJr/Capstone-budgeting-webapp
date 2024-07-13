@@ -30,20 +30,24 @@
         <div class="form-container bg-light">
           <h2>SavvyStudent Logon</h2>
           <form id="signInForm" autocomplete="off">
-            <label for="username" class="form-label">Username</label>
-            <input
-              type="text"
-              class="form-control form-control-md"
-              id="username"
-              placeholder="username or email"
-            />
-            <label for="password" class="form-label">Password</label>
-            <input
-              type="password"
-              id="password"
-              class="form-control form-control-md"
-              placeholder="password"
-            />
+            <div class="mb-3">
+              <label for="username" class="form-label">Username</label>
+              <input
+                type="text"
+                class="form-control"
+                id="username"
+                placeholder="username or email"
+              />
+            </div>
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input
+                type="password"
+                id="password"
+                class="form-control"
+                placeholder="password"
+              />
+            </div>
             <div class="form-check form-switch mt-2 ms-1">
               <input
                 class="form-check-input"
@@ -68,7 +72,7 @@
             >
               Submit
             </button>
-            <div class="d-flex justify-content-center">
+            <div class="d-flex justify-content-center mt-3">
               <a href="register.html" class="logon-links btn fs-6">
                 Register
               </a>

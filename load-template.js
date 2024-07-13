@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const style = document.createElement('style');
     style.innerHTML = `
       @media only screen and (min-width: 768px) and (max-width: 912px) {
-        .navbar-nav .nav-item{
+        .navbar-nav .nav-item {
           font-size: 1rem !important;
         }
   

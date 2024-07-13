@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let selectedValue;
   let msg;
   let initialLoadComplete = false;
+  
 
   // bootstrap spinners used as placeholders until data is pulled into the website
   const spinnerHTML = '<div class="spinner-border text-success" role="status"><span class="sr-only"></span></div>';
