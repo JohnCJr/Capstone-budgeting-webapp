@@ -77,13 +77,13 @@ function getBudgetFormValidation(suggestedAmount = null, selectedValue = null) {
   // will set the default value of each field in the form if a budget for the user already exists
   function setDefaultValues(budgetData) {
     if (budgetData) {
-      console.log('Setting default values:', budgetData);
+      // console.log('Setting default values:', budgetData);
       document.getElementById("foodBudget").value = sanitize(budgetData.food) || "";
       document.getElementById("utilityBudget").value = sanitize(budgetData.utility) || "";
       document.getElementById("entertainmentBudget").value = sanitize(budgetData.entertainment) || "";
       document.getElementById("otherBudget").value = sanitize(budgetData.other) || "";
-      console.log("current suggested amount: " + sanitize(suggestedAmount));
-      console.log("current type amount: " + sanitize(selectedValue));
+      // console.log("current suggested amount: " + sanitize(suggestedAmount));
+      // console.log("current type amount: " + sanitize(selectedValue));
       // if suggestedAmount and selectedValue are provided, override the fetched values
       if (suggestedAmount !== null && selectedValue !== null) {
         document.getElementById("totalBudget").value = sanitize(suggestedAmount) || "";
@@ -128,14 +128,14 @@ function getBudgetFormValidation(suggestedAmount = null, selectedValue = null) {
             const budgetData = snapshot.val();
             setDefaultValues(budgetData);
           } else {
-            console.log("No budget data available");
+            // console.log("No budget data available");
             setDefaultValues(null); // Call with null to set default values
           }
         }).catch((error) => {
           console.error("Error fetching budget data:", error);
         });
       } else {
-        console.log('No user is signed in.');
+        // console.log('No user is signed in.');
       }
     });
   }
@@ -206,7 +206,7 @@ function getBudgetFormValidation(suggestedAmount = null, selectedValue = null) {
               displayError("An error occurred. Please try again.");
             });
         } else {
-          console.log('No user is signed in.');
+          // console.log('No user is signed in.');
           displayError("You must be signed in to update your budget.");
         }
       });

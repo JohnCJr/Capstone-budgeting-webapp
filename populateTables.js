@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const today = new Date();
         let startDate, endDate;
 
-        console.log("selected value: " + selectedValue);
+        // console.log("selected value: " + selectedValue);
 
         if (selectedValue === "weekly") {
             [startDate, endDate] = getStartAndEndOfWeek(today);
@@ -407,7 +407,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const offset = dateValue.getTimezoneOffset();  
             dateValue.setMinutes(dateValue.getMinutes() - offset);  // subtracts offset to give UTC time
             // converts Date to string 
-            console.log('date of: ' + dateValue.toISOString().split("T")[0]);
+            // console.log('date of: ' + dateValue.toISOString().split("T")[0]);
             document.getElementById(`edit-date-${key}`).value = dateValue.toISOString().split("T")[0] || new Date().toISOString().split("T")[0];
             document.getElementById(`edit-description-${key}`).value = decodeHTMLEntities(data[1]); // prevent issues with certain characters being read as HTML code
             document.getElementById(`edit-amount-${key}`).value = data[2];
@@ -465,14 +465,14 @@ document.addEventListener('DOMContentLoaded', function() {
             };
             update(ref(database, 'expenses/' + userId + '/' + key), updatedData)
                 .then(() => {
-                    console.log('Expense updated successfully');
+                    // console.log('Expense updated successfully');
                 })
                 .catch((error) => {
                     console.error('Error updating expense:', error);
                 });
             cancelEdit(key, 'expense');
         } else {
-            console.log('Cannot edit expense: invalid userId');
+            // console.log('Cannot edit expense: invalid userId');
         }
     };
 
@@ -499,14 +499,14 @@ document.addEventListener('DOMContentLoaded', function() {
             };
             update(ref(database, 'income/' + userId + '/' + key), updatedData)
                 .then(() => {
-                    console.log('Income updated successfully');
+                    // console.log('Income updated successfully');
                 })
                 .catch((error) => {
                     console.error('Error updating income:', error);
                 });
             cancelEdit(key, 'income');
         } else {
-            console.log('Cannot edit income: invalid userId');
+            // console.log('Cannot edit income: invalid userId');
         }
     };
 
@@ -527,13 +527,13 @@ document.addEventListener('DOMContentLoaded', function() {
         if (userId !== '0') {
             remove(ref(database, 'expenses/' + userId + '/' + key))
                 .then(() => {
-                    console.log('Expense deleted successfully');
+                    // console.log('Expense deleted successfully');
                 })
                 .catch((error) => {
                     console.error('Error deleting expense:', error);
                 });
         } else {
-            console.log('Cannot delete expense: invalid userId');
+            // console.log('Cannot delete expense: invalid userId');
         }
     }
 
@@ -543,13 +543,13 @@ document.addEventListener('DOMContentLoaded', function() {
         if (userId !== '0') {
             remove(ref(database, 'income/' + userId + '/' + key))
                 .then(() => {
-                    console.log('Income deleted successfully');
+                    // console.log('Income deleted successfully');
                 })
                 .catch((error) => {
                     console.error('Error deleting income:', error);
                 });
         } else {
-            console.log('Cannot delete income: invalid userId');
+            // console.log('Cannot delete income: invalid userId');
         }
     }
 
@@ -596,7 +596,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
     } else {
-        console.log('User ID not found or invalid in localStorage');
+        // console.log('User ID not found or invalid in localStorage');
     }
 
     // listeners for filter, order, and sort buttons in expense table

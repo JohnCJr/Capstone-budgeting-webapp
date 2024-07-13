@@ -7,6 +7,7 @@
       content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     />
     <title>Budgeting Tips</title>
+    <link rel="icon" href="images/Cajoe-bits-logo.png" type="image/png" />
     <link rel="stylesheet" href="reset.css" />
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="tips-styles.css" />
@@ -74,11 +75,11 @@
     <div class="site_container">
       <header class="header"></header>
       <main class="main">
-        <div class="container">
+        <div class="container mb-5">
           <header class="header">
-            <h1>Budgeting Tips for College Students</h1>
+            <h1 class="my-3">Budgeting Tips for College Students</h1>
           </header>
-          <div class="main-content">
+          <div class="main-content mt-3">
             <section class="tips-section">
               <article class="tip">
                 <h2>1. Track Your Spending</h2>
@@ -142,7 +143,7 @@
                   type="number"
                   inputmode="decimal"
                   id="interestRate"
-                  class="form-control text-center"
+                  class="form-control text-center number-field"
                   value="10"
                   step="0.1"
                 />
@@ -155,7 +156,7 @@
                   type="number"
                   inputmode="decimal"
                   id="monthlyContribution"
-                  class="form-control text-center"
+                  class="form-control text-center number-field"
                   value="1000"
                   step="10"
                 />
@@ -166,7 +167,7 @@
                   type="number"
                   inputmode="decimal"
                   id="timePeriod"
-                  class="form-control text-center"
+                  class="form-control text-center number-field"
                   value="30"
                   step="1"
                 />
@@ -375,7 +376,71 @@
           </script>
         </div>
       </section>
-      <aside class="right"></aside>
+      <aside class="right">
+        <h2 class="text-center p-0 mb-0">Try our budget calculator</h2>
+        <div class="container d-flex justify-content-center p-0 mt-0">
+          <section
+            class="d-flex flex-column align-items-center p-5 border rounded col-md-6 col-12"
+            id="budgetCalculator"
+          >
+            <h2>Budget Calculator</h2>
+            <form id="budgetForm" class="w-100">
+              <div class="my-3">
+                <label for="income" class="form-label"
+                  >Monthly Income ($):</label
+                >
+                <input
+                  type="decimal"
+                  inputmode="decimal"
+                  class="form-control money-field"
+                  id="income"
+                  name="income"
+                  required
+                />
+              </div>
+              <div class="mb-4">
+                <label for="expenses" class="form-label"
+                  >Monthly Expenses ($):</label
+                >
+                <input
+                  type="decimal"
+                  inputmode="decimal"
+                  class="form-control money-field"
+                  id="expenses"
+                  name="expenses"
+                  required
+                />
+              </div>
+              <button type="submit" class="btn btn-primary w-100">
+                Calculate Budget
+              </button>
+            </form>
+            <div id="budgetResult" class="mt-3"></div>
+          </section>
+        </div>
+        <div class="container my-0 py-0">
+          <div class="row justify-content-center my-4">
+            <div class="col-10 col-md-6 mb-4">
+              <div class="card card-shadow">
+                <div class="card-header mb-0">
+                  <h5>Want to try the real thing?</h5>
+                </div>
+                <div
+                  class="card-body my-0 d-flex flex-column align-items-center"
+                >
+                  <p class="card-text mt-0">
+                    Log in to your account and use our budget calculator to set
+                    your weekly, monthly, or yearly budget today!
+                  </p>
+                  <a href="sign-on.html" class="btn btn-primary btn-md col-4"
+                    >Sign in</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
       <footer class="footer"></footer>
     </div>
     <div
@@ -469,7 +534,9 @@
     </div>
     <script src="bootstrap.bundle.min.js"></script>
     <script type="module" src="load-template.js"></script>
+    <script src="scripts/savy_script.js"></script>
     <script src="tips-scripts.js"></script>
+    <script src="budget-calculator.js"></script>
     <script src="profile-script.js"></script>
   </body>
 </html>

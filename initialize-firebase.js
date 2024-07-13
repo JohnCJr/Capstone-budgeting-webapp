@@ -41,11 +41,11 @@ import {getDatabase, ref, get, orderByChild, equalTo, query, update, set, remove
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-console.log("Firebase app initialized");
+// console.log("Firebase app initialized");
 
 // Initialize Realtime Database and get a reference to the service
 const database = getDatabase(app);
-console.log("Firebase initialized and database connected");
+// console.log("Firebase initialized and database connected");
 
 // Initialize Firebase Auth
 const auth = getAuth(app);
@@ -53,11 +53,11 @@ onAuthStateChanged(auth, (user) => {
   if (user) {
     localStorage.setItem('isLoggedIn', 'true');
     localStorage.setItem('userId', user.uid);
-    console.log("UserId set successfully initialized!");
+    // console.log("UserId set successfully initialized!");
   } else {
     localStorage.setItem('isLoggedIn', 'false');
     localStorage.setItem('userId', '0');
-    console.log("Firebase failed to connect to user data!");
+    // console.log("Firebase failed to connect to user data!");
   }
 });
 

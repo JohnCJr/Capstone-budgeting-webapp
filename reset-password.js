@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
       displaySuccess("Password reset email sent. If you haven't received an email, click the button again.");
       cancelButton.textContent = "Return";
     } catch (error) {
-      console.error("Error sending password reset email:", error);
+      // console.error("Error sending password reset email:", error);
       displayError("An error occurred. Please try again.");
     }
   });

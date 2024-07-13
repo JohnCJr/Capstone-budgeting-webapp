@@ -10,11 +10,6 @@ body {
     padding: 20px;
 }
 
-/*commented out, conflicts the the navbar header class that holds links*/
-/* .header {
-    text-align: center;
-    margin-bottom: 40px;
-} */
 
 .header h1 {
     text-align: center;
@@ -72,3 +67,57 @@ body {
 .home-button-container button:hover {
     background-color: #635c9b;
 } 
+
+#budgetCalculator {
+    margin-top: 40px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  #budgetCalculator label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+  }
+  
+  #budgetCalculator input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  #budgetCalculator button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  #budgetCalculator button:hover {
+    background-color: #0056b3;
+  }
+  
+  #budgetResult {
+    margin-top: 20px;
+    font-size: 1.2em;
+    font-weight: bold;
+  }
+  
+  #budgetResult ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  #budgetResult li {
+    margin-bottom: 8px;
+  }
+  

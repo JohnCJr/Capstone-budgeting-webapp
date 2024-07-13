@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!snapshot.exists()) {
           displayError('Please enter a valid username and password', usernameField, passwordField);
-          console.log("User doesn't exist");
+          // console.log("User doesn't exist");
           return;
         }
 
@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         });
     } catch (error) {
-      console.error("Error occurred during submission:", error);
+      // console.error("Error occurred during submission:", error);
       displayError('An issue occurred, please try again.', usernameField, passwordField);
     }
   });

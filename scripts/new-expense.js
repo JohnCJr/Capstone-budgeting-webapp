@@ -139,7 +139,7 @@ function getExpenseFormValidation() {
               displayError("An error occurred. Please try again.");
             });
         } else {
-          console.log('No user is signed in.');
+          // console.log('No user is signed in.');
           displayError("You must be signed in to add a new expense.");
         }
       });

@@ -133,7 +133,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         // loops through array of values for userIncomes
         Object.values(userIncomes).forEach(income => {
-          console.log("incoeme typoe is : " + income.type);
+          // console.log("incoeme typoe is : " + income.type);
           if (income.type !== 'once' && income.type !== 'one-time') {
             // passes values to function to see how income will be calculated
             totalAmount += calculateBudgetAmount(parseFloat(income.amount), income.type, selectedBudgetType); 

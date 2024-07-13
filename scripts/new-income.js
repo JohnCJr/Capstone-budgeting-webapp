@@ -113,7 +113,7 @@ function getIncomeFormValidation() {
     } else { // Larger screen
       selectedType = sanitize(document.querySelector('input[name="incomeTypes"]:checked').value);
     }
-    console.log("selected type is: " + selectedType);
+    // console.log("selected type is: " + selectedType);
     if (selectedType === 'once') {selectedType = 'one-time';}
 
     // Create the data object to be sent to Firebase
@@ -145,7 +145,7 @@ function getIncomeFormValidation() {
               displayError("An error occurred. Please try again.");
             });
         } else {
-          console.log('No user is signed in.');
+          // console.log('No user is signed in.');
           displayError("You must be signed in to add a new income source.");
         }
       });
