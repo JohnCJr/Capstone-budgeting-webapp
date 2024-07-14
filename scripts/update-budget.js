@@ -168,11 +168,11 @@ function getBudgetFormValidation(suggestedAmount = null, selectedValue = null) {
     }
 
     // Gather budget data entered by the user
-    const totalBudget = sanitize(document.getElementById("totalBudget").value);
-    const foodBudget = sanitize(document.getElementById("foodBudget").value);
-    const utilityBudget = sanitize(document.getElementById("utilityBudget").value);
-    const entertainmentBudget = sanitize(document.getElementById("entertainmentBudget").value);
-    const otherBudget = sanitize(document.getElementById("otherBudget").value);
+    const totalBudget = parseFloat(sanitize(document.getElementById("totalBudget").value));
+    const foodBudget = parseFloat(sanitize(document.getElementById("foodBudget").value));
+    const utilityBudget = parseFloat(sanitize(document.getElementById("utilityBudget").value));
+    const entertainmentBudget = parseFloat(sanitize(document.getElementById("entertainmentBudget").value));
+    const otherBudget = parseFloat(sanitize(document.getElementById("otherBudget").value));
     const budgetType = sanitize(document.getElementById("budgetType").value); // Get the budget type
     const currentDate = getFormattedDate(new Date()); // Get the current formatted date
 

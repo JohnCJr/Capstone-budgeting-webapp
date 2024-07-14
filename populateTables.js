@@ -208,6 +208,7 @@ document.addEventListener('DOMContentLoaded', function() {
         snapshot.forEach(function(childSnapshot) {
             let data = childSnapshot.val();
             data.key = childSnapshot.key;   // adds key variable and value to data object
+            data.amount = parseFloat(data.amount) || 0; // converts the amount to a float value
             expensesData.push(data);    // adds the data object with the key variable to the expensesData array
         });
         renderExpensesTable();
@@ -242,7 +243,7 @@ document.addEventListener('DOMContentLoaded', function() {
         filteredData.forEach(data => {
             let sanitizedDate = sanitize(data.date || new Date().toISOString().split("T")[0]);
             let sanitizedDescription = sanitize(data.description || 'undefined');
-            let sanitizedAmount = sanitize(data.amount || 'undefined');
+            let sanitizedAmount = parseFloat(sanitize(data.amount || '0')).toFixed(2);
             let sanitizedCategory = capitalize(sanitize(data.category || 'undefined'));
 
             currentTotalExpense += parseFloat(data.amount); // calculates total amount spent for all data currently displayed
@@ -460,7 +461,7 @@ document.addEventListener('DOMContentLoaded', function() {
             let updatedData = {
                 date: getFormattedDate(dateValue),
                 description: sanitize(document.getElementById(`edit-description-${key}`).value),
-                amount: sanitize(document.getElementById(`edit-amount-${key}`).value),
+                amount: parseFloat(sanitize(document.getElementById(`edit-amount-${key}`).value)), // ensures the amount is sent as a number
                 category: sanitize(document.getElementById(`edit-category-${key}`).value)
             };
             update(ref(database, 'expenses/' + userId + '/' + key), updatedData)
@@ -495,7 +496,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 date: getFormattedDate(document.getElementById(`edit-date-${key}`).value),
                 description: sanitize(document.getElementById(`edit-description-${key}`).value),
                 type: sanitize(document.getElementById(`edit-type-${key}`).value === "bi-weekly" ? "biweekly" : document.getElementById(`edit-type-${key}`).value),
-                amount: sanitize(document.getElementById(`edit-amount-${key}`).value)
+                amount: parseFloat(sanitize(document.getElementById(`edit-amount-${key}`).value)) // ensures the amount is sent as a number
             };
             update(ref(database, 'income/' + userId + '/' + key), updatedData)
                 .then(() => {

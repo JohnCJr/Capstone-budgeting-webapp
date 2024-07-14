@@ -100,7 +100,7 @@ function getExpenseFormValidation() {
 
     // Gathers expense data entered by the user
     const description = sanitize(document.getElementById("exdescription").value);
-    const amount = sanitize(document.getElementById("examount").value);
+    const amount = parseFloat(sanitize(document.getElementById("examount").value)); // ensures the amount is a number
     const currentDate = getCurrentFormattedDate(); // gets the current date and assigns it to the expense submitted
     let selectedCategory;
 

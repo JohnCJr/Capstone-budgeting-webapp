@@ -103,7 +103,7 @@ function getIncomeFormValidation() {
 
     // gathers income data entered by the user
     const description = sanitize(document.getElementById("incomeDescription").value);
-    const amount = sanitize(document.getElementById("incomeAmount").value);
+    const amount = parseFloat(sanitize(document.getElementById("incomeAmount").value));
     const currentDate = getCurrentFormattedDate(); // Get the current date
     let selectedType;
 
