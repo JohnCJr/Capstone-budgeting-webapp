@@ -8,6 +8,7 @@ function getIncomeFormValidation() {
   const errorMessage = document.getElementById("new-income-error-msg");
   const incomeSelect = document.getElementById("incomeSelect");
   const intervalFieldset = document.querySelector(".intervalFieldset");
+  const formModal = document.getElementById("actionModal"); // Ensure formModal is selected
 
   // gets the current date and formats it to MM/DD/YYYY
   function getCurrentFormattedDate() {
@@ -113,8 +114,8 @@ function getIncomeFormValidation() {
     } else { // Larger screen
       selectedType = sanitize(document.querySelector('input[name="incomeTypes"]:checked').value);
     }
-    // console.log("selected type is: " + selectedType);
-    if (selectedType === 'once') {selectedType = 'one-time';}
+
+    if (selectedType === 'once') { selectedType = 'one-time'; }
 
     // Create the data object to be sent to Firebase
     const data = {
@@ -137,15 +138,15 @@ function getIncomeFormValidation() {
           // closes modal upon successful update
           update(ref(database), updates)
             .then(() => {
-               const modal = bootstrap.Modal.getInstance(document.getElementById('actionModal'));
-               modal.hide();
+              formModal.classList.add('was-submitted');
+              const modal = bootstrap.Modal.getInstance(document.getElementById('actionModal'));
+              modal.hide();
             })
             .catch((error) => {
               console.error("Error:", error);
               displayError("An error occurred. Please try again.");
             });
         } else {
-          // console.log('No user is signed in.');
           displayError("You must be signed in to add a new income source.");
         }
       });
@@ -159,11 +160,6 @@ function getIncomeFormValidation() {
   function displayError(message) {
     errorMessage.textContent = message;
     errorMessage.style.display = "flex";
-
-    // clears the input fields and resets radio to default selection
-    document.getElementById("incomeAmount").value = "";
-    document.getElementById("incomeType1").checked = true;
-    document.getElementById("incomeDescription").value = "";
   }
 
   function updateAndSynchronizeSelections() {

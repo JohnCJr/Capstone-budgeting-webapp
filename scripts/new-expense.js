@@ -4,11 +4,11 @@ import { auth, onAuthStateChanged, getDatabase, ref, push, update } from '/initi
 import { sanitize } from '/sanitizeStrings.js'; // imports the sanitize function
 
 function getExpenseFormValidation() {
-  // Store the form and error message div into variables
   const expenseForm = document.getElementById("newExpense");
   const errorMessage = document.getElementById("new-expense-error-msg");
   const expenseSelect = document.getElementById("expenseSelect");
   const budgetTypeFieldset = document.querySelector(".budgetTypeFieldset");
+  const formModal = document.getElementById("actionModal"); // Ensure formModal is selected
 
   // Gets the current date and formats it to MM/DD/YYYY
   function getCurrentFormattedDate() {
@@ -131,6 +131,7 @@ function getExpenseFormValidation() {
 
           update(ref(database), updates)
             .then(() => {
+               formModal.classList.add('was-submitted');
                const modal = bootstrap.Modal.getInstance(document.getElementById('actionModal'));
                modal.hide();
             })
@@ -139,7 +140,6 @@ function getExpenseFormValidation() {
               displayError("An error occurred. Please try again.");
             });
         } else {
-          // console.log('No user is signed in.');
           displayError("You must be signed in to add a new expense.");
         }
       });
@@ -153,11 +153,6 @@ function getExpenseFormValidation() {
   function displayError(message) {
     errorMessage.textContent = message;
     errorMessage.style.display = "flex";
-
-    // Clears the input fields
-    document.getElementById("exdescription").value = "";
-    document.getElementById("examount").value = "";
-    document.getElementById("expenseType1").checked = true;
   }
 
   function updateAndSynchronizeSelections() {

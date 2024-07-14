@@ -22,7 +22,6 @@ document.addEventListener("DOMContentLoaded", () => {
   let selectedValue;
   let msg;
   let initialLoadComplete = false;
-  
 
   // bootstrap spinners used as placeholders until data is pulled into the website
   const spinnerHTML = '<div class="spinner-border text-success" role="status"><span class="sr-only"></span></div>';
@@ -276,9 +275,9 @@ document.addEventListener("DOMContentLoaded", () => {
           });
         });
 
-        // adds listener to add class to model, which will be used to identify which form was submitted
+        // Remove was-submitted class before attempting submission
         formElement.addEventListener('submit', () => {
-          formModal.classList.add('was-submitted');
+          formModal.classList.remove('was-submitted');
         });
       })
       .catch((error) => {
@@ -294,7 +293,7 @@ document.addEventListener("DOMContentLoaded", () => {
     removeScripts(["scripts/savy_script.js", ...Object.values(scriptMap)]);
     modalHeader.innerHTML = "";
 
-    if (formModal.classList.contains('was-submitted')) {
+    if (formModal.classList.contains('was-submitted') && !(formModal.classList.contains('was-cancelled'))) {
       showSubmitNotification(msg, "submitted");
     } else if (!formModal.classList.contains('was-cancelled')) {
       showCancelNotification(msg, "closed");
@@ -316,7 +315,7 @@ document.addEventListener("DOMContentLoaded", () => {
     toast.ariaLive = 'assertive';
     toast.ariaAtomic = 'true';
 
-    const actionText = action === "closed" ? "was closed" : "action was cancelled";
+    const actionText = action === "closed" ? "was closed" : "was cancelled";
 
     toast.innerHTML = `
       <div class="toast-header">
@@ -372,8 +371,8 @@ document.addEventListener("DOMContentLoaded", () => {
     updateTimestamps();
   }
 
-   // Manage toasts based on screen size
-   function manageToasts(newToast) {
+  // Manage toasts based on screen size
+  function manageToasts(newToast) {
     const toasterContainer = document.getElementById('toasterContainer');
     if (window.innerWidth < 576) {
       // Remove all existing toasts

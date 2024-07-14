@@ -66,13 +66,15 @@
             <div
               class="card-body d-flex flex-column justify-content-between my-xxl-4 py-xxl-4"
             >
-              <h3 class="card-title text-center mb-3 py-xl-4">
+              <h3 class="card-title text-center mb-3 py-xl-4 mt-3">
                 <strong>Having trouble deciding on your budget?</strong>
               </h3>
               <div class="container mt-3 position-relative">
-                <div class="row d-flex justify-content-between gap-sm-5 gap-2">
+                <div
+                  class="row d-flex flex-column flex-md-row justify-content-center gap-md-5 gap-sm-3 gap-2 mb-3"
+                >
                   <div
-                    class="budgetContainer d-flex flex-column align-items-center col border border-success-subtle border-3 p-4 rounded-4 position-relative"
+                    class="budgetContainer d-flex flex-column align-items-center col-md-4 col border border-success-subtle border-3 p-4 rounded-4 position-relative"
                   >
                     <img
                       id="currentIncomeInfo"
@@ -90,7 +92,7 @@
                     <h4 id="currentTotalIncome" class="mt-auto mb-0"></h4>
                   </div>
                   <div
-                    class="budgetContainer d-flex flex-column align-items-center col border border-success-subtle border-3 p-4 rounded-4"
+                    class="budgetContainer d-flex flex-column align-items-center col-md-4 col border border-success-subtle border-3 p-4 rounded-4"
                   >
                     <h4 id="suggestedTitle" class="d-flex text-center">
                       Suggested weekly budget:
@@ -207,21 +209,7 @@
                   data-bs-toggle="modal"
                   data-bs-target="#actionModal"
                   data-source="forms/update-budget.html"
-                  data-title="
-                  <h2>Update Budget</h2>
-                  <div class='container mt-3'>
-                    <div class='row d-flex justify-content-center justify-content-md-between align-items-center'>
-                      <div class='budgetContainer d-flex flex-column align-items-center col-12 col-md-5 border border-success-subtle border-3 p-sm-4 p-1 rounded-2'>
-                        <h4 class='d-flex text-center mb-0'>Current Budget:</h4>
-                        <h4 id='currentBudget'>$290.00</h4>
-                      </div>
-                      <div class='budgetContainer d-flex flex-column align-items-center col-12 col-md-5 border border-success-subtle border-3 p-sm-4 p-1 rounded-2 mt-3 mt-md-0'>
-                        <h4 class='d-flex text-center mb-0'>New Budget:</h4>
-                        <h4 id='newBudget'>290.00</h4>
-                      </div>
-                    </div>
-                  </div>
-                  "
+                  data-title="<h2>Update Budget</h2><div class='container mt-3'><div class='row d-flex justify-content-center justify-content-md-between align-items-center'><div class='budgetContainer d-flex flex-column align-items-center col-12 col-md-5 border border-success-subtle border-3 p-sm-4 p-1 rounded-2'><h4 class='d-flex text-center mb-0'>Current Budget:</h4><h4 id='currentBudget'>$290.00</h4></div><div class='budgetContainer d-flex flex-column align-items-center col-12 col-md-5 border border-success-subtle border-3 p-sm-4 p-1 rounded-2 mt-3 mt-md-0'><h4 class='d-flex text-center mb-0'>New Budget:</h4><h4 id='newBudget'>290.00</h4></div></div></div>"
                 >
                   Set Budget
                 </button>
@@ -232,7 +220,9 @@
         <div
           class="row d-flex justify-content-center mx-auto my-5 col-12 gap-5"
         >
-          <div class="card card-shadow col-lg-3 col-10 d-flex flex-column">
+          <div
+            class="card card-shadow col-lg-3 col-10 py-xxl-4 d-flex flex-column"
+          >
             <div class="card-body d-flex flex-column flex-grow-1">
               <h5 class="card-title text-center mb-3">
                 <strong>Want to update your budget?</strong>
@@ -250,28 +240,15 @@
                 data-bs-toggle="modal"
                 data-bs-target="#actionModal"
                 data-source="forms/update-budget.html"
-                data-title="
-                <h2>Update Budget</h2>
-                <div class='container mt-3'>
-                  <div class='row d-flex justify-content-center justify-content-md-between align-items-center'>
-                    <div class='budgetContainer d-flex flex-column align-items-center col-12 col-md-5 border border-success-subtle border-3 p-sm-4 p-1 rounded-2'>
-                      <h4 class='d-flex text-center mb-0'>Current Budget:</h4>
-                      <h4 id='currentBudget'>$290.00</h4>
-                    </div>
-                    <div class='budgetContainer d-flex flex-column align-items-center col-12 col-md-5 border border-success-subtle border-3 p-sm-4 p-1 rounded-2 mt-3 mt-md-0'>
-                      <h4 class='d-flex text-center mb-0'>New Budget:</h4>
-                      <h4 id='newBudget'>290.00</h4>
-                    </div>
-                  </div>
-                </div>
-                "
+                data-title="<h2>Update Budget</h2><div class='container mt-3'><div class='row d-flex justify-content-center justify-content-md-between align-items-center'><div class='budgetContainer d-flex flex-column align-items-center col-12 col-md-5 border border-success-subtle border-3 p-sm-4 p-1 rounded-2'><h4 class='d-flex text-center mb-0'>Current Budget:</h4><h4 id='currentBudget'>$290.00</h4></div><div class='budgetContainer d-flex flex-column align-items-center col-12 col-md-5 border border-success-subtle border-3 p-sm-4 p-1 rounded-2 mt-3 mt-md-0'><h4 class='d-flex text-center mb-0'>New Budget:</h4><h4 id='newBudget'>290.00</h4></div></div></div>"
               >
                 Update Budget
               </button>
             </div>
           </div>
-
-          <div class="card card-shadow col-lg-3 col-10 d-flex flex-column">
+          <div
+            class="card card-shadow col-lg-3 col-10 py-xxl-4 d-flex flex-column"
+          >
             <div class="card-body d-flex flex-column flex-grow-1">
               <h5 class="card-title text-center mb-3">
                 <strong>Made new expense?</strong>
@@ -294,8 +271,9 @@
               </button>
             </div>
           </div>
-
-          <div class="card card-shadow col-lg-3 col-10 d-flex flex-column">
+          <div
+            class="card card-shadow col-lg-3 col-10 py-xxl-4 d-flex flex-column"
+          >
             <div class="card-body d-flex flex-column flex-grow-1">
               <h5 class="card-title text-center mb-3">
                 <strong>Need to add a new source of income?</strong>
