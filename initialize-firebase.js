@@ -22,22 +22,26 @@ import {getDatabase, ref, get, orderByChild, equalTo, query, update, set, remove
 
 // };
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyDGkE-fvkAq-ZIKj_BUQeeXH2ToSPIV-p0",
+const firebaseConfig = {
 
-    authDomain: "dummy-2540c.firebaseapp.com",
-  
-    projectId: "dummy-2540c",
-  
-    storageBucket: "dummy-2540c.appspot.com",
-  
-    messagingSenderId: "951090433511",
-  
-    appId: "1:951090433511:web:5fd26390988ca95a794142",
-  
-    measurementId: "G-560PNDZNTR"
-  
-  }
+  apiKey: "AIzaSyDGkE-fvkAq-ZIKj_BUQeeXH2ToSPIV-p0",
+
+  authDomain: "dummy-2540c.firebaseapp.com",
+
+  databaseURL: "https://dummy-2540c-default-rtdb.firebaseio.com",
+
+  projectId: "dummy-2540c",
+
+  storageBucket: "dummy-2540c.appspot.com",
+
+  messagingSenderId: "951090433511",
+
+  appId: "1:951090433511:web:5fd26390988ca95a794142",
+
+  measurementId: "G-560PNDZNTR"
+
+};
+
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -54,9 +58,24 @@ onAuthStateChanged(auth, (user) => {
     localStorage.setItem('isLoggedIn', 'true');
     localStorage.setItem('userId', user.uid);
     // console.log("UserId set successfully initialized!");
+
+     // gets the username from the database, sets default to user if not foound
+     const userRef = ref(database, 'users/' + user.uid);
+     get(userRef).then((snapshot) => {
+       if (snapshot.exists()) {
+         const userData = snapshot.val();
+         localStorage.setItem('username', userData.username || 'user');
+       } else {
+         localStorage.setItem('username', 'user');
+       }
+     }).catch((error) => {
+       console.error("Error fetching user data: ", error);
+       localStorage.setItem('username', 'user');
+     });
   } else {
     localStorage.setItem('isLoggedIn', 'false');
     localStorage.setItem('userId', '0');
+    localStorage.setItem('username', 'user'); //defaults to user as username
     // console.log("Firebase failed to connect to user data!");
   }
 });

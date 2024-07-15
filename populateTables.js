@@ -6,6 +6,176 @@ import { sanitize } from './sanitizeStrings.js'; // Import the sanitize function
 
 document.addEventListener('DOMContentLoaded', function() {
     let expensesData = []; // will store expense data keys
+    let username = localStorage.username;
+    console.log(username);
+    document.getElementsByName("welcome-msg").innerHTML = `Welcome, ${username}`;
+
+    let budgetBarChart, budgetPieChart;
+
+    function initializeCharts() {
+        const barCtx = document.getElementById("budgetBarChart").getContext("2d");
+        const pieCtx = document.getElementById("budgetPieChart").getContext("2d");
+
+        budgetBarChart = new Chart(barCtx, {
+            type: "bar",
+            data: {
+                labels: ["Budget", "Expenses", "Income"],
+                datasets: [
+                    {
+                        label: "Amount",
+                        data: [0, 0, 0],
+                        backgroundColor: [
+                            "rgba(54, 162, 235, 0.8)",
+                            "rgba(255, 99, 132, 0.8)",
+                            "rgba(75, 192, 192, 0.8)",
+                        ],
+                        borderColor: [
+                            "rgba(54, 162, 235, 1)",
+                            "rgba(255, 99, 132, 1)",
+                            "rgba(75, 192, 192, 1)",
+                        ],
+                        borderWidth: 1,
+                        borderRadius: 10,
+                        barThickness: 30,
+                        hoverBackgroundColor: [
+                            "rgba(54, 162, 235, 1)",
+                            "rgba(255, 99, 132, 1)",
+                            "rgba(75, 192, 192, 1)",
+                        ],
+                    },
+                ],
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        labels: {
+                            font: {
+                                size: 16,
+                                family:
+                                    "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
+                            },
+                            color: "#333",
+                        },
+                    },
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            display: true,
+                        },
+                        ticks: {
+                            font: {
+                                size: 14,
+                                family:
+                                    "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
+                            },
+                            color: "#333",
+                        },
+                    },
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            borderDash: [5, 5],
+                            color: "rgba(200, 200, 200, 0.5)",
+                        },
+                        ticks: {
+                            font: {
+                                size: 16,
+                                family:
+                                    "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
+                            },
+                            color: "#333",
+                        },
+                    },
+                },
+            },
+        });
+
+        budgetPieChart = new Chart(pieCtx, {
+            type: "pie",
+            data: {
+                labels: ["Budget", "Expenses", "Income"],
+                datasets: [
+                    {
+                        label: "Amount",
+                        data: [0, 0, 0],
+                        backgroundColor: [
+                            "rgba(54, 162, 235, 0.8)",
+                            "rgba(255, 99, 132, 0.8)",
+                            "rgba(75, 192, 192, 0.8)",
+                        ],
+                        borderColor: [
+                            "rgba(54, 162, 235, 1)",
+                            "rgba(255, 99, 132, 1)",
+                            "rgba(75, 192, 192, 1)",
+                        ],
+                        borderWidth: 1,
+                        hoverBackgroundColor: [
+                            "rgba(54, 162, 235, 1)",
+                            "rgba(255, 99, 132, 1)",
+                            "rgba(75, 192, 192, 1)",
+                        ],
+                    },
+                ],
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            font: {
+                                size: 16,
+                                family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
+                            },
+                            color: "#333",
+                        },
+                    },
+                },
+            },
+        });
+
+        window.addEventListener('resize', () => {
+            budgetBarChart.resize();
+            budgetPieChart.resize();
+        });
+    }
+
+    function updateCharts(budget, expenses, income) {
+        budgetBarChart.data.datasets[0].data = [budget, expenses, income];
+        budgetBarChart.update();
+
+        budgetPieChart.data.datasets[0].data = [budget, expenses, income];
+        budgetPieChart.update();
+    }
+
+    function fetchAndDisplayData() {
+        let userId = localStorage.getItem('userId');
+        if (userId !== '0') {
+            Promise.all([
+                get(ref(database, 'budgets/' + userId)),
+                get(ref(database, 'expenses/' + userId)),
+                get(ref(database, 'income/' + userId))
+            ]).then(([budgetSnapshot, expenseSnapshot, incomeSnapshot]) => {
+                const budgetData = budgetSnapshot.val() || {};
+                const expenseData = expenseSnapshot.val() || {};
+                const incomeData = incomeSnapshot.val() || {};
+
+                const totalBudget = parseFloat(budgetData.total) || 0;
+                const totalExpenses = Object.values(expenseData).reduce((sum, exp) => sum + parseFloat(exp.amount), 0);
+                const totalIncome = Object.values(incomeData).reduce((sum, inc) => sum + parseFloat(inc.amount), 0);
+
+                updateCharts(totalBudget, totalExpenses, totalIncome);
+            }).catch(error => {
+                console.error("Error fetching data: ", error);
+            });
+        }
+    }
+
+    // Initialize charts and fetch initial data
+    initializeCharts();
+    fetchAndDisplayData();
+
+    document.getElementById('resetChartsButton').addEventListener('click', fetchAndDisplayData);
 
     // formats the date to YYYY-MM-DD to be used to set date range
     function formatDateToYYYYMMDD(date) {
