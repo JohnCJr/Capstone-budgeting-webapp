@@ -85,26 +85,21 @@
       </div>
       <header class="header"></header>
       <main class="main">
-        <h1 class="welcome-msg text-center">Welcome</h1>
+        <h1 class="text-center my-3 bg-info py-2" id="welcome-msg">Welcome</h1>
         <div class="container-fluid">
           <div
-            class="row my-4 justify-content-md-around justify-content-xxl-center gap-xxl-5"
+            class="row my-4 justify-content-md-around justify-content-xxl-center gap-xxl-5 px-md-1 justify-content-center"
           >
-            <div class="col-12 col-lg-6 col-xl-5">
-              <div class="chart-container">
+            <div class="col-10 col-lg-6 col-xl-5 col-xxl-4 my-xxl-5 my-3">
+              <div class="chart-container rounded-5">
                 <canvas id="budgetBarChart"></canvas>
               </div>
             </div>
-            <div class="col-12 col-lg-6 col-xl-5">
-              <div class="chart-container pie-chart">
+            <div class="col-10 col-lg-6 col-xl-5 col-xxl-4 my-xxl-5 my-2">
+              <div class="chart-container pie-chart rounded-5">
                 <canvas id="budgetPieChart"></canvas>
               </div>
             </div>
-          </div>
-          <div class="btn-center">
-            <button id="resetChartsButton" type="button" class="btn btn-danger">
-              Reset Charts
-            </button>
           </div>
         </div>
       </main>

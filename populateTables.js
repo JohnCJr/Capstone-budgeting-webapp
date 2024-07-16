@@ -6,23 +6,22 @@ import { sanitize } from './sanitizeStrings.js'; // Import the sanitize function
 
 document.addEventListener('DOMContentLoaded', function() {
     let expensesData = []; // will store expense data keys
-    let username = localStorage.username;
-    console.log(username);
-    document.getElementsByName("welcome-msg").innerHTML = `Welcome, ${username}`;
+    let username = localStorage.getItem("username");
+    let welcomeTitle = document.getElementById("welcome-msg");
+    welcomeTitle.innerHTML = `Welcome, ${username}`;
 
     let budgetBarChart, budgetPieChart;
 
     function initializeCharts() {
         const barCtx = document.getElementById("budgetBarChart").getContext("2d");
         const pieCtx = document.getElementById("budgetPieChart").getContext("2d");
-
+    
         budgetBarChart = new Chart(barCtx, {
             type: "bar",
             data: {
                 labels: ["Budget", "Expenses", "Income"],
                 datasets: [
                     {
-                        label: "Amount",
                         data: [0, 0, 0],
                         backgroundColor: [
                             "rgba(54, 162, 235, 0.8)",
@@ -48,15 +47,15 @@ document.addEventListener('DOMContentLoaded', function() {
             options: {
                 plugins: {
                     legend: {
-                        labels: {
-                            font: {
-                                size: 16,
-                                family:
-                                    "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
-                            },
-                            color: "#333",
-                        },
+                        display: false
                     },
+                    title: {
+                        display: true,
+                        text: 'Summary Bar Chart',
+                        font: {
+                            size: 18
+                        }
+                    }
                 },
                 scales: {
                     x: {
@@ -66,14 +65,20 @@ document.addEventListener('DOMContentLoaded', function() {
                         ticks: {
                             font: {
                                 size: 14,
-                                family:
-                                    "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
+                                family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
                             },
                             color: "#333",
                         },
                     },
                     y: {
                         beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Amount',
+                            font: {
+                                size: 16
+                            }
+                        },
                         grid: {
                             borderDash: [5, 5],
                             color: "rgba(200, 200, 200, 0.5)",
@@ -81,8 +86,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         ticks: {
                             font: {
                                 size: 16,
-                                family:
-                                    "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
+                                family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
                             },
                             color: "#333",
                         },
@@ -90,14 +94,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 },
             },
         });
-
+    
         budgetPieChart = new Chart(pieCtx, {
             type: "pie",
             data: {
                 labels: ["Budget", "Expenses", "Income"],
                 datasets: [
                     {
-                        label: "Amount",
                         data: [0, 0, 0],
                         backgroundColor: [
                             "rgba(54, 162, 235, 0.8)",
@@ -130,6 +133,13 @@ document.addEventListener('DOMContentLoaded', function() {
                             color: "#333",
                         },
                     },
+                    title: {
+                        display: true,
+                        text: 'Summary Pie Chart',
+                        font: {
+                            size: 18
+                        }
+                    }
                 },
             },
         });
@@ -174,8 +184,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize charts and fetch initial data
     initializeCharts();
     fetchAndDisplayData();
-
-    document.getElementById('resetChartsButton').addEventListener('click', fetchAndDisplayData);
 
     // formats the date to YYYY-MM-DD to be used to set date range
     function formatDateToYYYYMMDD(date) {
@@ -736,6 +744,7 @@ document.addEventListener('DOMContentLoaded', function() {
             get(ref(database, 'expenses/' + userId)).then(function(expensesSnapshot) {
                 updateBudgetsTable(budgetsSnapshot, expensesSnapshot);
             });
+            fetchAndDisplayData();
         });
 
         onValue(ref(database, 'expenses/' + userId), function(snapshot) {
@@ -743,10 +752,12 @@ document.addEventListener('DOMContentLoaded', function() {
             get(ref(database, 'budgets/' + userId)).then(function(budgetsSnapshot) {
                 updateBudgetsTable(budgetsSnapshot, snapshot); // Update budgets table as well whenever expenses change
             });
+            fetchAndDisplayData();
         });
 
         onValue(ref(database, 'income/' + userId), function(snapshot) {
             updateIncomeTable(snapshot);
+            fetchAndDisplayData();
         });
 
         // initial calls to populate tables
