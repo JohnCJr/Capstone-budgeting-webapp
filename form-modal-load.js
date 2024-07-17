@@ -146,7 +146,7 @@ document.addEventListener("DOMContentLoaded", () => {
         suggestedBudgetAmount.textContent = '$0.00';
       }
     }).catch((error) => {
-      console.error('Error fetching user incomes:', error);
+      // console.error('Error fetching user incomes:', error);
       currentBudgetAmount.textContent = '$0.00';
       suggestedBudgetAmount.textContent = '$0.00';
     });
@@ -281,7 +281,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       })
       .catch((error) => {
-        console.error("Failed to load form:", error);
+        // console.error("Failed to load form:", error);
         // must be used to display error message since html is dynamically loaded into modal
         modalBody.innerHTML = '<p class="text-danger">Failed to load form. Please try again later.</p>';
       });

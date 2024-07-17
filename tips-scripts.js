@@ -15,7 +15,6 @@ document.addEventListener("DOMContentLoaded", () => {
         e.target.value = value;
       });
     });
-    
-    window.getFormValidationShared();
 
+    getFormValidationShared();
 });

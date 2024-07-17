@@ -226,7 +226,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (error.code === "auth/weak-password") {
         displayError("Weak password, must have at least 6 characters.");
       } else {
-        console.error('Error:', error);
+        // console.error('Error:', error);
         // console.log(error.code);
         displayError(error.message);
       }

@@ -24,36 +24,6 @@
         window.location.href = "index.html"; // Redirect to homepage
       }
     </script>
-    <style>
-      .chart-container {
-        border: 1px solid #ddd;
-        background-color: #f9f9f9;
-        padding: 20px 5px;
-        margin-bottom: 20px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-        width: 100%;
-      }
-      .chart-container canvas {
-        width: 100% !important;
-        height: auto !important;
-      }
-      .chart-container.pie-chart {
-        max-width: 100%;
-      }
-      .btn-center {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-      .legend-container {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 20px;
-      }
-    </style>
   </head>
   <body>
     <div class="site_container">
@@ -85,7 +55,11 @@
       </div>
       <header class="header"></header>
       <main class="main">
-        <h1 class="text-center my-3 bg-info py-2" id="welcome-msg">Welcome</h1>
+        <h1 class="text-center my-3 bg-info py-2" id="welcome-msg">
+          <p class="placeholder-glow">
+            <span class="placeholder col-8"></span>
+          </p>
+        </h1>
         <div class="container-fluid">
           <div
             class="row my-4 justify-content-md-around justify-content-xxl-center gap-xxl-5 px-md-1 justify-content-center"

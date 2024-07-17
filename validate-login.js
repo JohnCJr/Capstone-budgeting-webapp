@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
           window.location.href = '/dashboard.html';
         })
         .catch((error) => {
-          console.error("Authentication error:", error.code);
+          // console.error("Authentication error:", error.code);
           if (error.code === 'auth/wrong-password' || error.code === 'auth/internal-error'|| error.code === 'auth/invalid-login-credentials') {
             displayError('Credentials don\'t match. Please try again.', usernameField, passwordField);
           } else if (error.code === "auth/too-many-requests") {

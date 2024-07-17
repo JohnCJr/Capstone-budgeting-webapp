@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = '/sign-on.html'; 
       }).catch((error) => {
         // will maybe add the code to change the localStorage variables back to their default 
-        console.error('Sign out error:', error);
+        // console.error('Sign out error:', error);
       });
     });
   

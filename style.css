@@ -173,7 +173,38 @@ body {
   padding: 10px 0px 0px 15px  !important;
 }
 
-/********************************************************************************************************/
+/*******************************************************************************************************/
+
+/******************************************** Dashboard Graphs Styles **********************************************/
+.chart-container {
+  border: 1px solid #ddd;
+  background-color: #f9f9f9;
+  padding: 20px 5px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  box-shadow: rgb(2, 78, 55) 0px 16px 40px -10px;
+}
+.chart-container canvas {
+  width: 100% !important;
+  height: auto !important;
+}
+.chart-container.pie-chart {
+  max-width: 100%;
+}
+.legend-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+#welcome-msg {
+  box-shadow: inset 0 0 10px rgb(34, 3, 119);
+}
+/****************************************************************************************************************/
 
 /* style for icon and styling for bootstrap  class .is-invalid */
 .is-invalid {

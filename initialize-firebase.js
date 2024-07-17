@@ -68,15 +68,33 @@ onAuthStateChanged(auth, (user) => {
        } else {
          localStorage.setItem('username', 'user');
        }
+
+       // Update the welcome message if on the dashboard page
+      if (window.location.pathname.includes("dashboard.html")) {
+        const welcomeTitle = document.getElementById("welcome-msg");
+        const username = localStorage.getItem("username");
+        welcomeTitle.innerHTML = `Welcome, ${username}!`;
+      }
      }).catch((error) => {
-       console.error("Error fetching user data: ", error);
+      //  console.error("Error fetching user data: ", error);
        localStorage.setItem('username', 'user');
+       // Update the welcome message in case of error if on the dashboard page
+      if (window.location.pathname.includes("dashboard.html")) {
+        const welcomeTitle = document.getElementById("welcome-msg");
+        welcomeTitle.innerHTML = `Welcome, user!`;
+      }
      });
   } else {
     localStorage.setItem('isLoggedIn', 'false');
     localStorage.setItem('userId', '0');
     localStorage.setItem('username', 'user'); //defaults to user as username
     // console.log("Firebase failed to connect to user data!");
+
+    // Update the welcome message if on the dashboard page
+    if (window.location.pathname.includes("dashboard.html")) {
+      const welcomeTitle = document.getElementById("welcome-msg");
+      welcomeTitle.innerHTML = `Welcome, user!`;
+    }
   }
 });
 

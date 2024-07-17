@@ -143,7 +143,7 @@ function getIncomeFormValidation() {
               modal.hide();
             })
             .catch((error) => {
-              console.error("Error:", error);
+              // console.error("Error:", error);
               displayError("An error occurred. Please try again.");
             });
         } else {
@@ -151,7 +151,7 @@ function getIncomeFormValidation() {
         }
       });
     } catch (error) {
-      console.error("Firebase initialization error:", error);
+      // console.error("Firebase initialization error:", error);
       displayError("Unable to connect to the database. Please try again later.");
     }
   });

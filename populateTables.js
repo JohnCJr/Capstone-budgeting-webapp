@@ -6,16 +6,13 @@ import { sanitize } from './sanitizeStrings.js'; // Import the sanitize function
 
 document.addEventListener('DOMContentLoaded', function() {
     let expensesData = []; // will store expense data keys
-    let username = localStorage.getItem("username");
-    let welcomeTitle = document.getElementById("welcome-msg");
-    welcomeTitle.innerHTML = `Welcome, ${username}`;
 
     let budgetBarChart, budgetPieChart;
 
     function initializeCharts() {
         const barCtx = document.getElementById("budgetBarChart").getContext("2d");
         const pieCtx = document.getElementById("budgetPieChart").getContext("2d");
-    
+
         budgetBarChart = new Chart(barCtx, {
             type: "bar",
             data: {
@@ -51,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     },
                     title: {
                         display: true,
-                        text: 'Summary Bar Chart',
+                        text: '',
                         font: {
                             size: 18
                         }
@@ -94,29 +91,32 @@ document.addEventListener('DOMContentLoaded', function() {
                 },
             },
         });
-    
+
         budgetPieChart = new Chart(pieCtx, {
             type: "pie",
             data: {
-                labels: ["Budget", "Expenses", "Income"],
+                labels: ["Food", "Utility", "Entertainment", "Other"],
                 datasets: [
                     {
-                        data: [0, 0, 0],
+                        data: [0, 0, 0, 0],
                         backgroundColor: [
                             "rgba(54, 162, 235, 0.8)",
                             "rgba(255, 99, 132, 0.8)",
                             "rgba(75, 192, 192, 0.8)",
+                            "rgba(153, 102, 255, 0.8)"
                         ],
                         borderColor: [
                             "rgba(54, 162, 235, 1)",
                             "rgba(255, 99, 132, 1)",
                             "rgba(75, 192, 192, 1)",
+                            "rgba(153, 102, 255, 1)"
                         ],
                         borderWidth: 1,
                         hoverBackgroundColor: [
                             "rgba(54, 162, 235, 1)",
                             "rgba(255, 99, 132, 1)",
                             "rgba(75, 192, 192, 1)",
+                            "rgba(153, 102, 255, 1)"
                         ],
                     },
                 ],
@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     },
                     title: {
                         display: true,
-                        text: 'Summary Pie Chart',
+                        text: '',
                         font: {
                             size: 18
                         }
@@ -150,11 +150,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    function updateCharts(budget, expenses, income) {
+    function updateCharts(budget, expenses, income, expenseCategories, budgetType) {
         budgetBarChart.data.datasets[0].data = [budget, expenses, income];
+        budgetBarChart.options.plugins.title.text = `${capitalize(budgetType)} Overall Summary`;
         budgetBarChart.update();
 
-        budgetPieChart.data.datasets[0].data = [budget, expenses, income];
+        budgetPieChart.data.datasets[0].data = expenseCategories;
+        budgetPieChart.options.plugins.title.text = `${capitalize(budgetType)} Expense Overview`;
         budgetPieChart.update();
     }
 
@@ -170,16 +172,60 @@ document.addEventListener('DOMContentLoaded', function() {
                 const expenseData = expenseSnapshot.val() || {};
                 const incomeData = incomeSnapshot.val() || {};
 
+                const budgetType = budgetData.budgetType || "weekly";
+                const today = new Date();
+                let startDate, endDate;
+
+                if (budgetType === "weekly") {
+                    [startDate, endDate] = getStartAndEndOfWeek(today);
+                } else if (budgetType === "monthly") {
+                    [startDate, endDate] = getStartAndEndOfMonth(today);
+                } else if (budgetType === "yearly") {
+                    [startDate, endDate] = getStartAndEndOfYear(today);
+                }
+
                 const totalBudget = parseFloat(budgetData.total) || 0;
-                const totalExpenses = Object.values(expenseData).reduce((sum, exp) => sum + parseFloat(exp.amount), 0);
                 const totalIncome = Object.values(incomeData).reduce((sum, inc) => sum + parseFloat(inc.amount), 0);
 
-                updateCharts(totalBudget, totalExpenses, totalIncome);
+                const expenseCategories = {
+                    food: 0,
+                    utility: 0,
+                    entertainment: 0,
+                    other: 0
+                };
+
+                let totalExpenses = 0;
+
+                Object.values(expenseData).forEach(exp => {
+                    const expenseDate = parseDate(exp.date);
+                    if (!expenseDate) {
+                        // console.error('Skipping invalid date for expense:', exp);
+                        return;
+                    }
+                    if (isWithinDateRange(expenseDate, startDate, endDate)) {
+                        const category = exp.category ? exp.category.toLowerCase() : 'other';
+                        if (expenseCategories.hasOwnProperty(category)) {
+                            expenseCategories[category] += parseFloat(exp.amount) || 0;
+                        } else {
+                            expenseCategories.other += parseFloat(exp.amount) || 0;
+                        }
+                        totalExpenses += parseFloat(exp.amount) || 0;
+                    }
+                });
+
+                updateCharts(totalBudget, totalExpenses, totalIncome, [
+                    expenseCategories.food,
+                    expenseCategories.utility,
+                    expenseCategories.entertainment,
+                    expenseCategories.other
+                ], budgetType);
             }).catch(error => {
-                console.error("Error fetching data: ", error);
+                // console.error("Error fetching data: ", error);
             });
         }
     }
+
+    
 
     // Initialize charts and fetch initial data
     initializeCharts();
@@ -270,12 +316,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Reformats date to a JS Date variable and checks if it contains a month, day, and year
     function parseDate(dateStr) {
         if (!dateStr) {
-            console.error('Date string is undefined or null');
+            // console.error('Date string is undefined or null');
             return null;
         }
         const [month, day, year] = dateStr.split('/');
         if (!month || !day || !year) {
-            console.error('Date string is invalid:', dateStr);
+            // console.error('Date string is invalid:', dateStr);
             return null;
         }
         return new Date(year, month - 1, day);
@@ -331,7 +377,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 Object.values(expenseData).forEach(expense => {
                     const expenseDate = parseDate(expense.date);
                     if (!expenseDate) {
-                        console.error('Skipping invalid date for expense:', expense);
+                        // console.error('Skipping invalid date for expense:', expense);
                         return;
                     }
                     if (expense.category.toLowerCase() === category && isWithinDateRange(expenseDate, startDate, endDate)) {
@@ -647,7 +693,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     // console.log('Expense updated successfully');
                 })
                 .catch((error) => {
-                    console.error('Error updating expense:', error);
+                    // console.error('Error updating expense:', error);
                 });
             cancelEdit(key, 'expense');
         } else {
@@ -681,7 +727,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     // console.log('Income updated successfully');
                 })
                 .catch((error) => {
-                    console.error('Error updating income:', error);
+                    // console.error('Error updating income:', error);
                 });
             cancelEdit(key, 'income');
         } else {
@@ -709,7 +755,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     // console.log('Expense deleted successfully');
                 })
                 .catch((error) => {
-                    console.error('Error deleting expense:', error);
+                    // console.error('Error deleting expense:', error);
                 });
         } else {
             // console.log('Cannot delete expense: invalid userId');
@@ -725,7 +771,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     // console.log('Income deleted successfully');
                 })
                 .catch((error) => {
-                    console.error('Error deleting income:', error);
+                    // console.error('Error deleting income:', error);
                 });
         } else {
             // console.log('Cannot delete income: invalid userId');

@@ -191,8 +191,8 @@ function getBudgetFormValidation(suggestedAmount = null, selectedValue = null) {
       onAuthStateChanged(auth, (user) => {
         if (user) {
           const userId = user.uid;
-          console.log("User UID:", user.uid);
-          console.log("Data being sent to Firebase:", data);
+          // console.log("User UID:", user.uid);
+          // console.log("Data being sent to Firebase:", data);
           const updates = {};
           updates['/budgets/' + userId] = data;
 
@@ -203,16 +203,16 @@ function getBudgetFormValidation(suggestedAmount = null, selectedValue = null) {
               modal.hide();
             })
             .catch((error) => {
-              console.error("Error:", error);
+              // console.error("Error:", error);
               displayError("An error occurred. Please try again.");
             });
         } else {
-          console.log('No user is signed in.');
+          // console.log('No user is signed in.');
           displayError("You must be signed in to update your budget.");
         }
       });
     } catch (error) {
-      console.error("Firebase initialization error:", error);
+      // console.error("Firebase initialization error:", error);
       displayError("Unable to connect to the database. Please try again later.");
     }
   });
