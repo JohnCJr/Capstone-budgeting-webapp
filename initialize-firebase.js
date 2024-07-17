@@ -69,7 +69,7 @@ onAuthStateChanged(auth, (user) => {
          localStorage.setItem('username', 'user');
        }
 
-       // Update the welcome message if on the dashboard page
+       // updates the welcome message if on the dashboard page and logged in
       if (window.location.pathname.includes("dashboard.html")) {
         const welcomeTitle = document.getElementById("welcome-msg");
         const username = localStorage.getItem("username");
@@ -78,7 +78,8 @@ onAuthStateChanged(auth, (user) => {
      }).catch((error) => {
       //  console.error("Error fetching user data: ", error);
        localStorage.setItem('username', 'user');
-       // Update the welcome message in case of error if on the dashboard page
+      
+       // updates the welcome message in case of error if on the dashboard page
       if (window.location.pathname.includes("dashboard.html")) {
         const welcomeTitle = document.getElementById("welcome-msg");
         welcomeTitle.innerHTML = `Welcome, user!`;

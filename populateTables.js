@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         display: true,
                         text: '',
                         font: {
-                            size: 18
+                            size: 16
                         }
                     }
                 },
@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             display: true,
                             text: 'Amount',
                             font: {
-                                size: 16
+                                size: 14
                             }
                         },
                         grid: {
@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         },
                         ticks: {
                             font: {
-                                size: 16,
+                                size: 14,
                                 family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
                             },
                             color: "#333",
@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         position: 'top',
                         labels: {
                             font: {
-                                size: 16,
+                                size: 14,
                                 family: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
                             },
                             color: "#333",
@@ -137,16 +137,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         display: true,
                         text: '',
                         font: {
-                            size: 18
+                            size: 16
                         }
                     }
                 },
             },
-        });
-
-        window.addEventListener('resize', () => {
-            budgetBarChart.resize();
-            budgetPieChart.resize();
         });
     }
 
@@ -227,7 +222,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     
 
-    // Initialize charts and fetch initial data
+    // initialize charts and fetch initial data to display to the user
     initializeCharts();
     fetchAndDisplayData();
 
@@ -796,9 +791,9 @@ document.addEventListener('DOMContentLoaded', function() {
         onValue(ref(database, 'expenses/' + userId), function(snapshot) {
             updateExpensesTable(snapshot);
             get(ref(database, 'budgets/' + userId)).then(function(budgetsSnapshot) {
-                updateBudgetsTable(budgetsSnapshot, snapshot); // Update budgets table as well whenever expenses change
+                updateBudgetsTable(budgetsSnapshot, snapshot); // updates budgets table as well whenever expenses change
             });
-            fetchAndDisplayData();
+            fetchAndDisplayData();  // updates charts with new data after a cnange to the exepnses table is made to Firebase 
         });
 
         onValue(ref(database, 'income/' + userId), function(snapshot) {

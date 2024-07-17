@@ -299,7 +299,7 @@ nav.navbar {
   text-align: center;
 }
 
-.navbar-toggler:focus, .navbar-toggler:active {
+.navbar-toggler:focus, .navbar-toggler:active, .navbar-toggler:active {
   background-color: lightblue !important;
   box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.25) !important;
 }
