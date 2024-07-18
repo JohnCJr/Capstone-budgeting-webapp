@@ -451,10 +451,18 @@ document.addEventListener('DOMContentLoaded', function() {
         // so long as the sort by selection isn't all, the table will toggle between ascedning and descending order based on user selection
         if (sortField !== 'all') {
             filteredData.sort((a, b) => {
+                let fieldA = a[sortField];
+                let fieldB = b[sortField];
+    
+                if (sortField === 'date') {
+                    fieldA = new Date(a[sortField]);
+                    fieldB = new Date(b[sortField]);
+                }
+    
                 if (sortOrder === 'asc') {
-                    return a[sortField] > b[sortField] ? 1 : -1;
+                    return fieldA > fieldB ? 1 : -1;
                 } else {
-                    return a[sortField] < b[sortField] ? 1 : -1;
+                    return fieldA < fieldB ? 1 : -1;
                 }
             });
         }
