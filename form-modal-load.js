@@ -319,7 +319,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     toast.innerHTML = `
       <div class="toast-header">
-        <img src="images/logo.jpg" class="rounded me-2" width="50px" alt="...">
+        <img src="images/Cajoe-bits-logo.png" class="rounded me-2" width="50px" alt="cajoe bits logo">
         <strong class="me-auto">Notification</strong>
         <small class="text-body-secondary" data-timestamp="${timestamp.toISOString()}">just now</small>
         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -354,7 +354,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     toast.innerHTML = `
       <div class="toast-header">
-        <img src="images/logo.jpg" class="rounded me-2" width="50px" alt="...">
+        <img src="images/Cajoe-bits-logo.png" class="rounded me-2" width="50px" alt="cajoe bits logo">
         <strong class="me-auto">Notification</strong>
         <small class="text-body-secondary" data-timestamp="${timestamp.toISOString()}">just now</small>
         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>

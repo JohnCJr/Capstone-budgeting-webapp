@@ -7,8 +7,9 @@ import { sanitize } from './sanitizeStrings.js'; // Import the sanitize function
 document.addEventListener('DOMContentLoaded', function() {
     let expensesData = []; // will store expense data keys
 
-    let budgetBarChart, budgetPieChart;
+    let budgetBarChart, budgetPieChart; // will store chart variables
 
+    // initializes both charts
     function initializeCharts() {
         const barCtx = document.getElementById("budgetBarChart").getContext("2d");
         const pieCtx = document.getElementById("budgetPieChart").getContext("2d");
@@ -145,6 +146,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // updates the charts based on new data passed through
     function updateCharts(budget, expenses, income, expenseCategories, budgetType) {
         budgetBarChart.data.datasets[0].data = [budget, expenses, income];
         budgetBarChart.options.plugins.title.text = `${capitalize(budgetType)} Overall Summary`;
@@ -155,6 +157,7 @@ document.addEventListener('DOMContentLoaded', function() {
         budgetPieChart.update();
     }
 
+    // fteches all data budget, expnese, and income data from Firebase specific to the user
     function fetchAndDisplayData() {
         let userId = localStorage.getItem('userId');
         if (userId !== '0') {
@@ -222,7 +225,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     
 
-    // initialize charts and fetch initial data to display to the user
+    // initialize charts and fetches initial data to display to the user
     initializeCharts();
     fetchAndDisplayData();
 
